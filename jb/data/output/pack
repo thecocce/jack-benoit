@@ -1,0 +1,281 @@
+
+sprites1.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Whip
+  rotate: false
+  xy: 2, 2
+  size: 320, 32
+  orig: 320, 32
+  offset: 0, 0
+  index: -1
+crystal-qubodup-ccby3-32-green
+  rotate: false
+  xy: 2, 36
+  size: 256, 32
+  orig: 256, 32
+  offset: 0, 0
+  index: -1
+crystal-qubodup-ccby3-32-grey
+  rotate: false
+  xy: 2, 70
+  size: 256, 32
+  orig: 256, 32
+  offset: 0, 0
+  index: -1
+crystal-qubodup-ccby3-32-orange
+  rotate: false
+  xy: 2, 104
+  size: 256, 32
+  orig: 256, 32
+  offset: 0, 0
+  index: -1
+crystal-qubodup-ccby3-32-pink
+  rotate: false
+  xy: 2, 138
+  size: 256, 32
+  orig: 256, 32
+  offset: 0, 0
+  index: -1
+crystal-qubodup-ccby3-32-blue
+  rotate: false
+  xy: 2, 172
+  size: 256, 32
+  orig: 256, 32
+  offset: 0, 0
+  index: -1
+crystal-qubodup-ccby3-32-yellow
+  rotate: false
+  xy: 2, 206
+  size: 256, 32
+  orig: 256, 32
+  offset: 0, 0
+  index: -1
+FirePistol
+  rotate: false
+  xy: 260, 36
+  size: 192, 32
+  orig: 192, 32
+  offset: 0, 0
+  index: -1
+zombie
+  rotate: false
+  xy: 324, 2
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+torch
+  rotate: false
+  xy: 260, 70
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+walk
+  rotate: false
+  xy: 260, 104
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+Walk
+  rotate: false
+  xy: 390, 70
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1
+Climb
+  rotate: false
+  xy: 390, 104
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Duck
+  rotate: false
+  xy: 454, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+front
+  rotate: false
+  xy: 454, 36
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+right
+  rotate: false
+  xy: 456, 104
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+earlysketch
+  rotate: false
+  xy: 260, 138
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+front
+  rotate: false
+  xy: 294, 138
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+back
+  rotate: false
+  xy: 328, 138
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+front
+  rotate: false
+  xy: 362, 138
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+web
+  rotate: false
+  xy: 396, 138
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+left
+  rotate: false
+  xy: 430, 138
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+spider1
+  rotate: false
+  xy: 464, 138
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+crystal-qubodup-ccby3-16-orange
+  rotate: false
+  xy: 260, 172
+  size: 128, 16
+  orig: 128, 16
+  offset: 0, 0
+  index: -1
+crystal-qubodup-ccby3-16-pink
+  rotate: false
+  xy: 260, 206
+  size: 128, 16
+  orig: 128, 16
+  offset: 0, 0
+  index: -1
+crystal-qubodup-ccby3-16-green
+  rotate: false
+  xy: 2, 240
+  size: 128, 16
+  orig: 128, 16
+  offset: 0, 0
+  index: -1
+crystal-qubodup-ccby3-16-grey
+  rotate: false
+  xy: 2, 258
+  size: 128, 16
+  orig: 128, 16
+  offset: 0, 0
+  index: -1
+crystal-qubodup-ccby3-16-yellow
+  rotate: false
+  xy: 2, 276
+  size: 128, 16
+  orig: 128, 16
+  offset: 0, 0
+  index: -1
+crystal-qubodup-ccby3-16-blue
+  rotate: false
+  xy: 2, 294
+  size: 128, 16
+  orig: 128, 16
+  offset: 0, 0
+  index: -1
+spider0
+  rotate: false
+  xy: 390, 172
+  size: 64, 16
+  orig: 64, 16
+  offset: 0, 0
+  index: -1
+
+sprites2.png
+format: Alpha
+filter: Nearest,Nearest
+repeat: none
+zombies
+  rotate: false
+  xy: 2, 2
+  size: 150, 75
+  orig: 150, 75
+  offset: 0, 0
+  index: -1
+
+cumulus-clouds-frogatto1.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+cumulus-tiny
+  rotate: false
+  xy: 2, 2
+  size: 120, 256
+  orig: 120, 256
+  offset: 0, 0
+  index: -1
+cumulus-big3
+  rotate: false
+  xy: 124, 2
+  size: 234, 128
+  orig: 234, 128
+  offset: 0, 0
+  index: -1
+cumulus-big1
+  rotate: false
+  xy: 124, 132
+  size: 174, 157
+  orig: 174, 157
+  offset: 0, 0
+  index: -1
+cumulus-big2
+  rotate: false
+  xy: 300, 132
+  size: 190, 118
+  orig: 190, 118
+  offset: 0, 0
+  index: -1
+cumulus-small2
+  rotate: false
+  xy: 2, 260
+  size: 76, 51
+  orig: 76, 51
+  offset: 0, 0
+  index: -1
+cumulus-small3
+  rotate: false
+  xy: 2, 313
+  size: 64, 41
+  orig: 64, 41
+  offset: 0, 0
+  index: -1
+cumulus-small1
+  rotate: false
+  xy: 2, 356
+  size: 54, 43
+  orig: 54, 43
+  offset: 0, 0
+  index: -1

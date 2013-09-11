@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="zombie" color="#ff0000"/>
+ <objecttype name="spider" color="#ff0000"/> 
+ <objecttype name="blue_jewel" color="#0000ff"/>
+</objecttypes>
