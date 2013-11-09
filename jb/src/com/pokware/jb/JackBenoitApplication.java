@@ -1,8 +1,5 @@
 package com.pokware.jb;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -11,6 +8,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.pokware.jb.objects.Jack;
 
@@ -44,8 +42,6 @@ public class JackBenoitApplication extends InputAdapter implements ApplicationLi
 		
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		timer += deltaTime;
-//		level.physicalWorld.step(deltaTime, 8, 3);
-
 		level.step(deltaTime, 8, 3);
 		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -87,27 +83,43 @@ public class JackBenoitApplication extends InputAdapter implements ApplicationLi
 		return jack.toString();
 	}
 
+	Vector3 jackScreenPosition = new Vector3();
 	private void camTrackJack() {
 		Jack jack = level.objectManager.getJack();
 		Vector2 position = jack.body.getPosition();
-		
-		level.camera.position.x = position.x;
-		level.camera.position.y = position.y;
+		jackScreenPosition.x = position.x;
+		jackScreenPosition.y = position.y;
+		level.camera.project(jackScreenPosition);
 		
 		int halfViewPortWidth = level.viewPortWidthInMeters / 2;
 		int halfViewPortHeight = level.viewPortHeightInMeters / 2;
+		int screenWidth = Gdx.graphics.getWidth();
+		int screenHeight = Gdx.graphics.getHeight();
 		
-		if (level.camera.position.x < halfViewPortWidth) {
-			level.camera.position.x = halfViewPortWidth;			
+		if (jackScreenPosition.x < screenWidth/3) {			
+			level.camera.position.x-= 0.1f;	
+		}		
+		if (jackScreenPosition.x > screenWidth - (screenWidth/3)) {
+			level.camera.position.x+= 0.1f;
 		}
-		if (level.camera.position.x > level.tiledMap.width*Level.METERS_PER_TILE - halfViewPortWidth) {
-			level.camera.position.x = level.tiledMap.width*Level.METERS_PER_TILE - halfViewPortWidth;
+		if (jackScreenPosition.y < screenHeight/4) {
+			level.camera.position.y-= 0.1f;
 		}
-		if (level.camera.position.y < halfViewPortHeight) {
-			level.camera.position.y = halfViewPortHeight;
+		if (jackScreenPosition.y > screenHeight - (screenHeight/4)) {
+			level.camera.position.y+= 0.1f;
+		}		
+		
+		if (level.camera.position.x < halfViewPortWidth * zoom) {
+			level.camera.position.x = halfViewPortWidth * zoom;			
 		}
-		if (level.camera.position.y > level.tiledMap.height*Level.METERS_PER_TILE - halfViewPortHeight) {
-			level.camera.position.y = level.tiledMap.height*Level.METERS_PER_TILE - halfViewPortHeight;
+		if (level.camera.position.x > level.tiledMap.width*Level.METERS_PER_TILE - halfViewPortWidth * zoom) {
+			level.camera.position.x = level.tiledMap.width*Level.METERS_PER_TILE - halfViewPortWidth * zoom;
+		}
+		if (level.camera.position.y < halfViewPortHeight* zoom) {
+			level.camera.position.y = halfViewPortHeight* zoom;
+		}
+		if (level.camera.position.y > level.tiledMap.height*Level.METERS_PER_TILE - halfViewPortHeight* zoom) {
+			level.camera.position.y = level.tiledMap.height*Level.METERS_PER_TILE - halfViewPortHeight* zoom;
 		}
 				
 		level.parrallaxCamera.position.x = level.camera.position.x / 2 + 20;
@@ -119,7 +131,7 @@ public class JackBenoitApplication extends InputAdapter implements ApplicationLi
 		// Load assets in static refs
 		loadArt();
 
-		level = new Level("level2");
+		level = new Level("level2", zoom);
 
 		box2dDebugRenderer = new Box2DDebugRenderer();
 		box2dDebugRenderer.setDrawJoints(true);

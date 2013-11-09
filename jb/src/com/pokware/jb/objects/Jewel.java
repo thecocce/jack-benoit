@@ -9,7 +9,7 @@ public class Jewel extends GameObject {
 	private JewelType type;
 	
 	public Jewel(Level level, float x, float y, JewelType type) {
-		super(level, x, y, 16, 16, CollisionCategory.COLLECTABLE);
+		super(level, x, y, 16, 16, CollisionCategory.COLLECTABLE, false);
 		this.type = type;
 	}
 	

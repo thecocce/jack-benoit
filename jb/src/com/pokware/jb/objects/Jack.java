@@ -34,9 +34,9 @@ public class Jack extends GameObject implements Climber {
 	private Vector2 antiGravityVector;
 			
 	public Jack(Level level, float x, float y) {
-		super(level, x, y, CollisionCategory.JACK);
+		super(level, x, y, CollisionCategory.JACK, true);
 		body.setBullet(true);			
-		antiGravityVector = level.gravityVector.cpy().mul(-body.getMass()).mul(0.8f);				
+		antiGravityVector = level.gravityVector.cpy().mul(-body.getMass()).mul(0.8f);
 	}	
 
 	final Vector2 forceVector = new Vector2();
@@ -49,7 +49,7 @@ public class Jack extends GameObject implements Climber {
 		state = JackStateEnum.IDLE;
 		body.setGravityScale(0.8f);
 //		body.setLinearDamping(0f);
-		
+				
 		int ladderStatus = getLadderStatus();	
 		
 		

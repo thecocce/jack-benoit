@@ -17,7 +17,7 @@ public class Spider extends GameObject {
 	final static Vector2 superJumpLeftImpulseVector = new Vector2(-SPIDER_SPEED * 50, SPIDER_SPEED * 50);
 	
 	public Spider(Level level, float x, float y) {
-		super(level, x, y, 32, 16, CollisionCategory.ENEMY, 0.4f, 0.3f);		
+		super(level, x, y, 32, 16, CollisionCategory.ENEMY, 0.4f, 0.3f, true);		
 	}
 	
 	private boolean free = false;

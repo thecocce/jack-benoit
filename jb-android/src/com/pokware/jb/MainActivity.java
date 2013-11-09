@@ -13,6 +13,6 @@ public class MainActivity extends AndroidApplication {
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
         cfg.useGL20 = false;
         
-        initialize(new JackBenoitApplication(0.6f), cfg);
+        initialize(new JackBenoitApplication(0.5f), cfg);
     }
 }

@@ -50,7 +50,7 @@ public class Level {
 	
 	public Vector2 gravityVector = new Vector2(0f, -200f);
 		
-	public Level(String mapName) {
+	public Level(String mapName, float zoom) {
 		super();
 		
 		GameObject.ID_COUNTER = 0;
@@ -82,7 +82,7 @@ public class Level {
 		
 		objectManager.populateLevel();
 		
-		initCamera();			
+		initCamera(zoom);			
 	}
 
 
@@ -126,14 +126,14 @@ public class Level {
 	}
 
 
-	private void initCamera() {
-		viewPortWidthInMeters = (Gdx.graphics.getWidth() / 32) * METERS_PER_TILE;
-		viewPortHeightInMeters = (Gdx.graphics.getHeight() / 32) * METERS_PER_TILE;
+	private void initCamera(float zoom) {
+		viewPortWidthInMeters = (int) ((Gdx.graphics.getWidth() / 32) * METERS_PER_TILE);
+		viewPortHeightInMeters = (int) ((Gdx.graphics.getHeight() / 32) * METERS_PER_TILE);
 		camera = new OrthographicCamera(viewPortWidthInMeters, viewPortHeightInMeters);
 		parrallaxCamera = new OrthographicCamera(viewPortWidthInMeters, viewPortHeightInMeters);		
 
 		cameraController = new OrthoCamController(camera, parrallaxCamera, this);
-		Gdx.input.setInputProcessor(cameraController);
+		Gdx.input.setInputProcessor(cameraController);		
 	}
 
 
@@ -199,6 +199,7 @@ public class Level {
 	private int rectNumber = 0;
 	public int viewPortWidthInMeters;
 	public int viewPortHeightInMeters;
+	private Body cameraBody;
 	
 
 	private void createRect(int startTileX, int startTileY, int endTileX, int endTileY) {

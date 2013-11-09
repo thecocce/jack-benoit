@@ -34,19 +34,19 @@ public abstract class GameObject {
 	public float height = 2f;
 	public GameObjectData userData;
 	
-	public GameObject(Level level, float x, float y, CollisionCategory category) {				
-		init(level, x, y, 32, 32, category, 0.2f, 0.5f);
+	public GameObject(Level level, float x, float y, CollisionCategory category, boolean bullet) {				
+		init(level, x, y, 32, 32, category, 0.2f, 0.5f, bullet);
 	}
 
-	public GameObject(Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category) {
-		init(level, x, y, pixelWidth, pixelHeight, category, 0.2f, 0.5f);
+	public GameObject(Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category, boolean bullet) {
+		init(level, x, y, pixelWidth, pixelHeight, category, 0.2f, 0.5f, bullet);
 	}
 
-	public GameObject(Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category, float widthRatio, float heightRatio) {
-		init(level, x, y, pixelWidth, pixelHeight, category, widthRatio, heightRatio);
+	public GameObject(Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category, float widthRatio, float heightRatio, boolean bullet) {
+		init(level, x, y, pixelWidth, pixelHeight, category, widthRatio, heightRatio, bullet);
 	}
 	
-	private void init(Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category, float widthRatio, float heightRatio) {
+	private void init(Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category, float widthRatio, float heightRatio, boolean bullet) {
 		this.width = Level.METERS_PER_TILE * pixelWidth / 32f;
 		this.height = Level.METERS_PER_TILE * pixelHeight / 32f;
 					
@@ -57,7 +57,7 @@ public abstract class GameObject {
 		body = level.physicalWorld.createBody(bodyDef);
 		userData = new GameObjectData(id, category);
 		body.setUserData(userData);
-		
+		body.setBullet(bullet);		
 		fixture = body.createFixture(polyShape, 20);					
 		fixture.setFriction(0f);
 		
