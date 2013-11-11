@@ -9,9 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.pokware.jb.Level;
 import com.pokware.jb.ai.PathNode;
 
@@ -71,7 +69,7 @@ public abstract class GameObject {
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.x = x;
 		bodyDef.position.y = y;
-		bodyDef.gravityScale = 1.0f;
+		bodyDef.gravityScale = 1.0f;	
 		bodyDef.fixedRotation = true;
 		bodyDef.linearDamping = 10f;
 		return bodyDef;

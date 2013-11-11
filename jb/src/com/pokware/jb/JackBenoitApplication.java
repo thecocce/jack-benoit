@@ -45,85 +45,35 @@ public class JackBenoitApplication extends InputAdapter implements ApplicationLi
 		level.step(deltaTime, 8, 3);
 		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-
-		level.camera.zoom = zoom;
-		level.parrallaxCamera.zoom = zoom;
-		level.camera.update();
-		level.parrallaxCamera.update();
+		
+		level.camera.update(level.objectManager.getJack());
 
 		// Render map
-		level.tileMapRenderer.render(level.parrallaxCamera, Level.PARALLAX_LAYERS);
-		level.tileMapRenderer.render(level.camera, Level.BACKGROUND_LAYERS);
+		level.tileMapRenderer.render(level.camera.parrallax, Level.PARALLAX_LAYERS);
+		level.tileMapRenderer.render(level.camera.front, Level.BACKGROUND_LAYERS);
 
 		// Render sprites
-		spriteBatch.getProjectionMatrix().set(level.camera.combined);
+		spriteBatch.getProjectionMatrix().set(level.camera.front.combined);
 		spriteBatch.begin();
 		level.objectManager.draw(spriteBatch, timer);
 		spriteBatch.end();
 
 		// Display info
 		if (level.debugMode) {
-			box2dDebugRenderer.render(level.physicalWorld, level.camera.combined);
+			box2dDebugRenderer.render(level.physicalWorld, level.camera.front.combined);
 			spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			spriteBatch.begin();
 			level.font.draw(spriteBatch, getStatusString(), 20, 460);
-			spriteBatch.end();
-			
+			spriteBatch.end();			
 			if (level.debugMode) {
 				level.objectManager.drawDebugInfo();
-			}		
-			
+			}				
 		}
-
-		camTrackJack();
 	}
 
 	private String getStatusString() {
 		Jack jack = level.objectManager.getJack();
 		return jack.toString();
-	}
-
-	Vector3 jackScreenPosition = new Vector3();
-	private void camTrackJack() {
-		Jack jack = level.objectManager.getJack();
-		Vector2 position = jack.body.getPosition();
-		jackScreenPosition.x = position.x;
-		jackScreenPosition.y = position.y;
-		level.camera.project(jackScreenPosition);
-		
-		int halfViewPortWidth = level.viewPortWidthInMeters / 2;
-		int halfViewPortHeight = level.viewPortHeightInMeters / 2;
-		int screenWidth = Gdx.graphics.getWidth();
-		int screenHeight = Gdx.graphics.getHeight();
-		
-		if (jackScreenPosition.x < screenWidth/3) {			
-			level.camera.position.x-= 0.1f;	
-		}		
-		if (jackScreenPosition.x > screenWidth - (screenWidth/3)) {
-			level.camera.position.x+= 0.1f;
-		}
-		if (jackScreenPosition.y < screenHeight/4) {
-			level.camera.position.y-= 0.1f;
-		}
-		if (jackScreenPosition.y > screenHeight - (screenHeight/4)) {
-			level.camera.position.y+= 0.1f;
-		}		
-		
-		if (level.camera.position.x < halfViewPortWidth * zoom) {
-			level.camera.position.x = halfViewPortWidth * zoom;			
-		}
-		if (level.camera.position.x > level.tiledMap.width*Level.METERS_PER_TILE - halfViewPortWidth * zoom) {
-			level.camera.position.x = level.tiledMap.width*Level.METERS_PER_TILE - halfViewPortWidth * zoom;
-		}
-		if (level.camera.position.y < halfViewPortHeight* zoom) {
-			level.camera.position.y = halfViewPortHeight* zoom;
-		}
-		if (level.camera.position.y > level.tiledMap.height*Level.METERS_PER_TILE - halfViewPortHeight* zoom) {
-			level.camera.position.y = level.tiledMap.height*Level.METERS_PER_TILE - halfViewPortHeight* zoom;
-		}
-				
-		level.parrallaxCamera.position.x = level.camera.position.x / 2 + 20;
-		level.parrallaxCamera.position.y = level.camera.position.y / 2 + 8;						
 	}
 
 	@Override

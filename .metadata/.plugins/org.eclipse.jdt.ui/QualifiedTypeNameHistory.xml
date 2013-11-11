@@ -2,4 +2,5 @@
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="com.pokware.jb.objects.GameObject"/>
 <fullyQualifiedTypeName name="com.badlogic.gdx.math.Vector3"/>
+<fullyQualifiedTypeName name="com.pokware.jb.LevelCamera"/>
 </qualifiedTypeNameHistroy>

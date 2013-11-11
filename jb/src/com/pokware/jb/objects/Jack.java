@@ -2,13 +2,14 @@ package com.pokware.jb.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.pokware.jb.Art;
 import com.pokware.jb.Level;
 
-public class Jack extends GameObject implements Climber {
+public class Jack extends GameObject implements Climber, InputProcessor {
 	
 	public static enum JackStateEnum {
 		IDLE(Art.walkingLeftAnimation), 
@@ -37,6 +38,8 @@ public class Jack extends GameObject implements Climber {
 		super(level, x, y, CollisionCategory.JACK, true);
 		body.setBullet(true);			
 		antiGravityVector = level.gravityVector.cpy().mul(-body.getMass()).mul(0.8f);
+		
+		Gdx.input.setInputProcessor(this);		
 	}	
 
 	final Vector2 forceVector = new Vector2();
@@ -197,4 +200,54 @@ public class Jack extends GameObject implements Climber {
 		}		
 	}
 		
+	
+	@Override
+	public boolean keyDown(int keycode) {
+		return false;
+	}
+	
+	@Override
+	public boolean keyTyped(char character) {	
+		return false;
+	}
+	
+	@Override
+	public boolean keyUp(int keycode) {	
+		return false;
+	}
+	
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {	
+		return false;
+	}
+	
+	@Override
+	public boolean scrolled(int amount) {	
+		return false;
+	}
+	
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		jump();
+		return true;
+	}
+	
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		/*camera.unproject(curr.set(x, y, 0));
+
+		if (!(last.x == -1 && last.y == -1 && last.z == -1)) {
+			camera.unproject(delta.set(last.x, last.y, 0));
+			delta.sub(curr);
+			camera.position.add(delta.x, delta.y, 0);			
+			parrallaxCamera.position.add(delta.x/5f, delta.y/5f, 0);			
+		}
+		last.set(x, y, 0);*/
+		return false;
+	}
+	
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {	
+		return false;
+	}
 }

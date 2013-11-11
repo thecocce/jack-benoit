@@ -46,7 +46,7 @@ public class Zombie extends GameObject implements Climber {
 		Vector2 position = body.getPosition();
 
 		if (wayPointList != null) {
-			shapeRenderer.setProjectionMatrix(level.camera.combined);
+			shapeRenderer.setProjectionMatrix(level.camera.front.combined);
 
 			float oldx = position.x;
 			float oldy = position.y;

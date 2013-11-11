@@ -44,9 +44,11 @@ public class Level {
 	public LevelObjectManager objectManager;
 	public PathingTool pathingTool;
 	
-	public OrthographicCamera camera;
+	// Camera stuff
+	public LevelCamera camera;
+	/*public OrthographicCamera camera;
 	public OrthographicCamera parrallaxCamera;
-	public OrthoCamController cameraController;	
+	public OrthoCamController cameraController;*/	
 	
 	public Vector2 gravityVector = new Vector2(0f, -200f);
 		
@@ -82,7 +84,7 @@ public class Level {
 		
 		objectManager.populateLevel();
 		
-		initCamera(zoom);			
+		camera = new LevelCamera(zoom, tiledMap.width*METERS_PER_TILE, tiledMap.height*METERS_PER_TILE, this);			
 	}
 
 
@@ -125,16 +127,6 @@ public class Level {
 		}
 	}
 
-
-	private void initCamera(float zoom) {
-		viewPortWidthInMeters = (int) ((Gdx.graphics.getWidth() / 32) * METERS_PER_TILE);
-		viewPortHeightInMeters = (int) ((Gdx.graphics.getHeight() / 32) * METERS_PER_TILE);
-		camera = new OrthographicCamera(viewPortWidthInMeters, viewPortHeightInMeters);
-		parrallaxCamera = new OrthographicCamera(viewPortWidthInMeters, viewPortHeightInMeters);		
-
-		cameraController = new OrthoCamController(camera, parrallaxCamera, this);
-		Gdx.input.setInputProcessor(cameraController);		
-	}
 
 
 	private void createPhysicsWorld() {
