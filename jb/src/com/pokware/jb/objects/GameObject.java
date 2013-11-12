@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.pokware.jb.Level;
 import com.pokware.jb.ai.PathNode;
@@ -54,9 +55,11 @@ public abstract class GameObject {
 		BodyDef bodyDef = getDefaultBodyDef(x, y);
 		body = level.physicalWorld.createBody(bodyDef);
 		userData = new GameObjectData(id, category);
+		
 		body.setUserData(userData);
+		
 		body.setBullet(bullet);		
-		fixture = body.createFixture(polyShape, 20);					
+		fixture = body.createFixture(polyShape, 5);					
 		fixture.setFriction(0f);
 		
 		polyShape.dispose();
@@ -72,6 +75,7 @@ public abstract class GameObject {
 		bodyDef.gravityScale = 1.0f;	
 		bodyDef.fixedRotation = true;
 		bodyDef.linearDamping = 10f;
+		
 		return bodyDef;
 	}
 
@@ -128,6 +132,21 @@ public abstract class GameObject {
 			}
 		}
 		return ladderStatus;
+	}
+	
+	public boolean isTopOfTheLadder() {
+		Vector2 position = body.getPosition();						
+		Vector2 currentTile = getTile();
+		int tileX = (int)currentTile.x;		
+		int tileY = (int)currentTile.y - 1;		
+		int[][] tiles = level.tiledMap.layers.get(2).tiles;						
+		if (tileY < tiles.length) { 						
+			if ("1".equals(level.tiledMap.getTileProperty(tiles[tileY][tileX], "ladder"))) {				
+				return false;
+			}
+		}
+		System.out.println("top ladder");
+		return true;
 	}
 	
 	private Vector2 getTileVector = new Vector2();

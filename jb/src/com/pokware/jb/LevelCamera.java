@@ -20,7 +20,7 @@ public class LevelCamera {
 	private int levelHeightInMeters;
 	private int levelWidthInMeters;
 	public Body cameraBody;
-	
+		
 	public LevelCamera(float zoom, int levelWidthInMeters, int levelHeightInMeters, Level level) {
 		this.viewPortWidthInMeters = (int) ((Gdx.graphics.getWidth() / 32) * Level.METERS_PER_TILE);
 		this.viewPortHeightInMeters = (int) ((Gdx.graphics.getHeight() / 32) * Level.METERS_PER_TILE);
@@ -43,85 +43,66 @@ public class LevelCamera {
 	public void update(Jack jack) {
 		front.update();
 		parrallax.update();		
-		camTrackJack(jack);
+		smoothTrackJack(jack);
 	}
 
 	Vector3 jackScreenPosition = new Vector3();
 	
-	private void camTrackJack(Jack jack) {
-		Vector2 position = jack.body.getPosition();
-		jackScreenPosition.x = position.x;
-		jackScreenPosition.y = position.y;
+	public void focusOnJack(Jack jack) {			
+		Vector2 jackWorldPosition = jack.body.getPosition();
+		Vector2 cameraBodyPosition = cameraBody.getPosition();		
+		cameraBodyPosition.x = jackWorldPosition.x;
+		cameraBodyPosition.y = jackWorldPosition.y;
+		cameraBody.setLinearVelocity(0,0);
+	}
+	
+	private void smoothTrackJack(Jack jack) {		
+		
+		Vector2 jackWorldPosition = jack.body.getPosition();		
+		jackScreenPosition.x = jackWorldPosition.x;
+		jackScreenPosition.y = jackWorldPosition.y;
 		front.project(jackScreenPosition);
 		
+		Vector2 cameraBodyPosition = cameraBody.getPosition();		
+				
 		int halfViewPortWidth = viewPortWidthInMeters / 2;
 		int halfViewPortHeight = viewPortHeightInMeters / 2;
-		int screenWidth = Gdx.graphics.getWidth();
-		int screenHeight = Gdx.graphics.getHeight();
 		
-		Vector2 camVector = position.sub(front.position.x, front.position.y);
+		Vector2 camVector = jackWorldPosition.sub(front.position.x, front.position.y).mul(2);
+				
+		if (cameraBodyPosition.x < halfViewPortWidth * zoom) {					
+			cameraBodyPosition.x = halfViewPortWidth * zoom;				
+			if (camVector.x < 0) {
+				camVector.x = 0;
+			}
+		}
+		if (cameraBodyPosition.x > levelWidthInMeters - halfViewPortWidth * zoom) {				
+			cameraBodyPosition.x = levelWidthInMeters - halfViewPortWidth * zoom;			
+			if (camVector.x > 0) {
+				camVector.x = 0;
+			}
+		}
+		if (cameraBodyPosition.y < halfViewPortHeight* zoom) {			
+			cameraBodyPosition.y = halfViewPortHeight* zoom;			
+			if (camVector.y < 0) {
+				camVector.y = 0;
+			}
+		}
+		if (cameraBodyPosition.y > levelHeightInMeters - halfViewPortHeight* zoom) {
+			cameraBodyPosition.y = levelHeightInMeters - halfViewPortHeight* zoom;
+			if (camVector.y > 0) {
+				camVector.y = 0;
+			}
+		}
 		
+		front.position.x = cameraBodyPosition.x;
+		front.position.y = cameraBodyPosition.y;
+	
 		cameraBody.setLinearVelocity(camVector);
-		
-		front.position.x = cameraBody.getPosition().x;
-		front.position.y = cameraBody.getPosition().y;
-				
-		/*if (front.position.x < halfViewPortWidth * zoom) {
-			front.position.x = halfViewPortWidth * zoom;			
-		}
-		if (front.position.x > levelWidthInMeters - halfViewPortWidth * zoom) {
-			front.position.x = levelWidthInMeters - halfViewPortWidth * zoom;
-		}
-		if (front.position.y < halfViewPortHeight* zoom) {
-			front.position.y = halfViewPortHeight* zoom;
-		}
-		if (front.position.y > levelHeightInMeters - halfViewPortHeight* zoom) {
-			front.position.y = levelHeightInMeters - halfViewPortHeight* zoom;
-		}*/
-				
+			
 		parrallax.position.x = front.position.x / 2 + 20;
 		parrallax.position.y = front.position.y / 2 + 8;						
 	}
 	
-	/*private void camTrackJack(Jack jack) {
-		Vector2 position = jack.body.getPosition();
-		jackScreenPosition.x = position.x;
-		jackScreenPosition.y = position.y;
-		front.project(jackScreenPosition);
-		
-		int halfViewPortWidth = viewPortWidthInMeters / 2;
-		int halfViewPortHeight = viewPortHeightInMeters / 2;
-		int screenWidth = Gdx.graphics.getWidth();
-		int screenHeight = Gdx.graphics.getHeight();
-		
-		if (jackScreenPosition.x < screenWidth/3) {			
-			front.position.x-= 0.2f;	
-		}		
-		if (jackScreenPosition.x > screenWidth - (screenWidth/3)) {
-			front.position.x+= 0.2f;
-		}
-		if (jackScreenPosition.y < screenHeight/4) {
-			front.position.y-= 0.2f;
-		}
-		if (jackScreenPosition.y > screenHeight - (screenHeight/4)) {
-			front.position.y+= 0.2f;
-		}		
-		
-		if (front.position.x < halfViewPortWidth * zoom) {
-			front.position.x = halfViewPortWidth * zoom;			
-		}
-		if (front.position.x > levelWidthInMeters - halfViewPortWidth * zoom) {
-			front.position.x = levelWidthInMeters - halfViewPortWidth * zoom;
-		}
-		if (front.position.y < halfViewPortHeight* zoom) {
-			front.position.y = halfViewPortHeight* zoom;
-		}
-		if (front.position.y > levelHeightInMeters - halfViewPortHeight* zoom) {
-			front.position.y = levelHeightInMeters - halfViewPortHeight* zoom;
-		}
-				
-		parrallax.position.x = front.position.x / 2 + 20;
-		parrallax.position.y = front.position.y / 2 + 8;						
-	}*/
-
 }
+ 

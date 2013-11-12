@@ -6,10 +6,15 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.pokware.jb.Art;
 import com.pokware.jb.Level;
 
 public class Jack extends GameObject implements Climber, InputProcessor {
+	
+	public static float WALK_POWER = 3;
+	public static float JUMP_POWER = 700;
+	public static float CLIMB_POWER = 200;
 	
 	public static enum JackStateEnum {
 		IDLE(Art.walkingLeftAnimation), 
@@ -35,9 +40,9 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	private Vector2 antiGravityVector;
 			
 	public Jack(Level level, float x, float y) {
-		super(level, x, y, CollisionCategory.JACK, true);
+		super(level, x, y, CollisionCategory.JACK, false);
 		body.setBullet(true);			
-		antiGravityVector = level.gravityVector.cpy().mul(-body.getMass()).mul(0.8f);
+		antiGravityVector = level.gravityVector.cpy().mul(-body.getMass());
 		
 		Gdx.input.setInputProcessor(this);		
 	}	
@@ -50,18 +55,11 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	@Override
 	public TextureRegion getTextureRegion(float tick) {
 		state = JackStateEnum.IDLE;
-		body.setGravityScale(0.8f);
-//		body.setLinearDamping(0f);
-				
-		int ladderStatus = getLadderStatus();	
-		
-		
-		
+
+		int ladderStatus = getLadderStatus();			
 		float goRight = goRight();
 		float goLeft = goLeft();
-		/*float goUp = goUp();
-		float goDown = goDown();*/
-		
+				
 		if (lastLadderStatus == GameObject.NO_LADDER && 
 				(ladderStatus == GameObject.LADDER || ladderStatus == GameObject.LADDER + GameObject.LADDER_BELOW)) {
 			if (body.getLinearVelocity().y != 0.0f) {
@@ -70,20 +68,24 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		}
 		else {
 			if (goRight > 0) {
-				if (ladderStatus != GameObject.LADDER && ladderStatus != GameObject.LADDER + GameObject.LADDER_BELOW) {
-					body.applyLinearImpulse(forceVector.set(6.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);
-				}
-				else {
-					body.applyLinearImpulse(forceVector.set(3.2f*goRight, 0.0f), FORCE_APPLICATION_POINT);
+				switch(ladderStatus) {
+				case GameObject.LADDER:
+					body.applyLinearImpulse(forceVector.set(6.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;
+				case GameObject.LADDER + GameObject.LADDER_BELOW:
+					body.applyLinearImpulse(forceVector.set(0.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;
+				default:
+					body.applyLinearImpulse(forceVector.set(6.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;		
 				}
 			}		
 			else if (goLeft > 0) {
-				if (ladderStatus != GameObject.LADDER && ladderStatus != GameObject.LADDER + GameObject.LADDER_BELOW) {
-					body.applyLinearImpulse(forceVector.set(-6.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);
-				}
-				else {
-					body.applyLinearImpulse(forceVector.set(-3.2f*goLeft, 0.0f), FORCE_APPLICATION_POINT);
-				}
+				switch(ladderStatus) {				
+				case GameObject.LADDER:
+					body.applyLinearImpulse(forceVector.set(-6.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;
+				case GameObject.LADDER + GameObject.LADDER_BELOW:
+					body.applyLinearImpulse(forceVector.set(-0.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;				
+				default:
+					body.applyLinearImpulse(forceVector.set(-6.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;
+				}								
 			}
 		}
 		
@@ -142,14 +144,24 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 
 	private float goLeft() {
 		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
-			return 12f;
+			return WALK_POWER;
 		}
 		else {
 			float accelerometerY = Gdx.input.getAccelerometerY();
-			return accelerometerY < -0.1f ? Math.min(-accelerometerY*8, 12f) : 0f;  			
+			return accelerometerY < -0.2f ? Math.min(-accelerometerY*WALK_POWER*2, WALK_POWER) : 0f;  			
 		}		
 	}
 
+	public float goRight() {
+		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+			return WALK_POWER;
+		}
+		else {
+			float accelerometerY = Gdx.input.getAccelerometerY();
+			return accelerometerY > 0.2f ? Math.min(accelerometerY*WALK_POWER*2, WALK_POWER) : 0f;  			
+		}
+	}
+	
 	@Override
 	public boolean isClimbing() {
 		return state == JackStateEnum.CLIMBING_DOWN || state == JackStateEnum.CLIMBING_IDLE || state == JackStateEnum.CLIMBING_UP;
@@ -165,15 +177,6 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		}			
 	}
 
-	public float goRight() {
-		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-			return 12f;
-		}
-		else {
-			float accelerometerY = Gdx.input.getAccelerometerY();
-			return accelerometerY > 0.1f ? Math.min(accelerometerY*8, 12f) : 0f;  			
-		}
-	}
 
 	public JackStateEnum getState() {
 		return state;
@@ -187,15 +190,18 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 
 	final Vector2 jumpVector = new Vector2();
 	
-	public void jump() {				
-		int ladderStatus = getLadderStatus();
-		boolean ladder = ladderStatus == GameObject.LADDER || ladderStatus == GameObject.LADDER + GameObject.LADDER_BELOW;
-		if (ladder) {
-			body.applyLinearImpulse(jumpVector.set(0f, 1200f), FORCE_APPLICATION_POINT);
+	public void jump() {
+		if (wasClimbing) {		
+			if (isTopOfTheLadder()) {
+				body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER*2), FORCE_APPLICATION_POINT);	
+			}
+			else {
+				body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER), FORCE_APPLICATION_POINT);
+			}						
 		} else {
 			Vector2 linearVelocity = body.getLinearVelocity();			
 			if (linearVelocity.y == 0.0f) {				
-				body.applyLinearImpulse(jumpVector.set(0f, 3000f+Math.abs(linearVelocity.x)*50), FORCE_APPLICATION_POINT);				
+				body.applyLinearImpulse(jumpVector.set(0f, JUMP_POWER), FORCE_APPLICATION_POINT);				
 			}
 		}		
 	}
@@ -225,29 +231,71 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	public boolean scrolled(int amount) {	
 		return false;
 	}
-	
+		 	
 	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {							
 		jump();
 		return true;
 	}
+
+	private Vector3 curr = new Vector3();
+	private Vector3 last = new Vector3();
+	private Vector3 delta = new Vector3();
+	public boolean wasDraggingUp = false;
+	public boolean wasDraggingDown = false;
 	
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		/*camera.unproject(curr.set(x, y, 0));
-
-		if (!(last.x == -1 && last.y == -1 && last.z == -1)) {
-			camera.unproject(delta.set(last.x, last.y, 0));
+				
+		level.camera.front.unproject(curr.set(screenX, screenY, 0));
+		if (!(last.x == -1 && last.y == -1 )) {
+			level.camera.front.unproject(delta.set(last.x, last.y, 0));
 			delta.sub(curr);
-			camera.position.add(delta.x, delta.y, 0);			
-			parrallaxCamera.position.add(delta.x/5f, delta.y/5f, 0);			
+			
+			/*if (goUp > 0) {					
+			if (ladderStatus == GameObject.LADDER || ladderStatus == GameObject.LADDER + GameObject.LADDER_BELOW) {
+				state = JackStateEnum.CLIMBING_UP;
+				body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT);
+				
+				body.applyLinearImpulse(forceVector.set(0.0f, 6.4f*goUp), FORCE_APPLICATION_POINT);
+			}
+			else if (ladderStatus == GameObject.LADDER_BELOW && wasClimbing) {
+				// Last steps of the ladder: re-enable gravity so jack "jump" onto the platform
+				state = JackStateEnum.IDLE;
+				body.setLinearVelocity(0f, 64f);
+			}
+		}		
+		else if (goDown > 0) {					
+			if (ladderStatus == GameObject.LADDER_BELOW || ladderStatus == GameObject.LADDER + GameObject.LADDER_BELOW) {
+				state = JackStateEnum.CLIMBING_DOWN;
+				body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT);
+				
+				body.applyLinearImpulse(forceVector.set(0.0f, -6.4f*goDown), FORCE_APPLICATION_POINT);
+			}
+		}*/
+	
+			if (lastLadderStatus == GameObject.LADDER || lastLadderStatus == GameObject.LADDER + GameObject.LADDER_BELOW || lastLadderStatus == GameObject.LADDER_BELOW) {					
+				if (delta.y < 0) {
+					// drag up				
+					wasDraggingUp = true;
+					body.applyLinearImpulse(forceVector.set(0.0f, -delta.y*20), FORCE_APPLICATION_POINT);
+				}
+				else if (delta.y > 0) {
+					// drag down								
+					wasDraggingDown = true;
+					body.applyLinearImpulse(forceVector.set(0.0f, -delta.y*20), FORCE_APPLICATION_POINT);
+				}					
+			}
 		}
-		last.set(x, y, 0);*/
+		last.set(screenX, screenY, 0);
 		return false;
 	}
 	
 	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {	
-		return false;
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {				
+		wasDraggingDown = false;
+		wasDraggingUp = false;
+		last.set(-1, -1, -1);
+		return true;
 	}
 }

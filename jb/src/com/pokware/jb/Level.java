@@ -84,7 +84,7 @@ public class Level {
 		
 		objectManager.populateLevel();
 		
-		camera = new LevelCamera(zoom, tiledMap.width*METERS_PER_TILE, tiledMap.height*METERS_PER_TILE, this);			
+		camera = new LevelCamera(zoom, tiledMap.width*METERS_PER_TILE, tiledMap.height*METERS_PER_TILE, this);		
 	}
 
 

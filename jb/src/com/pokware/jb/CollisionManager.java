@@ -79,9 +79,11 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		
 		if ((userDataA.collisionCategory == CollisionCategory.JACK && userDataB.collisionCategory == CollisionCategory.PLATFORM)
 				|| (userDataB.collisionCategory == CollisionCategory.JACK && userDataA.collisionCategory == CollisionCategory.PLATFORM)) {
-			if (objectManager.getJack().goDown() > 0 && objectManager.getJack().getLadderStatus() >= 2) {
+			// drop down the the ladder below
+			if (objectManager.getJack().wasDraggingDown && objectManager.getJack().getLadderStatus() >= 2) {
 				contact.setEnabled(false);
 			} else if (objectManager.getJack().isClimbing()) {
+				
 				contact.setEnabled(false);
 			}
 		}		
