@@ -7,7 +7,7 @@ import com.pokware.jb.Level;
 
 public class Spider extends GameObject {
 
-	private final static float SPIDER_SPEED = 16.0f;
+	private final static float SPIDER_SPEED = 3.0f;
 	private final static float SPIDER_PURSUIT_DISTANCE = 3.0f;
 	
 	final static Vector2 jumpRightImpulseVector = new Vector2(SPIDER_SPEED * 10, SPIDER_SPEED * 10);

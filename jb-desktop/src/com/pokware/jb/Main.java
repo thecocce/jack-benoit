@@ -18,9 +18,9 @@ public class Main {
 		cfg.height = 480;
 		
 		// Generate libgdx-friendly assets
-		deleteFiles();
+		/*deleteFiles();
 		processTiledMaps();
-		processSprites();
+		processSprites();*/
 		
 		new LwjglApplication(new JackBenoitApplication(1f), cfg);
 	}

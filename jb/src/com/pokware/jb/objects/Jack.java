@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.pokware.jb.Art;
 import com.pokware.jb.Level;
 
@@ -45,7 +48,23 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		antiGravityVector = level.gravityVector.cpy().mul(-body.getMass());
 		
 		Gdx.input.setInputProcessor(this);		
-	}	
+	}
+	
+	
+	protected void createFixtures(Body body, float widthRatio, float heightRatio) {
+		PolygonShape polyShape = new PolygonShape();
+		polyShape.setAsBox(width*0.2f, height*0.4f);
+		fixture = body.createFixture(polyShape, 5);
+		fixture.setFriction(0f);
+		polyShape.dispose();		
+		
+		CircleShape circle = new CircleShape();
+		circle.setRadius(0.40f);
+		circle.setPosition(new Vector2(0f, -0.5f));
+		fixture = body.createFixture(circle, 0);
+		fixture.setFriction(0f);
+		circle.dispose();		
+	}
 
 	final Vector2 forceVector = new Vector2();
 	boolean wasClimbing = false;
@@ -72,7 +91,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 				case GameObject.LADDER:
 					body.applyLinearImpulse(forceVector.set(6.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;
 				case GameObject.LADDER + GameObject.LADDER_BELOW:
-					body.applyLinearImpulse(forceVector.set(0.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;
+					body.applyLinearImpulse(forceVector.set(2.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;
 				default:
 					body.applyLinearImpulse(forceVector.set(6.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;		
 				}
@@ -82,7 +101,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 				case GameObject.LADDER:
 					body.applyLinearImpulse(forceVector.set(-6.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;
 				case GameObject.LADDER + GameObject.LADDER_BELOW:
-					body.applyLinearImpulse(forceVector.set(-0.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;				
+					body.applyLinearImpulse(forceVector.set(-2.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;				
 				default:
 					body.applyLinearImpulse(forceVector.set(-6.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;
 				}								
@@ -200,9 +219,10 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 			}						
 		} else {
 			Vector2 linearVelocity = body.getLinearVelocity();			
-			if (linearVelocity.y == 0.0f) {				
+			if (Math.abs(linearVelocity.y) < 0.0001f) {							
 				body.applyLinearImpulse(jumpVector.set(0f, JUMP_POWER), FORCE_APPLICATION_POINT);				
 			}
+			
 		}		
 	}
 		

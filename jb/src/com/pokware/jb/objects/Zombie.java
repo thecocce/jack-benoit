@@ -9,13 +9,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.pokware.jb.Art;
 import com.pokware.jb.Level;
 import com.pokware.jb.ai.PathNode;
 
 public class Zombie extends GameObject implements Climber {
 
-	private final static float ZOMBIE_SPEED = 16.0f;
+	private final static float ZOMBIE_SPEED = 4.0f;
 	private final static float ZOMBIE_PURSUIT_DISTANCE = 10.0f;
 	private final static float ZOMBIE_MAX_TIME_TO_REACH_WAYPOINT = 20.0f; // sec
 
@@ -36,6 +39,22 @@ public class Zombie extends GameObject implements Climber {
 	public Zombie(Level level, float x, float y) {
 		super(level, x, y, CollisionCategory.ENEMY, true);
 		antiGravityVector = level.gravityVector.cpy().mul(-body.getMass()*1.1f);
+	}
+	
+	@Override
+	protected void createFixtures(Body body, float widthRatio, float heightRatio) {
+		PolygonShape polyShape = new PolygonShape();
+		polyShape.setAsBox(width*0.2f, height*0.4f);
+		fixture = body.createFixture(polyShape, 5);
+		fixture.setFriction(0f);
+		polyShape.dispose();		
+		
+		CircleShape circle = new CircleShape();
+		circle.setRadius(0.40f);
+		circle.setPosition(new Vector2(0f, -0.5f));
+		fixture = body.createFixture(circle, 0);
+		fixture.setFriction(0f);
+		circle.dispose();
 	}
 
 	ShapeRenderer shapeRenderer = new ShapeRenderer();

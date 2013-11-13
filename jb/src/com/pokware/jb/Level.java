@@ -6,7 +6,6 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.tiled.TileAtlas;
 import com.badlogic.gdx.graphics.g2d.tiled.TileMapRenderer;
@@ -16,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -42,15 +42,10 @@ public class Level {
 	public TileMapRenderer tileMapRenderer;
 	public TileAtlas tileAtlas;	
 	public LevelObjectManager objectManager;
-	public PathingTool pathingTool;
-	
-	// Camera stuff
+	public PathingTool pathingTool;	
 	public LevelCamera camera;
-	/*public OrthographicCamera camera;
-	public OrthographicCamera parrallaxCamera;
-	public OrthoCamController cameraController;*/	
 	
-	public Vector2 gravityVector = new Vector2(0f, -200f);
+	public Vector2 gravityVector = new Vector2(0f, -300f);
 		
 	public Level(String mapName, float zoom) {
 		super();
@@ -132,6 +127,7 @@ public class Level {
 	private void createPhysicsWorld() {
 		
 		int[][] tiles = tiledMap.layers.get(BACKGROUND_LAYERS[0]).tiles;
+		int[][] ladders = tiledMap.layers.get(BACKGROUND_LAYERS[1]).tiles;
 
 		/*
 		 * tileX, tileY coords: 
@@ -151,9 +147,13 @@ public class Level {
 			int firstColIndex = 1;			
 			int lastColIndex = row.length - 1;			
 			for (int tileX = firstColIndex; tileX < lastColIndex; tileX++) {
-				int id = row[tileX];
-				String tileProperty = tiledMap.getTileProperty(id, "col");
-				if ("1".equals(tileProperty)) {
+				int platformTileId = row[tileX];
+				String platformTileProperty = tiledMap.getTileProperty(platformTileId, "col");
+				
+				int ladderTileId = ladders[y][tileX];
+				String ladderTileProperty = tiledMap.getTileProperty(ladderTileId, "ladder");
+				
+				if ("1".equals(platformTileProperty) && !"1".equals(ladderTileProperty)) {
 					if (startRectTileX == -1) {
 						startRectTileX = tileX;
 						startRectTileY = tileY;
@@ -172,6 +172,23 @@ public class Level {
 			}
 		}
 		
+		for (int y = tiles.length - 2, tileY = 1; y >= 1; y--, tileY++) {
+			int[] row = tiles[y];				
+			int firstColIndex = 1;			
+			int lastColIndex = row.length - 1;			
+			for (int tileX = firstColIndex; tileX < lastColIndex; tileX++) {
+				int platformTileId = row[tileX];
+				String platformTileProperty = tiledMap.getTileProperty(platformTileId, "col");
+				
+				int ladderTileId = ladders[y][tileX];
+				String ladderTileProperty = tiledMap.getTileProperty(ladderTileId, "ladder");
+				
+				if ("1".equals(platformTileProperty) && "1".equals(ladderTileProperty)) {
+					createTraversableEdge(tileX, tileY, tileX+1, tileY);
+				}				
+			}
+		}
+				
 		// Ground		
 		createRect(0, 0, tiles[0].length-1, 0);
 		// Ceiling
@@ -214,13 +231,28 @@ public class Level {
 		fixtureDef.filter.groupIndex = 0;
 		body.createFixture(fixtureDef);
 
-		body.setUserData(new GameObjectData(-1, CollisionCategory.PLATFORM));
+		body.setUserData(new GameObjectData(-1, CollisionCategory.SOLID_PLATFORM));		
 		groundPoly.dispose();
 	}
 
+	private void createTraversableEdge(int startTileX, int startTileY, int endTileX, int endTileY) {						
+		EdgeShape edge = new EdgeShape();;
+		edge.set(startTileX * METERS_PER_TILE, (startTileY+1) * METERS_PER_TILE, endTileX * METERS_PER_TILE, (endTileY+1) * METERS_PER_TILE);
+				
+		BodyDef groundBodyDef = new BodyDef();
+		groundBodyDef.type = BodyType.StaticBody;
+		Body body = physicalWorld.createBody(groundBodyDef);
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = edge;
+		fixtureDef.filter.groupIndex = 0;
+		body.createFixture(fixtureDef);
 
+		body.setUserData(new GameObjectData(-1, CollisionCategory.TRAVERSABLE_PLATFORM));
+		edge.dispose();
+	}
+	
 	public void step(float deltaTime, int velocityIterations, int positionIterations) {		
-		physicalWorld.step(deltaTime, velocityIterations, positionIterations);
+		physicalWorld.step(deltaTime*0.7f, velocityIterations, positionIterations);
 	}
 	
 }

@@ -8,8 +8,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.pokware.jb.Level;
 import com.pokware.jb.ai.PathNode;
@@ -49,25 +49,26 @@ public abstract class GameObject {
 		this.width = Level.METERS_PER_TILE * pixelWidth / 32f;
 		this.height = Level.METERS_PER_TILE * pixelHeight / 32f;
 					
-		PolygonShape polyShape = new PolygonShape();
-		polyShape.setAsBox(width*widthRatio, height*heightRatio);
-		
-		BodyDef bodyDef = getDefaultBodyDef(x, y);
+		BodyDef bodyDef = getBodyDef(x, y);
 		body = level.physicalWorld.createBody(bodyDef);
 		userData = new GameObjectData(id, category);
 		
-		body.setUserData(userData);
-		
+		body.setUserData(userData);		
 		body.setBullet(bullet);		
-		fixture = body.createFixture(polyShape, 5);					
-		fixture.setFriction(0f);
 		
-		polyShape.dispose();
-		
+		createFixtures(body, widthRatio, heightRatio);		
 		this.level=level;
 	}
 
-	private BodyDef getDefaultBodyDef(float x, float y) {
+	protected void createFixtures(Body body, float widthRatio, float heightRatio) {
+		PolygonShape polyShape = new PolygonShape();
+		polyShape.setAsBox(width*widthRatio, height*heightRatio);				
+		fixture = body.createFixture(polyShape, 5);
+		fixture.setFriction(0f);
+		polyShape.dispose();		
+	}
+
+	protected BodyDef getBodyDef(float x, float y) {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.x = x;

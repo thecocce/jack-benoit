@@ -33,20 +33,21 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		CollisionCategory categoryB = userDataB.collisionCategory;
 		
 		// Disable jack-platform collision when climbing
-		if ((categoryA == CollisionCategory.JACK && categoryB == CollisionCategory.PLATFORM) 
-				|| (categoryB == CollisionCategory.JACK && categoryA == CollisionCategory.PLATFORM)) {					
+		if ((categoryA == CollisionCategory.JACK && categoryB == CollisionCategory.TRAVERSABLE_PLATFORM) 
+				|| (categoryB == CollisionCategory.JACK && categoryA == CollisionCategory.TRAVERSABLE_PLATFORM)) {					
 			Jack jack = objectManager.getJack();
+			System.out.println("should collide? " + !jack.isClimbing());
 			return !jack.isClimbing();			
 		}
 		// Disable enemy-platform collision when climbing
-		else if (categoryA == CollisionCategory.ENEMY && categoryB == CollisionCategory.PLATFORM) {
+		else if (categoryA == CollisionCategory.ENEMY && categoryB == CollisionCategory.TRAVERSABLE_PLATFORM) {
 			GameObject gameObject = objectManager.get(userDataA.id);
 			if (gameObject instanceof Climber) {
 				return !((Climber)gameObject).isClimbing();
 			}
 			return true;
 		}
-		else if (categoryB == CollisionCategory.ENEMY && categoryA == CollisionCategory.PLATFORM) {			
+		else if (categoryB == CollisionCategory.ENEMY && categoryA == CollisionCategory.TRAVERSABLE_PLATFORM) {			
 			GameObject gameObject = objectManager.get(userDataB.id);
 			if (gameObject instanceof Climber) {
 				return !((Climber)gameObject).isClimbing();
@@ -54,7 +55,7 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 			return true;			
 		}
 		
-		else if (categoryA == CollisionCategory.ENEMY && categoryB == CollisionCategory.COLLECTABLE) {			
+		if (categoryA == CollisionCategory.ENEMY && categoryB == CollisionCategory.COLLECTABLE) {			
 			return false;
 		}
 		else if (categoryB == CollisionCategory.ENEMY && categoryA == CollisionCategory.COLLECTABLE) {			
@@ -77,17 +78,15 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		GameObjectData userDataA = (GameObjectData) bodyA.getUserData();		
 		GameObjectData userDataB = (GameObjectData) bodyB.getUserData();
 		
-		if ((userDataA.collisionCategory == CollisionCategory.JACK && userDataB.collisionCategory == CollisionCategory.PLATFORM)
-				|| (userDataB.collisionCategory == CollisionCategory.JACK && userDataA.collisionCategory == CollisionCategory.PLATFORM)) {
+		Jack jack = objectManager.getJack();
+		if ((userDataA.collisionCategory == CollisionCategory.JACK && userDataB.collisionCategory == CollisionCategory.TRAVERSABLE_PLATFORM)
+				|| (userDataB.collisionCategory == CollisionCategory.JACK && userDataA.collisionCategory == CollisionCategory.TRAVERSABLE_PLATFORM)) {
 			// drop down the the ladder below
-			if (objectManager.getJack().wasDraggingDown && objectManager.getJack().getLadderStatus() >= 2) {
-				contact.setEnabled(false);
-			} else if (objectManager.getJack().isClimbing()) {
-				
+			if (jack.wasDraggingDown || jack.isClimbing()) {
 				contact.setEnabled(false);
 			}
-		}		
-		else if (userDataA.collisionCategory == CollisionCategory.ENEMY && userDataB.collisionCategory == CollisionCategory.PLATFORM) {
+		}
+		else if (userDataA.collisionCategory == CollisionCategory.ENEMY && userDataB.collisionCategory == CollisionCategory.TRAVERSABLE_PLATFORM) {
 			GameObject gameObject = objectManager.get(userDataA.id);			
 			if (gameObject instanceof Climber) { 
 				if (((Climber) gameObject).isClimbing()) {
@@ -95,7 +94,7 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 				}
 			}
 		}
-		else if ((userDataB.collisionCategory == CollisionCategory.ENEMY && userDataA.collisionCategory == CollisionCategory.PLATFORM)) {
+		else if ((userDataB.collisionCategory == CollisionCategory.ENEMY && userDataA.collisionCategory == CollisionCategory.TRAVERSABLE_PLATFORM)) {
 			GameObject gameObject = objectManager.get(userDataB.id);
 			if (gameObject instanceof Climber) {
 				if (((Climber) gameObject).isClimbing()) {
@@ -118,10 +117,10 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		GameObjectData userDataA = (GameObjectData) bodyA.getUserData();
 		GameObjectData userDataB = (GameObjectData) bodyB.getUserData();
 		
-		if (userDataA.collisionCategory == CollisionCategory.PLATFORM && userDataB.collisionCategory != CollisionCategory.PLATFORM) {
+		if (userDataA.collisionCategory == CollisionCategory.SOLID_PLATFORM && userDataB.collisionCategory != CollisionCategory.SOLID_PLATFORM) {
 			userDataB.flying = true;
 		}
-		else if (userDataB.collisionCategory == CollisionCategory.PLATFORM && userDataA.collisionCategory != CollisionCategory.PLATFORM) {
+		else if (userDataB.collisionCategory == CollisionCategory.SOLID_PLATFORM && userDataA.collisionCategory != CollisionCategory.SOLID_PLATFORM) {
 			userDataA.flying = true;
 		}
 	}
@@ -159,10 +158,10 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 //			Art.coinSound.play();
 			userDataB.hidden = true;
 		}			
-		else if (userDataA.collisionCategory == CollisionCategory.PLATFORM && userDataB.collisionCategory != CollisionCategory.PLATFORM) {
+		else if (userDataA.collisionCategory == CollisionCategory.SOLID_PLATFORM && userDataB.collisionCategory != CollisionCategory.SOLID_PLATFORM) {
 			userDataB.flying = false;
 		}
-		else if (userDataB.collisionCategory == CollisionCategory.PLATFORM && userDataA.collisionCategory != CollisionCategory.PLATFORM) {
+		else if (userDataB.collisionCategory == CollisionCategory.SOLID_PLATFORM && userDataA.collisionCategory != CollisionCategory.SOLID_PLATFORM) {
 			userDataA.flying = false;
 		}
 	}

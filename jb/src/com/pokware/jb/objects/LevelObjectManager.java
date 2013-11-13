@@ -78,7 +78,7 @@ public class LevelObjectManager {
 				int id = row[x];
 				String tileProperty = level.tiledMap.getTileProperty(id, "spawn");
 				int mapHeightInMeters = level.tiledMap.height*Level.METERS_PER_TILE;
-				/*if ("Spider".equals(tileProperty)) {	
+				if ("Spider".equals(tileProperty)) {	
 					float xPosition = x*Level.METERS_PER_TILE+1;
 					float yPosition = y*Level.METERS_PER_TILE+2.2f;
 					add(new Spider(level, xPosition, mapHeightInMeters-yPosition));
@@ -97,7 +97,7 @@ public class LevelObjectManager {
 					float xPosition = x*Level.METERS_PER_TILE+1;
 					float yPosition = y*Level.METERS_PER_TILE+1;
 					add(new BigJewel(level, xPosition, mapHeightInMeters-yPosition, JewelType.BLUE));
-				}*/
+				}
 			}
 		}
 		/*for (TiledObjectGroup group : tiledMap.objectGroups) {
