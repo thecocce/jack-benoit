@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.pokware.jb.Art;
 import com.pokware.jb.Level;
 
-public class BigJewel extends GameObject {
+public class BigJewel extends GameObject implements Collectable {
 
 	private JewelType type;
 	
@@ -22,7 +22,10 @@ public class BigJewel extends GameObject {
 		}
 		return null;
 	}
-	
-	
+
+	@Override
+	public int getScoreValue() {
+		return type.getScoreValue() * 10;
+	}
 	
 }

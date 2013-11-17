@@ -59,23 +59,30 @@ FirePistol
   orig: 192, 32
   offset: 0, 0
   index: -1
-zombie
+heart
   rotate: false
   xy: 324, 2
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
-torch
+zombie
   rotate: false
   xy: 260, 70
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
-walk
+torch
   rotate: false
   xy: 260, 104
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+walk
+  rotate: false
+  xy: 260, 138
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
@@ -117,56 +124,49 @@ right
   index: -1
 earlysketch
   rotate: false
-  xy: 260, 138
+  xy: 390, 138
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 front
   rotate: false
-  xy: 294, 138
+  xy: 424, 138
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 back
   rotate: false
-  xy: 328, 138
+  xy: 458, 138
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 front
   rotate: false
-  xy: 362, 138
+  xy: 260, 172
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 web
   rotate: false
-  xy: 396, 138
+  xy: 294, 172
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 left
   rotate: false
-  xy: 430, 138
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-spider1
-  rotate: false
-  xy: 464, 138
+  xy: 328, 172
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-orange
   rotate: false
-  xy: 260, 172
+  xy: 362, 172
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
@@ -208,7 +208,14 @@ crystal-qubodup-ccby3-16-blue
   index: -1
 spider0
   rotate: false
-  xy: 390, 172
+  xy: 390, 206
+  size: 64, 16
+  orig: 64, 16
+  offset: 0, 0
+  index: -1
+spider1
+  rotate: false
+  xy: 2, 312
   size: 64, 16
   orig: 64, 16
   offset: 0, 0

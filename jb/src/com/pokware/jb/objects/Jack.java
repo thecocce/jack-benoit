@@ -39,7 +39,9 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	}
 
 	private JackStateEnum state = JackStateEnum.IDLE;
-		
+	private JackStateEnum lastState = null;
+	private int life = 3;
+	private int score;
 	private Vector2 antiGravityVector;
 			
 	public Jack(Level level, float x, float y) {
@@ -71,27 +73,31 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	
 	
 	int lastLadderStatus = 0;
+	
 	@Override
-	public TextureRegion getTextureRegion(float tick) {
-		state = JackStateEnum.IDLE;
-
-		int ladderStatus = getLadderStatus();			
+	public TextureRegion getTextureRegion(float tick) {		
+		state = lastState != null ? lastState : JackStateEnum.IDLE;
+		
+		int ladderStatus = getLadderStatus();
+		if (ladderStatus == GameObject.NO_LADDER && lastLadderStatus != NO_LADDER) {
+			state = JackStateEnum.IDLE;
+		}			
 		float goRight = goRight();
 		float goLeft = goLeft();
-				
+						
 		if (lastLadderStatus == GameObject.NO_LADDER && 
 				(ladderStatus == GameObject.LADDER || ladderStatus == GameObject.LADDER + GameObject.LADDER_BELOW)) {
 			if (body.getLinearVelocity().y != 0.0f) {
 				body.setLinearVelocity(0f, 0f);
 			}
 		}
-		else {
+		else {			
 			if (goRight > 0) {
 				switch(ladderStatus) {
 				case GameObject.LADDER:
-					body.applyLinearImpulse(forceVector.set(6.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;
+					body.applyLinearImpulse(forceVector.set(4.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;
 				case GameObject.LADDER + GameObject.LADDER_BELOW:
-					body.applyLinearImpulse(forceVector.set(2.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;
+					body.applyLinearImpulse(forceVector.set(1.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;
 				default:
 					body.applyLinearImpulse(forceVector.set(6.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;		
 				}
@@ -99,9 +105,9 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 			else if (goLeft > 0) {
 				switch(ladderStatus) {				
 				case GameObject.LADDER:
-					body.applyLinearImpulse(forceVector.set(-6.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;
+					body.applyLinearImpulse(forceVector.set(-4.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;
 				case GameObject.LADDER + GameObject.LADDER_BELOW:
-					body.applyLinearImpulse(forceVector.set(-2.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;				
+					body.applyLinearImpulse(forceVector.set(-1.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;				
 				default:
 					body.applyLinearImpulse(forceVector.set(-6.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;
 				}								
@@ -147,7 +153,8 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		boolean looping = Math.abs(body.getLinearVelocity().x) > 0.1f || Math.abs(body.getLinearVelocity().y) > 0.1f;
 		
 		lastLadderStatus = ladderStatus;
-		return state.getAnimation().getKeyFrame(tick, looping);
+		lastState = state;
+		return state.getAnimation().getKeyFrame(looping ? tick : 0, true);
 		
 	}
 
@@ -220,7 +227,8 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		} else {
 			Vector2 linearVelocity = body.getLinearVelocity();			
 			if (Math.abs(linearVelocity.y) < 0.0001f) {							
-				body.applyLinearImpulse(jumpVector.set(0f, JUMP_POWER), FORCE_APPLICATION_POINT);				
+				body.applyLinearImpulse(jumpVector.set(0f, JUMP_POWER), FORCE_APPLICATION_POINT);
+				Art.jumpSound.play();
 			}
 			
 		}		
@@ -263,6 +271,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	private Vector3 delta = new Vector3();
 	public boolean wasDraggingUp = false;
 	public boolean wasDraggingDown = false;
+	
 	
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
@@ -318,4 +327,31 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		last.set(-1, -1, -1);
 		return true;
 	}
+
+
+	public int getLife() {
+		return life;
+	}
+
+
+	public int getScore() {
+		return score;
+	}
+	
+	public void incScore(int delta) {
+		score+=delta;
+	}
+
+
+	public void decrementLife() {
+		if (life > 1) {
+			life--;
+		}
+	}
+
+	public void onItemCollected(Collectable collectable) {
+		incScore(collectable.getScoreValue());
+	}
+
+
 }

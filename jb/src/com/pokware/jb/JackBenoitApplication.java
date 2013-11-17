@@ -7,14 +7,11 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.pokware.jb.objects.Jack;
 
 public class JackBenoitApplication extends InputAdapter implements ApplicationListener {
 
-	private boolean preprocess = false;
 	private TextureAtlas atlas;
 	private SpriteBatch spriteBatch;
 	private long lastKeyTime = System.currentTimeMillis();
@@ -26,12 +23,7 @@ public class JackBenoitApplication extends InputAdapter implements ApplicationLi
 	public JackBenoitApplication(float zoom) {
 		this.zoom = zoom;
 	}
-	
-	public JackBenoitApplication(float zoom, boolean preprocess) {
-		this.zoom = zoom;
-		this.preprocess = preprocess;
-	}
-	
+		
 	@Override
 	public void render() {
 
@@ -55,9 +47,15 @@ public class JackBenoitApplication extends InputAdapter implements ApplicationLi
 		// Render sprites
 		spriteBatch.getProjectionMatrix().set(level.camera.front.combined);
 		spriteBatch.begin();
-		level.objectManager.draw(spriteBatch, timer);
+		level.objectManager.draw(spriteBatch, timer);		
 		spriteBatch.end();
-
+		
+		// Render HUD
+		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		spriteBatch.begin();
+		level.hud.draw(level, spriteBatch, timer);
+		spriteBatch.end();
+		
 		// Display info
 		if (level.debugMode) {
 			box2dDebugRenderer.render(level.physicalWorld, level.camera.front.combined);

@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.pokware.jb.objects.Climber;
+import com.pokware.jb.objects.Collectable;
 import com.pokware.jb.objects.GameObject;
 import com.pokware.jb.objects.CollisionCategory;
 import com.pokware.jb.objects.GameObjectData;
@@ -36,7 +37,6 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		if ((categoryA == CollisionCategory.JACK && categoryB == CollisionCategory.TRAVERSABLE_PLATFORM) 
 				|| (categoryB == CollisionCategory.JACK && categoryA == CollisionCategory.TRAVERSABLE_PLATFORM)) {					
 			Jack jack = objectManager.getJack();
-			System.out.println("should collide? " + !jack.isClimbing());
 			return !jack.isClimbing();			
 		}
 		// Disable enemy-platform collision when climbing
@@ -135,27 +135,41 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		GameObjectData userDataB = (GameObjectData) bodyB.getUserData();
 		if ((userDataA.collisionCategory == CollisionCategory.JACK && userDataB.collisionCategory == CollisionCategory.ENEMY)) {
 
-//			Art.hurtSound.play();
+			Art.hurtSound.play();
 			Vector2 positionA = bodyA.getPosition();
 			Vector2 positionB = bodyB.getPosition();
 			Vector2 b2a = positionA.sub(positionB).nor();
-			bodyA.applyLinearImpulse(b2a.mul(2000f), new Vector2(32, 32));			
+			bodyA.applyLinearImpulse(b2a.mul(200f), new Vector2(32, 32));		
+			
+			Jack jack = objectManager.getJack();
+			jack.decrementLife();
 		}
 		else if ((userDataB.collisionCategory == CollisionCategory.JACK && userDataA.collisionCategory == CollisionCategory.ENEMY)) {
-//			Art.hurtSound.play();
+			Art.hurtSound.play();
 				
 			Vector2 positionA = bodyA.getPosition();
 			Vector2 positionB = bodyB.getPosition();
 			Vector2 b2a = positionA.sub(positionB).nor();
-			bodyB.applyLinearImpulse(b2a.rotate(180f).mul(2000f), new Vector2(32, 32));
+			bodyB.applyLinearImpulse(b2a.rotate(180f).mul(200f), new Vector2(32, 32));
+			
+			Jack jack = objectManager.getJack();			
+			jack.decrementLife();
 			
 		}				
 		else if ((userDataB.collisionCategory == CollisionCategory.JACK && userDataA.collisionCategory == CollisionCategory.COLLECTABLE)) {
-//			Art.coinSound.play();
+			Art.coinSound.play();
+			if (!userDataA.hidden) {
+				Jack jack = objectManager.getJack();
+				jack.onItemCollected((Collectable)objectManager.get(userDataA.id));
+			}
 			userDataA.hidden = true;
 		}
 		else if ((userDataA.collisionCategory == CollisionCategory.JACK && userDataB.collisionCategory == CollisionCategory.COLLECTABLE)) {
-//			Art.coinSound.play();
+			Art.coinSound.play();
+			if (!userDataB.hidden) {
+				Jack jack = objectManager.getJack();
+				jack.onItemCollected((Collectable)objectManager.get(userDataB.id));
+			}
 			userDataB.hidden = true;
 		}			
 		else if (userDataA.collisionCategory == CollisionCategory.SOLID_PLATFORM && userDataB.collisionCategory != CollisionCategory.SOLID_PLATFORM) {

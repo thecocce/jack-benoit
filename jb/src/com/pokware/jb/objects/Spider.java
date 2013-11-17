@@ -25,7 +25,7 @@ public class Spider extends GameObject {
 	@Override
 	public TextureRegion getTextureRegion(float tick) {		
 		if (free) {
-			body.setGravityScale(1f);
+			body.setGravityScale(0.5f);
 			if (!userData.flying) {
 				if (Math.random() <= 0.5) {
 					if (Math.random() <= 0.2) {

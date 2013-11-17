@@ -43,8 +43,7 @@ public class Level {
 	public TileAtlas tileAtlas;	
 	public LevelObjectManager objectManager;
 	public PathingTool pathingTool;	
-	public LevelCamera camera;
-	
+	public LevelCamera camera;	
 	public Vector2 gravityVector = new Vector2(0f, -300f);
 		
 	public Level(String mapName, float zoom) {
@@ -55,7 +54,6 @@ public class Level {
 		this.font = new BitmapFont();
 		font.setColor(Color.YELLOW);
 		
-		 
 		this.physicalWorld = new World(gravityVector, true);		
 		this.objectManager = new LevelObjectManager(this);
 	
@@ -209,6 +207,7 @@ public class Level {
 	public int viewPortWidthInMeters;
 	public int viewPortHeightInMeters;
 	private Body cameraBody;
+	public HUD hud = new HUD();
 	
 
 	private void createRect(int startTileX, int startTileY, int endTileX, int endTileY) {
