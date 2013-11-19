@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.pokware.jb.Art;
+import com.pokware.jb.Constants;
 import com.pokware.jb.Level;
 import com.pokware.jb.ai.PathNode;
 
@@ -72,8 +73,8 @@ public class Zombie extends GameObject implements Climber {
 
 			for (int i = wayPointList.size() - 1; i >= 0; i--) {
 				PathNode wayPointNode = wayPointList.get(i);
-				float x1 = wayPointNode.x * Level.METERS_PER_TILE;
-				float y1 = (level.tiledMap.height - wayPointNode.y) * Level.METERS_PER_TILE;
+				float x1 = wayPointNode.x * Constants.METERS_PER_TILE;
+				float y1 = (level.tiledMap.height - wayPointNode.y) * Constants.METERS_PER_TILE;
 
 				shapeRenderer.begin(ShapeType.Rectangle);
 				shapeRenderer.setColor(Color.WHITE);
@@ -153,8 +154,8 @@ public class Zombie extends GameObject implements Climber {
 
 	private Vector2 distanceToWayPoint(PathNode pathNode) {
 		Vector2 position = body.getPosition();
-		float tileX = pathNode.x * Level.METERS_PER_TILE + 1;
-		float tileY = (level.tiledMap.height - pathNode.y) * Level.METERS_PER_TILE - 1;
+		float tileX = pathNode.x * Constants.METERS_PER_TILE + 1;
+		float tileY = (level.tiledMap.height - pathNode.y) * Constants.METERS_PER_TILE - 1;
 		return distanceToWayPointVector.set(tileX, tileY).sub(position);
 	}
 

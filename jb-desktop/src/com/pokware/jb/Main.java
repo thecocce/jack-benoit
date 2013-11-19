@@ -22,7 +22,7 @@ public class Main {
 		processTiledMaps();
 		processSprites();
 		
-		new LwjglApplication(new JackBenoitApplication(1f), cfg);
+		new LwjglApplication(new JackBenoitApplication(), cfg);
 	}
 	
 

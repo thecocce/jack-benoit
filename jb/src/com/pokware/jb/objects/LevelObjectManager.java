@@ -1,5 +1,6 @@
 package com.pokware.jb.objects;
 
+import static com.pokware.jb.Constants.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,34 +69,34 @@ public class LevelObjectManager {
 
 	public void populateLevel() {
 		
-		add(new Jack(level, 20f, level.tiledMap.height*Level.METERS_PER_TILE - 20f));
+		add(new Jack(level, 20f, level.tiledMap.height*METERS_PER_TILE - 20f));
 		
 		// Spawn from tiles
-		int[][] interactionTiles = level.tiledMap.layers.get(Level.SPRITE_LAYERS[0]).tiles;
+		int[][] interactionTiles = level.tiledMap.layers.get(SPRITE_LAYERS[0]).tiles;
 		for (int y = interactionTiles.length - 1; y > 0; y--) {
 			int[] row = interactionTiles[y];					
 			for (int x = 0; x < row.length; x++) {
 				int id = row[x];
 				String tileProperty = level.tiledMap.getTileProperty(id, "spawn");
-				int mapHeightInMeters = level.tiledMap.height*Level.METERS_PER_TILE;
+				int mapHeightInMeters = level.tiledMap.height*METERS_PER_TILE;
 				if ("Spider".equals(tileProperty)) {	
-					float xPosition = x*Level.METERS_PER_TILE+1;
-					float yPosition = y*Level.METERS_PER_TILE+2.2f;
+					float xPosition = x*METERS_PER_TILE+1;
+					float yPosition = y*METERS_PER_TILE+2.2f;
 					add(new Spider(level, xPosition, mapHeightInMeters-yPosition));
 				}
 				else if ("Zombie".equals(tileProperty)) {	
-					float xPosition = x*Level.METERS_PER_TILE+1;
-					float yPosition = y*Level.METERS_PER_TILE+1;
+					float xPosition = x*METERS_PER_TILE+1;
+					float yPosition = y*METERS_PER_TILE+1;
 					add(new Zombie(level, xPosition, mapHeightInMeters-yPosition));
 				}
 				else if("blue_jewel".equals(tileProperty)) {
-					float xPosition = x*Level.METERS_PER_TILE+1;
-					float yPosition = y*Level.METERS_PER_TILE+1;
+					float xPosition = x*METERS_PER_TILE+1;
+					float yPosition = y*METERS_PER_TILE+1;
 					add(new Jewel(level, xPosition, mapHeightInMeters-yPosition, JewelType.BLUE));
 				}
 				else if("big_blue_jewel".equals(tileProperty)) {
-					float xPosition = x*Level.METERS_PER_TILE+1;
-					float yPosition = y*Level.METERS_PER_TILE+1;
+					float xPosition = x*METERS_PER_TILE+1;
+					float yPosition = y*METERS_PER_TILE+1;
 					add(new BigJewel(level, xPosition, mapHeightInMeters-yPosition, JewelType.BLUE));
 				}
 			}

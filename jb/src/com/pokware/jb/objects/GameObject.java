@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.pokware.jb.Constants;
 import com.pokware.jb.Level;
 import com.pokware.jb.ai.PathNode;
 
@@ -45,8 +46,8 @@ public abstract class GameObject {
 	}
 	
 	private void init(Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category, float widthRatio, float heightRatio, boolean bullet) {
-		this.width = Level.METERS_PER_TILE * pixelWidth / 32f;
-		this.height = Level.METERS_PER_TILE * pixelHeight / 32f;
+		this.width = Constants.METERS_PER_TILE * pixelWidth / 32f;
+		this.height = Constants.METERS_PER_TILE * pixelHeight / 32f;
 					
 		BodyDef bodyDef = getBodyDef(x, y);
 		body = level.physicalWorld.createBody(bodyDef);
@@ -124,7 +125,7 @@ public abstract class GameObject {
 		}
 		
 		y = position.y-1.2f;
-		tileY = (int)((level.tiledMap.height*2-y)/Level.METERS_PER_TILE);
+		tileY = (int)((level.tiledMap.height*2-y)/Constants.METERS_PER_TILE);
 		
 		if (tileY < tiles.length) { 						
 			if ("1".equals(level.tiledMap.getTileProperty(tiles[tileY][tileX], "ladder"))) {
@@ -151,8 +152,8 @@ public abstract class GameObject {
 	private Vector2 getTileVector = new Vector2();
 	public Vector2 getTile() {
 		Vector2 position = body.getPosition();
-		int tileX = (int) (position.x/Level.METERS_PER_TILE);		
-		int tileY = (int)((level.tiledMap.height*2-position.y)/Level.METERS_PER_TILE);		
+		int tileX = (int) (position.x/Constants.METERS_PER_TILE);		
+		int tileY = (int)((level.tiledMap.height*2-position.y)/Constants.METERS_PER_TILE);		
 		return getTileVector.set(tileX, tileY);		
 	}
 	

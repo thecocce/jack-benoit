@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="82" height="34" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" source="../../../../Desktop/level_1.tsx"/>
+ <layer name="platforms_layer" width="82" height="34">
+  <data encoding="base64" compression="zlib">
+   eJzt1jvOpFYQhmFCb8ALIWDBBOxzPJJbKj39Fv8EDh0g6OacOnX5LtzHcTz/XOe/92v8/jzfrPm8+9w/7z9rXf+M9c/Yc8b6LY/5/8xrvp9x7rFu7pt5m681nSOWeZjbfXz3Z8asWm/eG9d3F3uu4zv/ep653eybuc28zNc6HuJUf28u5zHPvCKeuLGOM9bMeVT8wpPY2vKfGJ2zfuLMOauqceJ41nNyTvW41mz1VRz5OfF+Hd913qyZWJ25133O0b4Ujjyv9EOOPbFWzNpjY3lO5W3Oddk3ef4nPJ53MfTEtWll8ah4LH7nuXMurhMvzsnz1N3r+M59w+PM32e1Zca3Tvvl3tIC483ZyEGx6Frn+xP2ikv2ZvZPLZ7vi7ueZV3Vk9K4id+3/js3+Vma4axKx/RhZyEmjSMm9ObieHFYL515lPdvuJJXletbD/VYY5UnyEXxLZ4LZ9ZiHjVHsWUuephaU3ze5iwuC2vzXLV49s6z5V/10XVnxHNu4v1Nk8tzypt+8gvzLK8ofqgtVeOcnT5QmnXzrvhRvCyvtlfmchKzdK68snSoZmIvCmf2Qz90vfEKx6Xz5dHyWt5uNWx6Y93ipXzNmU4ePHFts/WMWfuMa26/r7/GVfr89v2gB5RunPFO3Plf9aM4UVoh3zZPUxvKOwvLb56u97/5nM8TU3OP+8WC+lm+pocWhjeN8ByxVjpTGrr1QN+q9cWLqR2z7tL6zZOK1+VpniXmH+6Fv/o2cSb2dPMqnwtzpaeeb8+cgd8eb31QA9WIN2/asFZx5Gjp6sy95lOequdteevBvitNfo7vXpbGiHN7rEdXrm86LQ5mrzb/Lz2ynsJ8caS8bWJheoJYtkaxURitOaurhVHPkmMXsQvbhb3Zg80/9M6qd5tDebV+Lz4Lp296NM+ovhc+xX75uFpUPlT4N9fylPm/WlEaXfox36th4qA4XPO1l+WXckkMW0/hXB/9E58vLDoLsfSGQTmnT5U+OgP1qPSyvNiZTq2tPKreiTUxqt6axxXvav7lo97t78X+mrNea97qzIYDdUx8iQG9snzxPr7nXfptH4prD/v0LWssv6lc7WPNtrhQa8rvxNeGrY2TYnniwPnbc+vfeFNc3LRYDqij5uf54nGuL9+omjZdnB4jl8VL5TJj2r8592v5r/So9osXdbt08Izn4pXfKJuOnTz7u2Yy89J/y29nn61XvbK3+r+88rtCjVCvJhbMb2LgPr5z1ROeY8eAfDWnysv+/eSJ4mbmXX2uudc3Qum+uvnWZ7VWDPredW/zFfPmveld9VzN3Txw46aYrp5MnJUWFU+vo3u29ab0qjR00yfnei1xSpuNtfl0+YZaNeua9Wy6dcWajcvqiDVvniE3ytfNq3RMXpWGq6V+n8ycxHDpmZhTG+SLfTVG+Xt5uGc8x3ftm+fWDC/ilnYWTt0zcy/ciomZj+tLM/Q+vzlKA/S50iz1qzSgvoH0JPnmDOtMMaav2zd7JpY3bXybnV674UVNE0OlN1s/CiP2We5sujzPL5zIdb9z9HV55DeLsTZvecN/9XTTsYtz1SY1pTBduC+/Kh3XMyqGeze8/L7//f/1n1y/AEDgdg4=
+  </data>
+ </layer>
+ <layer name="tiledef" width="82" height="34">
+  <data encoding="base64" compression="zlib">
+   eJztzsENQFAURcG3wZriUAEqQPluCax+JDPJ2Z+5qpa0pi3t6UhnutJdvNGlPg2tR35uTFPrCQAAAAAAAAAAAIAPHkiqA9U=
+  </data>
+ </layer>
+</map>

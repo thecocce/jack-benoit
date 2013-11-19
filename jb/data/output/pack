@@ -3,219 +3,226 @@ sprites1.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-Whip
+logo
   rotate: false
   xy: 2, 2
+  size: 471, 126
+  orig: 471, 126
+  offset: 0, 0
+  index: -1
+Whip
+  rotate: false
+  xy: 2, 130
   size: 320, 32
   orig: 320, 32
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-32-green
   rotate: false
-  xy: 2, 36
+  xy: 2, 164
   size: 256, 32
   orig: 256, 32
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-32-grey
   rotate: false
-  xy: 2, 70
+  xy: 2, 198
   size: 256, 32
   orig: 256, 32
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-32-orange
   rotate: false
-  xy: 2, 104
+  xy: 2, 232
   size: 256, 32
   orig: 256, 32
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-32-pink
   rotate: false
-  xy: 2, 138
+  xy: 2, 266
   size: 256, 32
   orig: 256, 32
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-32-blue
   rotate: false
-  xy: 2, 172
+  xy: 2, 300
   size: 256, 32
   orig: 256, 32
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-32-yellow
   rotate: false
-  xy: 2, 206
+  xy: 2, 334
   size: 256, 32
   orig: 256, 32
   offset: 0, 0
   index: -1
 FirePistol
   rotate: false
-  xy: 260, 36
+  xy: 260, 164
   size: 192, 32
   orig: 192, 32
   offset: 0, 0
   index: -1
 heart
   rotate: false
-  xy: 324, 2
+  xy: 324, 130
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 zombie
   rotate: false
-  xy: 260, 70
+  xy: 260, 198
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 torch
   rotate: false
-  xy: 260, 104
+  xy: 2, 368
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 walk
   rotate: false
-  xy: 260, 138
+  xy: 2, 402
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
 Walk
   rotate: false
-  xy: 390, 70
+  xy: 390, 198
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
 Climb
   rotate: false
-  xy: 390, 104
+  xy: 2, 436
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Duck
   rotate: false
-  xy: 454, 2
+  xy: 475, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 front
   rotate: false
-  xy: 454, 36
+  xy: 475, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 right
   rotate: false
-  xy: 456, 104
+  xy: 475, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 earlysketch
   rotate: false
-  xy: 390, 138
+  xy: 454, 130
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 front
   rotate: false
-  xy: 424, 138
+  xy: 454, 164
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 back
   rotate: false
-  xy: 458, 138
+  xy: 2, 470
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 front
   rotate: false
-  xy: 260, 172
+  xy: 68, 436
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 web
   rotate: false
-  xy: 294, 172
+  xy: 68, 470
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 left
   rotate: false
-  xy: 328, 172
+  xy: 132, 368
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-orange
   rotate: false
-  xy: 362, 172
+  xy: 260, 232
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-pink
   rotate: false
-  xy: 260, 206
+  xy: 260, 250
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-green
   rotate: false
-  xy: 2, 240
+  xy: 260, 268
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-grey
   rotate: false
-  xy: 2, 258
+  xy: 260, 286
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-yellow
   rotate: false
-  xy: 2, 276
+  xy: 260, 304
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-blue
   rotate: false
-  xy: 2, 294
+  xy: 260, 322
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
 spider0
   rotate: false
-  xy: 390, 206
+  xy: 166, 368
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 spider1
   rotate: false
-  xy: 2, 312
+  xy: 132, 402
   size: 64, 16
   orig: 64, 16
   offset: 0, 0

@@ -21,12 +21,12 @@ public class LevelCamera {
 	private int levelWidthInMeters;
 	public Body cameraBody;
 		
-	public LevelCamera(float zoom, int levelWidthInMeters, int levelHeightInMeters, Level level) {
-		this.viewPortWidthInMeters = (int) ((Gdx.graphics.getWidth() / 32) * Level.METERS_PER_TILE);
-		this.viewPortHeightInMeters = (int) ((Gdx.graphics.getHeight() / 32) * Level.METERS_PER_TILE);
+	public LevelCamera(int levelWidthInMeters, int levelHeightInMeters, Level level) {
+		this.viewPortWidthInMeters = (int) ((Gdx.graphics.getWidth() / 32) * Constants.METERS_PER_TILE);
+		this.viewPortHeightInMeters = (int) ((Gdx.graphics.getHeight() / 32) * Constants.METERS_PER_TILE);
 		this.levelWidthInMeters = levelWidthInMeters;
 		this.levelHeightInMeters =levelHeightInMeters;
-		this.zoom = zoom;
+		this.zoom = Constants.ZOOM_FACTOR;
 		this.front = new OrthographicCamera(viewPortWidthInMeters, viewPortHeightInMeters);
 		this.parrallax = new OrthographicCamera(viewPortWidthInMeters, viewPortHeightInMeters);
 		

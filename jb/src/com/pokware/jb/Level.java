@@ -1,5 +1,6 @@
 package com.pokware.jb;
 
+import static com.pokware.jb.Constants.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,14 +27,6 @@ import com.pokware.jb.objects.GameObjectData;
 import com.pokware.jb.objects.LevelObjectManager;
 
 public class Level {
-
-	public static int METERS_PER_TILE = 2;	
-	public static int TILE_SIZE_IN_PIXELS = 32;
-	public static int METERS_TO_PIXELS_RATIO = TILE_SIZE_IN_PIXELS / METERS_PER_TILE; // pixels per meters
-		
-	public static int[] PARALLAX_LAYERS = { 0 };
-	public static int[] BACKGROUND_LAYERS = { 1, 2 };
-	public static int[] SPRITE_LAYERS = { 3 };
 	
 	public boolean debugMode = false;
 	public BitmapFont font;
@@ -46,7 +39,7 @@ public class Level {
 	public LevelCamera camera;	
 	public Vector2 gravityVector = new Vector2(0f, -300f);
 		
-	public Level(String mapName, float zoom) {
+	public Level(String mapName) {
 		super();
 		
 		GameObject.ID_COUNTER = 0;
@@ -77,7 +70,7 @@ public class Level {
 		
 		objectManager.populateLevel();
 		
-		camera = new LevelCamera(zoom, tiledMap.width*METERS_PER_TILE, tiledMap.height*METERS_PER_TILE, this);		
+		camera = new LevelCamera(tiledMap.width*METERS_PER_TILE, tiledMap.height*METERS_PER_TILE, this);		
 	}
 
 

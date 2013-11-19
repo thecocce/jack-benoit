@@ -1,13 +1,16 @@
 package com.pokware.jb;
 
-import com.badlogic.gdx.Gdx;
+import javax.management.RuntimeErrorException;
+
 import com.badlogic.gdx.Files.FileType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.tools.hiero.Hiero;
 
 public class Art {
 
@@ -39,8 +42,14 @@ public class Art {
 	public static TextureRegion heartStaticTexture;
 	
 	public static BitmapFont bitmapFont;
+
+	// Menu
+	public static AtlasRegion jackBenoitLogo;
 			
 	public static void load(TextureAtlas atlas) {
+				
+		// Menu
+		jackBenoitLogo = atlas.findRegion("logo");		
 		
 		bitmapFont = new BitmapFont(Gdx.files.getFileHandle("data/output/font/kromasky20.fnt", FileType.Internal), 
 				Gdx.files.getFileHandle("data/output/font/kromasky20.png", FileType.Internal), false);
