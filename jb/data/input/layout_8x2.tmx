@@ -1,106 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="82" height="34" tilewidth="32" tileheight="32">
- <tileset firstgid="1" name="level_1" tilewidth="32" tileheight="32">
-  <image source="tiles.png" width="512" height="512"/>
-  <tile id="4">	
-   <properties>
-    <property name="col" value="1"/>
-   </properties>
-  </tile>
-  <tile id="5">
-   <properties>
-    <property name="col" value="1"/>
-   </properties>
-  </tile>
-  <tile id="6">
-   <properties>
-    <property name="col" value="1"/>
-   </properties>
-  </tile>
-  <tile id="16">
-   <properties>
-    <property name="ladder" value="1"/>
-   </properties>
-  </tile>
-  <tile id="17">
-   <properties>
-    <property name="ladder" value="1"/>
-   </properties>
-  </tile>
-  <tile id="18">
-   <properties>
-    <property name="spawn" value="Flower"/>
-   </properties>
-  </tile>
-  <tile id="20">
-   <properties>
-    <property name="col" value="1"/>
-   </properties>
-  </tile>
-  <tile id="21">
-   <properties>
-    <property name="col" value="1"/>
-   </properties>
-  </tile>
-  <tile id="22">
-   <properties>
-    <property name="col" value="1"/>
-   </properties>
-  </tile>
-  <tile id="32">
-   <properties>
-    <property name="spawn" value="Spider"/>
-   </properties>
-  </tile>
-  <tile id="33">
-   <properties>
-    <property name="spawn" value="Zombie"/>
-   </properties>
-  </tile>
-  <tile id="34">
-   <properties>
-    <property name="spawn" value="Jack"/>
-   </properties>
-  </tile>
-  <tile id="36">
-   <properties>
-    <property name="col" value="1"/>
-   </properties>
-  </tile>
-  <tile id="37">
-   <properties>
-    <property name="col" value="1"/>
-   </properties>
-  </tile>
-  <tile id="38">
-   <properties>
-    <property name="spawn" value="Exit"/>
-   </properties>
-  </tile>
-  <tile id="53">
-   <properties>
-    <property name="spawn" value="big_blue_jewel"/>
-   </properties>
-  </tile>
-  <tile id="69">
-   <properties>
-    <property name="spawn" value="blue_jewel"/>
-   </properties>
-  </tile>
- </tileset>
+ <tileset firstgid="1" source="general.tsx"/>
  <layer name="parrallax_layer" width="82" height="34">
   <data encoding="base64" compression="zlib">
-   eJztmumR1DAQhfVzlIEUxgAJcAXAFQBXAFwBwEIArE0A4Jk8aVdN13zuacn2zlIrYH+88thu9Xu62q3e7UIIg6AXdIdrj3tCn432O9jtcD8U/KhdZ9oMhmsHdOCj3S6cauwLGNtFQbqmfnjojQ9e2YfbMZ7vx+YfQ8bvdLhPBvHwPsLGtsmwKd2rr+hwnIub7ksM1zMff9sclvp9XWMUDbLzbA08n6pPxyIZvgRe2nhjrmNmx9f6Y1/0Sh7qnRufJWPyJ/R5z7X9JrQ7prV1MdrfEdwV3DPaN857O0+p4Ccv9G1/K+4LHggeCh4JHpsx8d57+9yz855x7NMCnlb1cl2Mv58IngqeCZ4LXoRjbMuF93aOY8HOe8Z4kxbwtKqX+2m8vhS8ErwWvBG8he7Se/pQ355dqa2un7yAp1W9nJPx+k7wXvBB8FHwKUxjkfeecVI5PLuSbxsTl/C0pteO5WfBF8GF4KvgG2xK76kpVey8Z14+U+NpVW8KU33fBZfheO75gbHPhff2e1vyU2ubF/K0qpc573j9KfgVjufLfZjmK/q+w3ubz8eCH++ZtyeW8LSm145lCsez/4BnbM/6gs1BqY9+tgfwWYS9/X6UeFrVy2+W3rP2wT2k3KzLWD+MF9SvuuibZ0Wbz83xtKbXO+uw/rQPp2uBtSt7pmFOZWtZWt/Se3tGygt4WtVrYze1xYOubPSx3ke9zJGtb86pjXPMi+d4WtVr9UT4UbsE+wQOjUdbgFoYi731QFttP8fTql7GWc6LzoV+33SebVynzy147NmT/bDxKxpdNZ5W9dr50HWue2AP8Nt3id9evGE819hT2ifUMcfTql764J5hvNmjvff3muz4oT7dd+rT5i+c37U8rej1cnvVpftjDy5+w5TLzif1KX8XpmuBe5J7ZY6nVb3UwzVcy8VYA+nDVI/9BlpdXi5LjjmeVvWOsHXgbPi47kffrIFwndCPza+YRySHM5lriadVvaV6MWODPTfYv3FvCn64XuZs2f+1PC3oLdWTNXeiNp6RqCtW/CRj2xdsGXeuwnPTer2abx/8b5unS3Myz08K0/50FU7mImt5WtDr1Xzpo6aL+USp7pzDaV9qNeqr8LSg16v50oeu3xH6PzfU3Vf8aLzpDeZq1Gt5WtDr1XzJp/HGi9sDuEp16RRO47xnm87gaUGvV/OlLuZIQwW12jE1lTj5rVzL04JezfV51fbemcpysA8DfKi//+F/9qj9dhzP68dvWxczCg==
+   eJztmEEOwzAIBH1u+oAozQvS/v995WIpihQZXAPrwmFuqcQuZCFdSylrkoDxIBbiCVCLpebRejfiRewA+np7W59fmL/bmHoldRzEm/gA+Nfb26qh0tJyMPUizpgElN5a1xExY6X+cLxpzX90n7l53Jp/j/cUqXfcPEZk9h0hRWtuUHaVFdH0enG9sS0zT3rfI1Nz7oxV5knve05PvHrh6WOPV3c+eefXdSaQs5R7J/b24u55rezR+D+H2/Nfeyztxcjs0ZgLL5Budq1avOb835h5zpFAeueSRAra99Cs+a51k/T6kfk+xo/M9/QjSbyZdS+e62/dGRYaZ9+LnDvDQmOEPRBBYxKXL6sYB78=
   </data>
  </layer>
  <layer name="platforms_layer" width="82" height="34">
   <data encoding="base64" compression="zlib">
-   eJzt2rEJwDAQBMEPVYH6L9WpYntBYGbgGtj49sxsS8Y3OjZ0bOjY0LGhY0PHho4NHRs6NnScWcfe0rGhY0PHho4NHRs6NnRs6NjQsaFjQ8eGjg0dGzo2dGzo2NCxoWNDx4aODR0bt3+Xf9oD3YMTsQ==
+   eJzt2kEJADAQA8FTcf6lVkQXCmUGYmDf2ZlZS8YdHRs6NnRs6NjQsaFjQ8eGjg0dGzo2dGzo2NCxoWNDx4aODR0bOjZ0bOjY0LGhY0PHho4NHRs6NnRs6NjQsaFjQ8fG69/lTzsyhROZ
   </data>
  </layer>
  <layer name="interaction_layer" width="82" height="34">
   <data encoding="base64" compression="zlib">
-   eJztwTEBAAAAwqD1T20Hb6AAAAAAAAAAAAAAgNcAK5AAAQ==
+   eJzt2dEKgzAMheFcb3uA4XyC2fd/vrWMwCiC63Janfwf5Fo92JigGYB/cd8ofGfKdV2pm5Fji2euJdejqtnIsYWf3/JekuPvPMelqmTbOdJbNeitGvRWDXqrRqS39vTZbxDjZwMxfjYQU3r0tPdNBPg3Z975PpLpc7zYe6Yb4Sg59lCebdRznSnHej/zHEfsaz6bp87XGaHe1zxH9rU27Gsa7GsaR93XAADr+A+hwX8IDeZaDeZaDeZaAGf0AhnUE4M=
   </data>
  </layer>
  <layer name="sprite_layer" width="82" height="34">

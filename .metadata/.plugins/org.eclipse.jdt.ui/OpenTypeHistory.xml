@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<typeInfoHistroy/>
+<typeInfoHistroy>
+<typeInfo handle="=jb/src&lt;com.pokware.jb.objects{LevelObjectManager.java[LevelObjectManager" modifiers="1" timestamp="1384955438000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb.objects{Jack.java[Jack" modifiers="1" timestamp="1384855800000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb{Level.java[Level" modifiers="1" timestamp="1384957382000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb{CollisionManager.java[CollisionManager" modifiers="17" timestamp="1384955914000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.engine.fonts{FntGenerator.java[FntGenerator" modifiers="1" timestamp="1384552323000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb{Art.java[Art" modifiers="1" timestamp="1384866095000"/>
+<typeInfo handle="=jb/libs\/gdx.jar&lt;com.badlogic.gdx.maps.tiled(TiledMapTile.class[TiledMapTile" modifiers="1537" timestamp="1384855681000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb.ai{PathingTool.java[PathingTool" modifiers="1" timestamp="1384957135000"/>
+</typeInfoHistroy>

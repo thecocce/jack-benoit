@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-import com.badlogic.gdx.graphics.g2d.tiled.TiledLayer;
-import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -19,59 +19,55 @@ import com.badlogic.gdx.math.Vector2;
 public class PathingTool {
 
 	private PathNode[][] pathNodeTopology;
-	private TiledMap tiledMap;
 	
-	public PathingTool(TiledMap tiledMap, int[][] platformTiles, int[][] interactionLayer) {
-		this.pathNodeTopology = new PathNode[platformTiles.length][platformTiles[0].length];
-		this.tiledMap = tiledMap;
-		
+	public PathingTool(TiledMapTileLayer platformTiles, TiledMapTileLayer interactionLayer) {
+		this.pathNodeTopology = new PathNode[platformTiles.getHeight()][platformTiles.getWidth()];
+			
 		for (int y = 0; y < pathNodeTopology.length; y++) {
 			PathNode[] row = pathNodeTopology[y];
 			for (int x = 0; x < row.length; x++) {
-				if (isPlatformAt(platformTiles, y, x) && y >= 1 && platformTiles[y-1][x] == 0) { // floors
-					markAsWalkable(x,y-1);					
+				if (isPlatformAt(platformTiles, x, y) && y < platformTiles.getHeight() && platformTiles.getCell(x, y+1) == null) { // floors
+					markAsWalkable(x,y+1);					
 				}				
 			}
 		}	
 		for (int y = 0; y < pathNodeTopology.length; y++) {
 			PathNode[] row = pathNodeTopology[y];
 			for (int x = 0; x < row.length; x++) {
-				if (isLadderAt(interactionLayer, y, x)) { // ladders
+				if (isLadderAt(interactionLayer, x, y)) { // ladders
 					if (isWalkable(x, y)) {
 						markAsWaypoint(x, y);
 					}					
 					else {
 						markAsWalkable(x,y);						
 					}
-					if (y > 0 && isPlatformAt(platformTiles, y, x)) { // top ladder
-						markAsWaypoint(x, y-1);
+					if (y > 1 && isPlatformAt(platformTiles, x, y)) { // top ladder
+						markAsWaypoint(x, y+1);
 					}
-					if (y > 0 && x-1 > 0 && x < platformTiles[0].length && (platformTiles[y+1][x-1] != 0 || platformTiles[y+1][x+1] != 0)) { // ladder
+					if (y > 1 && x-1 > 0 && x < platformTiles.getWidth() && (platformTiles.getCell(x-1, y-1) != null || 
+							platformTiles.getCell(x+1, y-1) != null)) { // ladder
 						markAsWaypoint(x, y);
 					}
 				}
 			}
 		}
-//		dump();
+		dump();
 
 		this.shortestPathSearchNodes = new PriorityQueue<PathNode>(256, new ShortestPathNodeComparator(this));
 		this.randomPathSearchNodes = new PriorityQueue<PathNode>(256, new RandomPathNodeComparator(this));
 	}
 
-	private boolean isLadderAt(int[][] interactionLayer, int y, int x) {
-		int tileId = interactionLayer[y][x];
-		return tiledMap.getTileProperty(tileId, "ladder") != null;
+	private boolean isLadderAt(TiledMapTileLayer interactionLayer, int x, int y) {
+		Cell cell = interactionLayer.getCell(x, y);
+		return cell != null && cell.getTile().getProperties().containsKey("ladder");
 	}
 	
-	private boolean isPlatformAt(int[][] platformLayer, int y, int x) {
-		int tileId = platformLayer[y][x];
-		return tiledMap.getTileProperty(tileId, "col") != null;
+	private boolean isPlatformAt(TiledMapTileLayer platformLayer, int x, int y) {
+		Cell cell = platformLayer.getCell(x, y);
+		return cell!= null && cell.getTile().getProperties().containsKey("col");
 	}
 	
-	public PathingTool(TiledMap tiledMap, TiledLayer platformLayer, TiledLayer interactionLayer) {		
-		this(tiledMap, platformLayer.tiles, interactionLayer.tiles);
-	}
-	
+
 	private void markAsWalkable(int x, int y) {
 		if (y < pathNodeTopology.length && y >= 0) {
 			pathNodeTopology[y][x] = new PathNode(x, y);
@@ -319,7 +315,7 @@ public class PathingTool {
 	
 	public void dump() {
 		System.out.println("------------------------------------------");
-		for (int y = 0; y < pathNodeTopology.length; y++) {
+		for (int y = pathNodeTopology.length - 1; y > 0; y--) {
 			System.out.print(y+":");
 			PathNode[] row = pathNodeTopology[y];
 			for (int x = 0; x < row.length; x++) {

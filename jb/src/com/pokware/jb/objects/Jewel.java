@@ -15,7 +15,7 @@ public class Jewel extends GameObject implements Collectable {
 	
 	@Override
 	public TextureRegion getTextureRegion(float tick) {			
-		body.applyLinearImpulse(0, -1f, body.getPosition().x, body.getPosition().y);
+		body.applyLinearImpulse(0, -1f, body.getPosition().x, body.getPosition().y, true);
 		
 		switch(type) {
 			case BLUE: return Art.blueJewelAnimation.getKeyFrame(tick, true);

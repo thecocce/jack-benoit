@@ -112,6 +112,11 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 	public void endContact(Contact contact) {		
 		Fixture fixtureA = contact.getFixtureA();
 		Fixture fixtureB = contact.getFixtureB();
+		
+		if (fixtureA == null || fixtureB == null) {
+			return;
+		}
+		
 		Body bodyA = fixtureA.getBody();
 		Body bodyB = fixtureB.getBody();
 		GameObjectData userDataA = (GameObjectData) bodyA.getUserData();
@@ -139,7 +144,7 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 			Vector2 positionA = bodyA.getPosition();
 			Vector2 positionB = bodyB.getPosition();
 			Vector2 b2a = positionA.sub(positionB).nor();
-			bodyA.applyLinearImpulse(b2a.mul(200f), new Vector2(32, 32));		
+			bodyA.applyLinearImpulse(b2a.scl(200f), new Vector2(32, 32), true);		
 			
 			Jack jack = objectManager.getJack();
 			jack.decrementLife();
@@ -150,7 +155,7 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 			Vector2 positionA = bodyA.getPosition();
 			Vector2 positionB = bodyB.getPosition();
 			Vector2 b2a = positionA.sub(positionB).nor();
-			bodyB.applyLinearImpulse(b2a.rotate(180f).mul(200f), new Vector2(32, 32));
+			bodyB.applyLinearImpulse(b2a.rotate(180f).scl(200f), new Vector2(32, 32), true);
 			
 			Jack jack = objectManager.getJack();			
 			jack.decrementLife();

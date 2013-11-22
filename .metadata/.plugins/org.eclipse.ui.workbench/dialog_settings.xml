@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<section name="org.eclipse.ui.internal.dialogs.WorkbenchEditorsDialog">
+		<item value="0" key="sort"/>
+		<item value="false" key="allPersp"/>
+		<list key="bounds">
+			<item value="511"/>
+			<item value="213"/>
+			<item value="900"/>
+			<item value="561"/>
+		</list>
+		<list key="columns">
+			<item value="292"/>
+			<item value="586"/>
+		</list>
+	</section>
 	<section name="org.eclipse.ui.internal.QuickAccess">
-		<item value="1194" key="dialogWidth"/>
-		<item value="744" key="dialogHeight"/>
+		<item value="1200" key="dialogWidth"/>
+		<item value="750" key="dialogHeight"/>
 		<list key="orderedProviders">
 		</list>
 		<list key="textArray">
@@ -17,6 +31,8 @@
 		<item value="652" key="DIALOG_X_ORIGIN"/>
 	</section>
 	<section name="NewWizardAction">
+	</section>
+	<section name="EditorSelectionDialog">
 	</section>
 	<section name="ImportExportAction">
 		<item value="org.eclipse.ui.wizards.import.ExternalProject" key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID"/>

@@ -2,6 +2,7 @@ package com.pokware.jb;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -21,11 +22,13 @@ public class LevelCamera {
 	private int levelWidthInMeters;
 	public Body cameraBody;
 		
-	public LevelCamera(int levelWidthInMeters, int levelHeightInMeters, Level level) {
+	public LevelCamera(Level level) {
+		TiledMapTileLayer layer = (TiledMapTileLayer)level.tiledMap.getLayers().get(0);
+		
 		this.viewPortWidthInMeters = (int) ((Gdx.graphics.getWidth() / 32) * Constants.METERS_PER_TILE);
 		this.viewPortHeightInMeters = (int) ((Gdx.graphics.getHeight() / 32) * Constants.METERS_PER_TILE);
-		this.levelWidthInMeters = levelWidthInMeters;
-		this.levelHeightInMeters =levelHeightInMeters;
+		this.levelWidthInMeters = layer.getWidth() * Constants.METERS_PER_TILE;
+		this.levelHeightInMeters = layer.getHeight() * Constants.METERS_PER_TILE;
 		this.zoom = Constants.ZOOM_FACTOR;
 		this.front = new OrthographicCamera(viewPortWidthInMeters, viewPortHeightInMeters);
 		this.parrallax = new OrthographicCamera(viewPortWidthInMeters, viewPortHeightInMeters);
@@ -68,7 +71,7 @@ public class LevelCamera {
 		int halfViewPortWidth = viewPortWidthInMeters / 2;
 		int halfViewPortHeight = viewPortHeightInMeters / 2;
 		
-		Vector2 camVector = jackWorldPosition.sub(front.position.x, front.position.y).mul(2);
+		Vector2 camVector = jackWorldPosition.sub(front.position.x, front.position.y).scl(2);
 				
 		if (cameraBodyPosition.x < halfViewPortWidth * zoom) {					
 			cameraBodyPosition.x = halfViewPortWidth * zoom;				

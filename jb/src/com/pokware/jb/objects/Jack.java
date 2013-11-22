@@ -47,7 +47,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	public Jack(Level level, float x, float y) {
 		super(level, x, y, CollisionCategory.JACK, false);
 		body.setBullet(true);			
-		antiGravityVector = level.gravityVector.cpy().mul(-body.getMass());
+		antiGravityVector = level.gravityVector.cpy().scl(-body.getMass());
 		
 		Gdx.input.setInputProcessor(this);		
 	}
@@ -95,21 +95,21 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 			if (goRight > 0) {
 				switch(ladderStatus) {
 				case GameObject.LADDER:
-					body.applyLinearImpulse(forceVector.set(4.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;
+					body.applyLinearImpulse(forceVector.set(4.4f*goRight, 0.0f), FORCE_APPLICATION_POINT, true);break;
 				case GameObject.LADDER + GameObject.LADDER_BELOW:
-					body.applyLinearImpulse(forceVector.set(1.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;
+					body.applyLinearImpulse(forceVector.set(1.4f*goRight, 0.0f), FORCE_APPLICATION_POINT, true);break;
 				default:
-					body.applyLinearImpulse(forceVector.set(6.4f*goRight, 0.0f), FORCE_APPLICATION_POINT);break;		
+					body.applyLinearImpulse(forceVector.set(6.4f*goRight, 0.0f), FORCE_APPLICATION_POINT, true);break;		
 				}
 			}		
 			else if (goLeft > 0) {
 				switch(ladderStatus) {				
 				case GameObject.LADDER:
-					body.applyLinearImpulse(forceVector.set(-4.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;
+					body.applyLinearImpulse(forceVector.set(-4.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT, true);break;
 				case GameObject.LADDER + GameObject.LADDER_BELOW:
-					body.applyLinearImpulse(forceVector.set(-1.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;				
+					body.applyLinearImpulse(forceVector.set(-1.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT, true);break;				
 				default:
-					body.applyLinearImpulse(forceVector.set(-6.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT);break;
+					body.applyLinearImpulse(forceVector.set(-6.4f*goLeft, 0.0f), FORCE_APPLICATION_POINT, true);break;
 				}								
 			}
 		}
@@ -138,7 +138,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		//else {
 			if (ladderStatus == GameObject.LADDER || ladderStatus == GameObject.LADDER + GameObject.LADDER_BELOW) {
 				state = JackStateEnum.CLIMBING_IDLE;
-				body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT);
+				body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT, true);
 			}			
 		//}
 		
@@ -219,15 +219,15 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	public void jump() {
 		if (wasClimbing) {		
 			if (isTopOfTheLadder()) {
-				body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER*2), FORCE_APPLICATION_POINT);	
+				body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER*2), FORCE_APPLICATION_POINT, true);	
 			}
 			else {
-				body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER), FORCE_APPLICATION_POINT);
+				body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER), FORCE_APPLICATION_POINT, true);
 			}						
 		} else {
 			Vector2 linearVelocity = body.getLinearVelocity();			
 			if (Math.abs(linearVelocity.y) < 0.0001f) {							
-				body.applyLinearImpulse(jumpVector.set(0f, JUMP_POWER), FORCE_APPLICATION_POINT);
+				body.applyLinearImpulse(jumpVector.set(0f, JUMP_POWER), FORCE_APPLICATION_POINT, true);
 				Art.jumpSound.play();
 			}
 			
@@ -307,12 +307,12 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 				if (delta.y < 0) {
 					// drag up				
 					wasDraggingUp = true;
-					body.applyLinearImpulse(forceVector.set(0.0f, -delta.y*20), FORCE_APPLICATION_POINT);
+					body.applyLinearImpulse(forceVector.set(0.0f, -delta.y*20), FORCE_APPLICATION_POINT, true);
 				}
 				else if (delta.y > 0) {
 					// drag down								
 					wasDraggingDown = true;
-					body.applyLinearImpulse(forceVector.set(0.0f, -delta.y*20), FORCE_APPLICATION_POINT);
+					body.applyLinearImpulse(forceVector.set(0.0f, -delta.y*20), FORCE_APPLICATION_POINT, true);
 				}					
 			}
 		}

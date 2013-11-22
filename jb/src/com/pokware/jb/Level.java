@@ -1,6 +1,8 @@
 package com.pokware.jb;
 
-import static com.pokware.jb.Constants.*;
+import static com.pokware.jb.Constants.BACKGROUND_LAYERS;
+import static com.pokware.jb.Constants.METERS_PER_TILE;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,10 +10,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.tiled.TileAtlas;
-import com.badlogic.gdx.graphics.g2d.tiled.TileMapRenderer;
-import com.badlogic.gdx.graphics.g2d.tiled.TiledLoader;
-import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -28,12 +31,13 @@ import com.pokware.jb.objects.LevelObjectManager;
 
 public class Level {
 	
+	public OrthogonalTiledMapRenderer tileMapRenderer;
+	public TiledMap tiledMap;
+
 	public boolean debugMode = false;
 	public BitmapFont font;
 	public World physicalWorld;	
-	public TiledMap tiledMap;
-	public TileMapRenderer tileMapRenderer;
-	public TileAtlas tileAtlas;	
+	
 	public LevelObjectManager objectManager;
 	public PathingTool pathingTool;	
 	public LevelCamera camera;	
@@ -49,28 +53,21 @@ public class Level {
 		
 		this.physicalWorld = new World(gravityVector, true);		
 		this.objectManager = new LevelObjectManager(this);
-	
-		int blockWidth = 10;
-		int blockHeight = 12;
 
-		String path = "data/output/";
-		mapName = "layout_8x2";		
-		FileHandle mapHandle = Gdx.files.internal(path + mapName + ".tmx");
-		FileHandle baseDir = Gdx.files.internal(path);		
-		tiledMap = TiledLoader.createMap(mapHandle);
-		
+		tiledMap  = new TmxMapLoader().load("data/output/layout_8x2.tmx");
+				
 		generateRoomsFor(tiledMap, 1, 4, 2);
 				
-		tileAtlas = new TileAtlas(tiledMap, baseDir);
-		tileMapRenderer = new TileMapRenderer(tiledMap, tileAtlas, blockWidth, blockHeight, METERS_PER_TILE, METERS_PER_TILE);		
+		tileMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 2f/32f);		
 		
-		pathingTool = new PathingTool(tiledMap, tiledMap.layers.get(BACKGROUND_LAYERS[0]), tiledMap.layers.get(BACKGROUND_LAYERS[1]));
+		pathingTool = new PathingTool((TiledMapTileLayer)tiledMap.getLayers().get(BACKGROUND_LAYERS[0]), 
+									  (TiledMapTileLayer)tiledMap.getLayers().get(BACKGROUND_LAYERS[1]));
 		
 		createPhysicsWorld();		
 		
 		objectManager.populateLevel();
 		
-		camera = new LevelCamera(tiledMap.width*METERS_PER_TILE, tiledMap.height*METERS_PER_TILE, this);		
+		camera = new LevelCamera(this);		
 	}
 
 
@@ -85,7 +82,7 @@ public class Level {
 				TiledMap roomMap = null;
 				if (!mapCache.containsKey(roomIndex)) {
 					FileHandle mapHandle = roomFileList[roomIndex];
-					roomMap = TiledLoader.createMap(mapHandle);
+					roomMap = new TmxMapLoader().load(mapHandle.path());
 					mapCache.put(roomIndex, roomMap);					
 				}
 				else {
@@ -97,16 +94,18 @@ public class Level {
 						for(int layer = 1; layer <= 3; layer++) {
 							int globalTileY = ry+(y*16);
 							int globalTileX = rx+(x*20);
-							tiledMap.layers.get(layer).tiles[1+globalTileY][1+globalTileX]
-									= roomMap.layers.get(layer).tiles[ry][rx];
+							TiledMapTileLayer mapLayer = (TiledMapTileLayer)tiledMap.getLayers().get(layer);
+							TiledMapTileLayer roomLayer = (TiledMapTileLayer)roomMap.getLayers().get(layer);
+							mapLayer.setCell(1+globalTileX, 1+globalTileY, roomLayer.getCell(rx, ry)); // Copy room cell to map cell									
 						}
 					}
 				}
 				
 				// Create a hole
-				for(int ty = 14; ty < 19; ty++) {
-					tiledMap.layers.get(1).tiles[ty][hRooms*20-1]= 0;
-					tiledMap.layers.get(1).tiles[ty][hRooms*20-2]= 0;
+				for(int ty = 13; ty < 22; ty++) {
+					TiledMapTileLayer mapLayer = (TiledMapTileLayer)tiledMap.getLayers().get(1);
+					mapLayer.setCell(hRooms*20-1, ty, null);						
+					mapLayer.setCell(hRooms*20, ty, null);						
 				}
 				
 			}
@@ -116,10 +115,9 @@ public class Level {
 
 
 	private void createPhysicsWorld() {
+		TiledMapTileLayer platforms = (TiledMapTileLayer)tiledMap.getLayers().get(BACKGROUND_LAYERS[0]);
+		TiledMapTileLayer ladders = (TiledMapTileLayer)tiledMap.getLayers().get(BACKGROUND_LAYERS[1]);
 		
-		int[][] tiles = tiledMap.layers.get(BACKGROUND_LAYERS[0]).tiles;
-		int[][] ladders = tiledMap.layers.get(BACKGROUND_LAYERS[1]).tiles;
-
 		/*
 		 * tileX, tileY coords: 
 		 * +-----+-----+-----+-----+ 
@@ -131,20 +129,22 @@ public class Level {
 		 * +-----+-----+-----+-----+
 		 */
 
-		for (int y = tiles.length - 2, tileY = 1; y >= 1; y--, tileY++) {
-			int[] row = tiles[y];
+		for (int y = platforms.getHeight() - 2, tileY = 1; y >= 1; y--, tileY++) {			
 			int startRectTileX = -1;
 			int startRectTileY = -1;		
 			int firstColIndex = 1;			
-			int lastColIndex = row.length - 1;			
+			int lastColIndex = platforms.getWidth() - 1;			
 			for (int tileX = firstColIndex; tileX < lastColIndex; tileX++) {
-				int platformTileId = row[tileX];
-				String platformTileProperty = tiledMap.getTileProperty(platformTileId, "col");
+				Object platformCollision = null;
+				if (platforms.getCell(tileX, tileY) != null) {
+					platformCollision = platforms.getCell(tileX, tileY).getTile().getProperties().get("col"); 
+				}
+				Object ladderPresent = null;
+				if (ladders.getCell(tileX, tileY) != null) {
+					ladderPresent = ladders.getCell(tileX, tileY).getTile().getProperties().get("ladder"); 
+				}
 				
-				int ladderTileId = ladders[y][tileX];
-				String ladderTileProperty = tiledMap.getTileProperty(ladderTileId, "ladder");
-				
-				if ("1".equals(platformTileProperty) && !"1".equals(ladderTileProperty)) {
+				if ("1".equals(platformCollision) && !"1".equals(ladderPresent)) {
 					if (startRectTileX == -1) {
 						startRectTileX = tileX;
 						startRectTileY = tileY;
@@ -163,31 +163,34 @@ public class Level {
 			}
 		}
 		
-		for (int y = tiles.length - 2, tileY = 1; y >= 1; y--, tileY++) {
-			int[] row = tiles[y];				
+		for (int y = platforms.getHeight() - 2, tileY = 1; y >= 1; y--, tileY++) {			
 			int firstColIndex = 1;			
-			int lastColIndex = row.length - 1;			
+			int lastColIndex = platforms.getWidth() - 1;			
 			for (int tileX = firstColIndex; tileX < lastColIndex; tileX++) {
-				int platformTileId = row[tileX];
-				String platformTileProperty = tiledMap.getTileProperty(platformTileId, "col");
 				
-				int ladderTileId = ladders[y][tileX];
-				String ladderTileProperty = tiledMap.getTileProperty(ladderTileId, "ladder");
+				Object platformCollision = null;
+				if (platforms.getCell(tileX, tileY) != null) {
+					platformCollision = platforms.getCell(tileX, tileY).getTile().getProperties().get("col"); 
+				}
+				Object ladderPresent = null;
+				if (ladders.getCell(tileX, tileY) != null) {
+					ladderPresent = ladders.getCell(tileX, tileY).getTile().getProperties().get("ladder"); 
+				}				
 				
-				if ("1".equals(platformTileProperty) && "1".equals(ladderTileProperty)) {
+				if ("1".equals(platformCollision) && "1".equals(ladderPresent)) {
 					createTraversableEdge(tileX, tileY, tileX+1, tileY);
 				}				
 			}
 		}
 				
 		// Ground		
-		createRect(0, 0, tiles[0].length-1, 0);
+		createRect(0, 0, platforms.getWidth()-1, 0);
 		// Ceiling
-		createRect(0, tiles.length-1, tiles[0].length-1, tiles.length-1);
+		createRect(0, platforms.getHeight()-1, platforms.getWidth()-1, platforms.getHeight()-1);
 		// Left wall
-		createRect(0, 0, 0, tiles.length-1);
+		createRect(0, 0, 0, platforms.getHeight()-1);
 		// Right wall
-		createRect(tiles[0].length-1, 0, tiles[0].length-1, tiles.length-1);
+		createRect(platforms.getWidth()-1, 0, platforms.getWidth()-1, platforms.getHeight()-1);
 		
 		System.out.println("Rectangles created : " + rectNumber);
 		

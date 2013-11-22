@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -39,7 +40,7 @@ public class Zombie extends GameObject implements Climber {
 
 	public Zombie(Level level, float x, float y) {
 		super(level, x, y, CollisionCategory.ENEMY, true);
-		antiGravityVector = level.gravityVector.cpy().mul(-body.getMass()*1.1f);
+		antiGravityVector = level.gravityVector.cpy().scl(-body.getMass()*1.1f);
 	}
 	
 	@Override
@@ -74,18 +75,18 @@ public class Zombie extends GameObject implements Climber {
 			for (int i = wayPointList.size() - 1; i >= 0; i--) {
 				PathNode wayPointNode = wayPointList.get(i);
 				float x1 = wayPointNode.x * Constants.METERS_PER_TILE;
-				float y1 = (level.tiledMap.height - wayPointNode.y) * Constants.METERS_PER_TILE;
+				float y1 = wayPointNode.y * Constants.METERS_PER_TILE;
 
-				shapeRenderer.begin(ShapeType.Rectangle);
+				shapeRenderer.begin(ShapeType.Line);
 				shapeRenderer.setColor(Color.WHITE);
-				shapeRenderer.rect(x1, y1 - 2, 2, 2);
+				shapeRenderer.rect(x1, y1, 2, 2);
 				shapeRenderer.end();
 
 				shapeRenderer.begin(ShapeType.Line);
-				shapeRenderer.line(oldx, oldy, x1 + 1, y1 - 1);
+				shapeRenderer.line(oldx, oldy, x1+1, y1+1);
 				shapeRenderer.end();
 				oldx = x1 + 1;
-				oldy = y1 - 1;
+				oldy = y1 + 1;
 			}
 
 			shapeRenderer.end();
@@ -155,7 +156,7 @@ public class Zombie extends GameObject implements Climber {
 	private Vector2 distanceToWayPoint(PathNode pathNode) {
 		Vector2 position = body.getPosition();
 		float tileX = pathNode.x * Constants.METERS_PER_TILE + 1;
-		float tileY = (level.tiledMap.height - pathNode.y) * Constants.METERS_PER_TILE - 1;
+		float tileY = pathNode.y * Constants.METERS_PER_TILE + 1;
 		return distanceToWayPointVector.set(tileX, tileY).sub(position);
 	}
 
@@ -192,33 +193,33 @@ public class Zombie extends GameObject implements Climber {
 	private void climbUp() {
 		climbingUp = true;
 		climbingDown = false;
-		body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT);
-		body.applyLinearImpulse(upImpulseVector, FORCE_APPLICATION_POINT);
+		body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT, true);
+		body.applyLinearImpulse(upImpulseVector, FORCE_APPLICATION_POINT, true);
 	}
 
 	private void climbDown() {
 		climbingUp = false;
 		climbingDown = true;
-		body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT);
-		body.applyLinearImpulse(downImpulseVector, FORCE_APPLICATION_POINT);
+		body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT, true);
+		body.applyLinearImpulse(downImpulseVector, FORCE_APPLICATION_POINT, true);
 	}
 
 	private void walkLeft() {
 		if (climbingUp) {
-			body.applyLinearImpulse(jumpLeftImpulseVector, FORCE_APPLICATION_POINT);	
+			body.applyLinearImpulse(jumpLeftImpulseVector, FORCE_APPLICATION_POINT, true);	
 		}
 		climbingUp = false;
 		climbingDown = false;
-		body.applyLinearImpulse(leftImpulseVector, FORCE_APPLICATION_POINT);
+		body.applyLinearImpulse(leftImpulseVector, FORCE_APPLICATION_POINT, true);
 	}
 
 	private void walkRight() {
 		if (climbingUp) {
-			body.applyLinearImpulse(jumpRightImpulseVector, FORCE_APPLICATION_POINT);	
+			body.applyLinearImpulse(jumpRightImpulseVector, FORCE_APPLICATION_POINT, true);	
 		}
 		climbingUp = false;
 		climbingDown = false;
-		body.applyLinearImpulse(rightImpulseVector, FORCE_APPLICATION_POINT);
+		body.applyLinearImpulse(rightImpulseVector, FORCE_APPLICATION_POINT, true);
 	}
 
 	public ZombieAnimationEnum getState() {

@@ -62,19 +62,19 @@ public class Spider extends GameObject {
 	}
 
 	public void jumpRight() {
-		body.applyLinearImpulse(jumpRightImpulseVector, FORCE_APPLICATION_POINT);
+		body.applyLinearImpulse(jumpRightImpulseVector, FORCE_APPLICATION_POINT, true);
 	}
 	
 	public void jumpLeft() {
-		body.applyLinearImpulse(jumpLeftImpulseVector, FORCE_APPLICATION_POINT);
+		body.applyLinearImpulse(jumpLeftImpulseVector, FORCE_APPLICATION_POINT, true);
 	}
 	
 	public void superJumpRight() {
-		body.applyLinearImpulse(superJumpRightImpulseVector, FORCE_APPLICATION_POINT);
+		body.applyLinearImpulse(superJumpRightImpulseVector, FORCE_APPLICATION_POINT, true);
 	}
 	
 	public void superJumpLeft() {
-		body.applyLinearImpulse(superJumpLeftImpulseVector, FORCE_APPLICATION_POINT);
+		body.applyLinearImpulse(superJumpLeftImpulseVector, FORCE_APPLICATION_POINT, true);
 	}
 
 

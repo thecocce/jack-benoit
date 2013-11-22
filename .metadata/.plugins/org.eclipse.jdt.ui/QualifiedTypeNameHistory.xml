@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.pokware.jb.objects.GameObject"/>
 <fullyQualifiedTypeName name="com.badlogic.gdx.math.Vector3"/>
 <fullyQualifiedTypeName name="com.pokware.jb.LevelCamera"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.physics.box2d.MassData"/>
+<fullyQualifiedTypeName name="com.pokware.jb.objects.GameObject"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.physics.box2d.EdgeShape"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.physics.box2d.ChainShape"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.physics.box2d.CircleShape"/>
 <fullyQualifiedTypeName name="com.badlogic.gdx.math.Vector2"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.graphics.g2d.Animation"/>
+<fullyQualifiedTypeName name="com.pokware.jb.HUD"/>
+<fullyQualifiedTypeName name="com.pokware.jb.Level"/>
+<fullyQualifiedTypeName name="com.pokware.jb.Art"/>
+<fullyQualifiedTypeName name="com.pokware.engine.fonts.FntGenerator"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="java.io.BufferedWriter"/>
+<fullyQualifiedTypeName name="java.io.FileWriter"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.graphics.g2d.BitmapFont"/>
+<fullyQualifiedTypeName name="java.util.Set"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.tools.hiero.Hiero"/>
+<fullyQualifiedTypeName name="com.pokware.jb.objects.Collectable"/>
+<fullyQualifiedTypeName name="java.io.FileFilter"/>
+<fullyQualifiedTypeName name="java.nio.file.Files"/>
+<fullyQualifiedTypeName name="java.nio.file.StandardCopyOption"/>
+<fullyQualifiedTypeName name="java.nio.file.Path"/>
+<fullyQualifiedTypeName name="java.nio.file.Paths"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.tools.imagepacker.TexturePacker2"/>
+<fullyQualifiedTypeName name="sun.awt.CharsetString"/>
+<fullyQualifiedTypeName name="java.nio.charset.Charset"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.tiledmappacker.TileSetLayout"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.maps.tiled.TiledMapTileSets"/>
+<fullyQualifiedTypeName name="com.pokware.jb.JackBenoitApplication"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.assets.loaders.FileHandleResolver"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.Gdx"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell"/>
+<fullyQualifiedTypeName name="com.pokware.engine.tiles.Tiles"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.maps.MapLayer"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.maps.tiled.TiledMap"/>
+<fullyQualifiedTypeName name="com.pokware.jb.Constants"/>
+<fullyQualifiedTypeName name="com.badlogic.gdx.maps.tiled.TiledMapTileLayer"/>
+<fullyQualifiedTypeName name="com.pokware.jb.screens.LevelScreen"/>
 </qualifiedTypeNameHistroy>

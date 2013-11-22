@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -116,33 +119,39 @@ public abstract class GameObject {
 		int tileX = (int)currentTile.x;		
 		int tileY = (int)currentTile.y;
 		
-		int[][] tiles = level.tiledMap.layers.get(2).tiles;
+		TiledMapTileLayer ladderLayer = (TiledMapTileLayer)level.tiledMap.getLayers().get(Constants.LADDER_LAYER);
+		int layerWidth = ladderLayer.getWidth();
+		int layerHeight = ladderLayer.getHeight();
+		
 		int ladderStatus = 0;
-		if (tileY >= 0 && tileY < tiles.length && tileX >= 0 && tileX < tiles[0].length) { 						
-			if ("1".equals(level.tiledMap.getTileProperty(tiles[tileY][tileX], "ladder"))) {
+		if (tileY >= 0 && tileY < layerHeight && tileX >= 0 && tileX < layerWidth) {
+			Cell cell = ladderLayer.getCell(tileX, tileY);
+			if (cell!=null && "1".equals(cell.getTile().getProperties().get("ladder"))) {			
 				ladderStatus+=LADDER;
 			}
 		}
 		
 		y = position.y-1.2f;
-		tileY = (int)((level.tiledMap.height*2-y)/Constants.METERS_PER_TILE);
+		tileY = (int)(y/Constants.METERS_PER_TILE);
 		
-		if (tileY < tiles.length) { 						
-			if ("1".equals(level.tiledMap.getTileProperty(tiles[tileY][tileX], "ladder"))) {
+		if (tileY < ladderLayer.getHeight()) {			
+			Cell cell = ladderLayer.getCell(tileX, tileY);
+			if (cell!=null && "1".equals(cell.getTile().getProperties().get("ladder"))) {		
 				ladderStatus+=LADDER_BELOW;
 			}
 		}
 		return ladderStatus;
 	}
 	
-	public boolean isTopOfTheLadder() {
-		Vector2 position = body.getPosition();						
+	public boolean isTopOfTheLadder() {						
 		Vector2 currentTile = getTile();
 		int tileX = (int)currentTile.x;		
-		int tileY = (int)currentTile.y - 1;		
-		int[][] tiles = level.tiledMap.layers.get(2).tiles;						
-		if (tileY < tiles.length) { 						
-			if ("1".equals(level.tiledMap.getTileProperty(tiles[tileY][tileX], "ladder"))) {				
+		int tileY = (int)currentTile.y + 1;		
+
+		TiledMapTileLayer ladderLayer = (TiledMapTileLayer)level.tiledMap.getLayers().get(Constants.LADDER_LAYER);	
+		if (tileY < ladderLayer.getHeight()) { 						
+			Cell cell = ladderLayer.getCell(tileX, tileY);
+			if (cell!=null && "1".equals(cell.getTile().getProperties().get("ladder"))) {					
 				return false;
 			}
 		}
@@ -151,9 +160,9 @@ public abstract class GameObject {
 	
 	private Vector2 getTileVector = new Vector2();
 	public Vector2 getTile() {
-		Vector2 position = body.getPosition();
-		int tileX = (int) (position.x/Constants.METERS_PER_TILE);		
-		int tileY = (int)((level.tiledMap.height*2-position.y)/Constants.METERS_PER_TILE);		
+		Vector2 position = body.getPosition();	
+		int tileX = (int) (position.x/Constants.METERS_PER_TILE);				
+		int tileY = (int) (position.y/Constants.METERS_PER_TILE);		
 		return getTileVector.set(tileX, tileY);		
 	}
 	
