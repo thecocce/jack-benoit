@@ -1,4 +1,4 @@
-package com.pokware.engine;
+package com.pokware.engine.components;
 
 public interface LogicComponent extends Component {
 

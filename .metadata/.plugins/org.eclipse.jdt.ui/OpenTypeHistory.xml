@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <typeInfoHistroy>
-<typeInfo handle="=jb/src&lt;com.pokware.jb.objects{LevelObjectManager.java[LevelObjectManager" modifiers="1" timestamp="1384955438000"/>
-<typeInfo handle="=jb/src&lt;com.pokware.jb.objects{Jack.java[Jack" modifiers="1" timestamp="1384855800000"/>
-<typeInfo handle="=jb/src&lt;com.pokware.jb{Level.java[Level" modifiers="1" timestamp="1384957382000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb.objects{LevelObjectManager.java[LevelObjectManager" modifiers="1" timestamp="1385117360000"/>
 <typeInfo handle="=jb/src&lt;com.pokware.jb{CollisionManager.java[CollisionManager" modifiers="17" timestamp="1384955914000"/>
-<typeInfo handle="=jb/src&lt;com.pokware.engine.fonts{FntGenerator.java[FntGenerator" modifiers="1" timestamp="1384552323000"/>
-<typeInfo handle="=jb/src&lt;com.pokware.jb{Art.java[Art" modifiers="1" timestamp="1384866095000"/>
 <typeInfo handle="=jb/libs\/gdx.jar&lt;com.badlogic.gdx.maps.tiled(TiledMapTile.class[TiledMapTile" modifiers="1537" timestamp="1384855681000"/>
-<typeInfo handle="=jb/src&lt;com.pokware.jb.ai{PathingTool.java[PathingTool" modifiers="1" timestamp="1384957135000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb.ai{PathingTool.java[PathingTool" modifiers="1" timestamp="1385127860000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb{Level.java[Level" modifiers="1" timestamp="1385474780000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb.objects{Zombie.java[Zombie" modifiers="1" timestamp="1385119059000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.engine.fonts{FntGenerator.java[FntGenerator" modifiers="1" timestamp="1384552323000"/>
+<typeInfo handle="=jb/libs\/gdx.jar&lt;com.badlogic.gdx.maps.tiled(TiledMapTileLayer$Cell.class[Cell" modifiers="9" timestamp="1384855681000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb{Art.java[Art" modifiers="1" timestamp="1385378727000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb.objects{Jack.java[Jack" modifiers="1" timestamp="1385378599000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.engine.tiles{JBTile.java[JBTile" modifiers="16385" timestamp="1385399682000"/>
+<typeInfo handle="=jb-android/\/home\/fabien\/android-sdks\/platforms\/android-17\/android.jar&lt;android.provider(SyncStateContract$Constants.class[Constants" modifiers="9" timestamp="1369340554000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb{Constants.java[Constants" modifiers="1" timestamp="1384944843000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.jb.ai{ProceduralArtGenerator.java[ProceduralArtGenerator" modifiers="1" timestamp="1385474780000"/>
+<typeInfo handle="=jb/src&lt;com.pokware.engine.tiles{JBLevelLayout.java[JBLevelLayout" modifiers="1" timestamp="1385474961000"/>
 </typeInfoHistroy>

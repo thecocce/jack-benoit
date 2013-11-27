@@ -64,7 +64,7 @@ public class Art {
 			textureRegion.flip(true, false);
 		}		
 		walkingLeftAnimation = new Animation(0.1f, flippedWalkingTextures);
-		
+				
 		TextureRegion[] climbTextures = atlas.findRegion("Climb").split(TILESIZE, TILESIZE)[0];
 		climbingAnimation = new Animation(0.1f, climbTextures);
 		

@@ -16,7 +16,7 @@ import com.pokware.jb.Level;
 public class Jack extends GameObject implements Climber, InputProcessor {
 	
 	public static float WALK_POWER = 3;
-	public static float JUMP_POWER = 700;
+	public static float JUMP_POWER = 1700;
 	public static float CLIMB_POWER = 200;
 	
 	public static enum JackStateEnum {

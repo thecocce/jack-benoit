@@ -9,7 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.pokware.engine.tiles.Tiles;
+import com.pokware.engine.tiles.JBTile;
 import com.pokware.jb.Art;
 import com.pokware.jb.Constants;
 
@@ -40,7 +40,7 @@ public class MenuScreen extends AbstractScreen {
 	private void generateRandomDecorations() {
 		TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet(0);
 		TiledMapTileLayer layer = (TiledMapTileLayer)tiledMap.getLayers().get(0);
-		layer.getCell(1, 1).setTile(tileSet.getTile(Tiles.WORLD1_LADDER.id));
+		layer.getCell(1, 1).setTile(tileSet.getTile(JBTile.WORLD1_LADDER.id));
 	}
 
 	@SuppressWarnings("unused")
@@ -56,10 +56,12 @@ public class MenuScreen extends AbstractScreen {
 
 	private void createMenuBox(float centerX, float centerY, int width, int height) {
 		
+		
+		
 	}
 
 	@Override
-	public void render() {
+	public void render(float delta) {
 		tiledMapRenderer.render();
 
 		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

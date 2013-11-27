@@ -1,11 +1,12 @@
 package com.pokware.jb.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
-public abstract class AbstractScreen {
+public abstract class AbstractScreen implements Screen {
 
 	public static ShapeRenderer shapeRenderer = new ShapeRenderer();
 	public static ScreenListener listener;
@@ -25,6 +26,28 @@ public abstract class AbstractScreen {
 		listener.notifyScreenChange(newScreen);	
 	}
 
-	public abstract void render();
-		
+	@Override
+	public void resize(int width, int height) {			
+	}
+	
+	@Override
+	public void dispose() {	
+	}
+	
+	@Override
+	public void resume() {	
+	}
+	
+	@Override
+	public void hide() {	
+	}
+	
+	@Override
+	public void pause() {		
+	}
+	
+	@Override
+	public void show() {		
+	}
+	
 }

@@ -31,6 +31,7 @@ public class PathingTool {
 				}				
 			}
 		}	
+		
 		for (int y = 0; y < pathNodeTopology.length; y++) {
 			PathNode[] row = pathNodeTopology[y];
 			for (int x = 0; x < row.length; x++) {
@@ -41,17 +42,17 @@ public class PathingTool {
 					else {
 						markAsWalkable(x,y);						
 					}
-					if (y > 1 && isPlatformAt(platformTiles, x, y)) { // top ladder
+					/*if (y > 1 && isPlatformAt(platformTiles, x, y)) { // top ladder
 						markAsWaypoint(x, y+1);
 					}
 					if (y > 1 && x-1 > 0 && x < platformTiles.getWidth() && (platformTiles.getCell(x-1, y-1) != null || 
 							platformTiles.getCell(x+1, y-1) != null)) { // ladder
 						markAsWaypoint(x, y);
-					}
+					}*/
 				}
 			}
 		}
-		dump();
+//		dump();
 
 		this.shortestPathSearchNodes = new PriorityQueue<PathNode>(256, new ShortestPathNodeComparator(this));
 		this.randomPathSearchNodes = new PriorityQueue<PathNode>(256, new RandomPathNodeComparator(this));

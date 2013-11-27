@@ -3,7 +3,7 @@ package com.pokware.jb.screens;
 public class SplashScreen extends AbstractScreen {
 
 	@Override
-	public void render() {
+	public void render(float delta) {
 		
 	}
 

@@ -10,9 +10,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -23,7 +25,10 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.pokware.engine.tiles.JBLevelLayout;
+import com.pokware.engine.tiles.Room;
 import com.pokware.jb.ai.PathingTool;
+import com.pokware.jb.ai.ProceduralArtGenerator;
 import com.pokware.jb.objects.CollisionCategory;
 import com.pokware.jb.objects.GameObject;
 import com.pokware.jb.objects.GameObjectData;
@@ -54,10 +59,33 @@ public class Level {
 		this.physicalWorld = new World(gravityVector, true);		
 		this.objectManager = new LevelObjectManager(this);
 
-		tiledMap  = new TmxMapLoader().load("data/output/layout_8x2.tmx");
-				
-		generateRoomsFor(tiledMap, 1, 4, 2);
-				
+//		tiledMap = new TmxMapLoader().load("data/output/layout_16x1.tmx");
+//		MapProperties properties = tiledMap.getProperties();
+//		int margin = Integer.valueOf(properties.get("margin").toString());
+//		int hRooms = Integer.valueOf(properties.get("hRooms").toString());
+//		int vRooms = Integer.valueOf(properties.get("vRooms").toString());
+		
+		JBLevelLayout jbLevelLayout = new JBLevelLayout(4, 2, 20, 16);
+		// First row	
+		jbLevelLayout.addFilledRoom();
+		jbLevelLayout.addRoom(false, true, true, false, true);
+		jbLevelLayout.addRoom(false, true, false, true, true);
+		jbLevelLayout.addRoom(false, false, true, true, true);
+		
+		// Second row
+		jbLevelLayout.addRoom(true, false, true, false, true);
+		jbLevelLayout.addRoom(true, false, false, true, false);		
+		jbLevelLayout.addRoom(true, false, true, false, false);
+		jbLevelLayout.addRoom(true, false, false, true, false);
+		
+		for (Room room : jbLevelLayout) {
+			System.out.println(room);
+		}
+		
+		tiledMap = ProceduralArtGenerator.generateMap(new TmxMapLoader().load("data/output/layout_16x1.tmx"), jbLevelLayout);
+		
+//		generateRoomsFor(tiledMap, 1, hRooms, vRooms, margin);
+		
 		tileMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 2f/32f);		
 		
 		pathingTool = new PathingTool((TiledMapTileLayer)tiledMap.getLayers().get(BACKGROUND_LAYERS[0]), 
@@ -70,14 +98,25 @@ public class Level {
 		camera = new LevelCamera(this);		
 	}
 
-
-	private void generateRoomsFor(TiledMap tiledMap, int world, int hRooms, int vRooms) {
+	private void generateRoomsFor(TiledMap tiledMap, int world, int hRooms, int vRooms, int margin) {
 		FileHandle baseRoomDir = Gdx.files.internal("data/output/rooms");
 		FileHandle[] roomFileList = baseRoomDir.list(world+".tmx");
 		Map<Integer, TiledMap> mapCache = new HashMap<Integer, TiledMap>();
 		
+		/*		
+		TiledMapTileLayer platformLayer = (TiledMapTileLayer)tiledMap.getLayers().get(Constants.PLATFORM_LAYER);
+		TiledMapTileLayer ladderLayer= (TiledMapTileLayer)tiledMap.getLayers().get(Constants.LADDER_LAYER);
+		TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet(0);
+		
+		
+		
+		ProceduralArtGenerator proceduralGenerator = new ProceduralArtGenerator(platformLayer, ladderLayer, tileSet, 16, 20);
+		int roomIndex = 0;
 		for (int x = 0; x < hRooms; x++) {
 			for (int y = 0; y < vRooms; y++) {
+								
+				proceduralGenerator.createRandomPlatforms(roomIndex++, x*20, y*16, false, true, false, false);
+				
 				int roomIndex = (int)Math.floor(Math.random()*roomFileList.length);
 				TiledMap roomMap = null;
 				if (!mapCache.containsKey(roomIndex)) {
@@ -96,21 +135,18 @@ public class Level {
 							int globalTileX = rx+(x*20);
 							TiledMapTileLayer mapLayer = (TiledMapTileLayer)tiledMap.getLayers().get(layer);
 							TiledMapTileLayer roomLayer = (TiledMapTileLayer)roomMap.getLayers().get(layer);
-							mapLayer.setCell(1+globalTileX, 1+globalTileY, roomLayer.getCell(rx, ry)); // Copy room cell to map cell									
+							mapLayer.setCell(margin+globalTileX, margin+globalTileY, roomLayer.getCell(rx, ry)); // Copy room cell to map cell									
 						}
 					}
-				}
-				
-				// Create a hole
-				for(int ty = 13; ty < 22; ty++) {
-					TiledMapTileLayer mapLayer = (TiledMapTileLayer)tiledMap.getLayers().get(1);
-					mapLayer.setCell(hRooms*20-1, ty, null);						
-					mapLayer.setCell(hRooms*20, ty, null);						
-				}
-				
+				}				
 			}
 		}
+		
+		proceduralGenerator.tilingPostProcessing();
+		*/
 	}
+	
+	
 
 
 
@@ -121,15 +157,15 @@ public class Level {
 		/*
 		 * tileX, tileY coords: 
 		 * +-----+-----+-----+-----+ 
-		 * | 0,2 | 1,2 | 2,2 | 3,2 | tiles[tiles.length-3] 
+		 * | 0,2 | 1,2 | 2,2 | 3,2 |  
 		 * +-----+-----+-----+-----+ 
-		 * | 0,1 | 1,1 | 2,1 | 3,1 | tiles[tiles.length-2]
+		 * | 0,1 | 1,1 | 2,1 | 3,1 | 
 		 * +-----+-----+-----+-----+ 
-		 * | 0,0 | 1,0 | 2,0 | 3,0 | tiles[tiles.length-1] 
+		 * | 0,0 | 1,0 | 2,0 | 3,0 |  
 		 * +-----+-----+-----+-----+
 		 */
 
-		for (int y = platforms.getHeight() - 2, tileY = 1; y >= 1; y--, tileY++) {			
+		for (int tileY = 0; tileY < platforms.getHeight(); tileY++) {			
 			int startRectTileX = -1;
 			int startRectTileY = -1;		
 			int firstColIndex = 1;			
@@ -184,9 +220,9 @@ public class Level {
 		}
 				
 		// Ground		
-		createRect(0, 0, platforms.getWidth()-1, 0);
+//		createRect(0, 0, platforms.getWidth()-1, 0);
 		// Ceiling
-		createRect(0, platforms.getHeight()-1, platforms.getWidth()-1, platforms.getHeight()-1);
+//		createRect(0, platforms.getHeight()-1, platforms.getWidth()-1, platforms.getHeight()-1);
 		// Left wall
 		createRect(0, 0, 0, platforms.getHeight()-1);
 		// Right wall

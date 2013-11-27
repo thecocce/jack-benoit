@@ -23,7 +23,7 @@ public class LevelScreen extends AbstractScreen {
 	}
 	
 	@Override
-	public void render() {
+	public void render(float delta) {
 		if (Gdx.input.isKeyPressed(Input.Keys.F1) && (System.currentTimeMillis()-lastKeyTime)>100) {
 			level.debugMode = !level.debugMode;			
 			lastKeyTime=System.currentTimeMillis();

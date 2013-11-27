@@ -80,22 +80,22 @@
  </tileset>
  <layer name="parrallax_layer" width="20" height="16">
   <data encoding="base64" compression="zlib">
-   eJyTYGBgkBjFgxZzATE3EPNgkZOCyqFjbGqR9UgDsQwWOS0g1obKI2NsatH16BBhJzHmEYO10TA+u0fxKMaHASQkHnU=
+   eJyTYGBgkAJiGSCWIAGD9Ejj0DeSzJNGwtxUNg/ZXB40fdxo8tjUgrA2GsZmPiGML6y0oObqQN2GbA8yrU2keaTGiQzUbmqaR4kZ3EiYnHSBLY2QGiej5hFvHgBOnR+h
   </data>
  </layer>
- <layer name="platforms_layer" width="20" height="16" visible="0">
+ <layer name="platforms_layer" width="20" height="16">
   <data encoding="base64" compression="zlib">
    eJwTZ2BgEKcipgVgBWI2IBYFYnYqmquKxQ5cmBh7VQkrIdt9xACQH/C5c6DdhwyQ3QoLe3EGTPcjxz2x8UAMGExhgQxg/lVlGHj/ipJhHj49YiSaJwoVF0UTg2ExND4yVsUhpoomBwCMrQa7
   </data>
  </layer>
- <layer name="interaction_layer" width="20" height="16" visible="0">
+ <layer name="interaction_layer" width="20" height="16">
   <data encoding="base64" compression="zlib">
    eJxjYBhaQJDK5glR2Q5s5mETowTgM48ct+Mzjxy3E2ueIBYxdIDuH3S+EBY2Kf7Bxx+M5mGTG2nmURMAAOlLAwE=
   </data>
  </layer>
- <layer name="sprite_layer" width="20" height="16" visible="0">
+ <layer name="sprite_layer" width="20" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjYKA+MANiNyRMD6AOpYVxyFPTHYpUNGuoA2rHL7awHezh7YZGjwIEUCZCDbZwU6K2Q3AAAPVPA0k=
+   eJxjYKA+MANiNyRMK6CExFaH0sI0tG8UYAJqx68ilc2jB3BDo0cBAigToWYgww0AjsACwQ==
   </data>
  </layer>
 </map>

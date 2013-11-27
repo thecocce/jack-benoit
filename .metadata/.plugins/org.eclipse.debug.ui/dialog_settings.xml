@@ -7,7 +7,7 @@
 	</section>
 	<section name="org.eclipse.debug.ui.LAUNCH_CONFIGURATIONS_DIALOG_SECTION">
 		<item value="802" key="DIALOG_WIDTH"/>
-		<item value=", " key="org.eclipse.debug.ui.EXPANDED_NODES"/>
+		<item value=", org.eclipse.jdt.launching.localJavaApplication, " key="org.eclipse.debug.ui.EXPANDED_NODES"/>
 		<item value="644" key="DIALOG_HEIGHT"/>
 		<item value="237" key="org.eclipse.debug.ui.DIALOG_SASH_WEIGHTS_1"/>
 		<item value="1|Liberation Sans,Sans|8.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>

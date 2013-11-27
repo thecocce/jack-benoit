@@ -1,4 +1,7 @@
 eclipse.preferences.version=1
+lineNumberRuler=true
+occurrenceIndicationColor=255,165,0
+occurrenceIndicationInVerticalRuler=true
 overviewRuler_migration=migrated_3.1
 spellingEnabled=false
 spellingEngine=org.eclipse.jdt.internal.ui.text.spelling.DefaultSpellingEngine

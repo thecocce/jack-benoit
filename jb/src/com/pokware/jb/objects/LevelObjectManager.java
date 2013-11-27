@@ -76,7 +76,7 @@ public class LevelObjectManager {
 		TiledMapTileLayer spriteLayer = (TiledMapTileLayer)level.tiledMap.getLayers().get(Constants.SPRITE_LAYERS[0]);
 		int mapHeightInMeters = mapLayer.getHeight()*METERS_PER_TILE;
 		
-		add(new Jack(level, 20f, 20f));		
+		add(new Jack(level, 20f, mapHeightInMeters-20f));		
 		// Spawn from tiles
 			
 		for (int y = spriteLayer.getHeight() - 1; y > 0; y--) {							

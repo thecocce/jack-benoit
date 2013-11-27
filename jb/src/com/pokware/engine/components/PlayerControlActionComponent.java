@@ -1,4 +1,4 @@
-package com.pokware.engine;
+package com.pokware.engine.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
