@@ -28,7 +28,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.pokware.engine.tiles.JBLevelLayout;
 import com.pokware.engine.tiles.Room;
 import com.pokware.jb.ai.PathingTool;
-import com.pokware.jb.ai.ProceduralArtGenerator;
+import com.pokware.jb.ai.ProceduralLevelGenerator;
 import com.pokware.jb.objects.CollisionCategory;
 import com.pokware.jb.objects.GameObject;
 import com.pokware.jb.objects.GameObjectData;
@@ -58,33 +58,10 @@ public class Level {
 		
 		this.physicalWorld = new World(gravityVector, true);		
 		this.objectManager = new LevelObjectManager(this);
-
-//		tiledMap = new TmxMapLoader().load("data/output/layout_16x1.tmx");
-//		MapProperties properties = tiledMap.getProperties();
-//		int margin = Integer.valueOf(properties.get("margin").toString());
-//		int hRooms = Integer.valueOf(properties.get("hRooms").toString());
-//		int vRooms = Integer.valueOf(properties.get("vRooms").toString());
 		
-		JBLevelLayout jbLevelLayout = new JBLevelLayout(4, 2, 20, 16);
-		// First row	
-		jbLevelLayout.addFilledRoom();
-		jbLevelLayout.addRoom(false, true, true, false, true);
-		jbLevelLayout.addRoom(false, true, false, true, true);
-		jbLevelLayout.addRoom(false, false, true, true, true);
-		
-		// Second row
-		jbLevelLayout.addRoom(true, false, true, false, true);
-		jbLevelLayout.addRoom(true, false, false, true, false);		
-		jbLevelLayout.addRoom(true, false, true, false, false);
-		jbLevelLayout.addRoom(true, false, false, true, false);
-		
-		for (Room room : jbLevelLayout) {
-			System.out.println(room);
-		}
-		
-		tiledMap = ProceduralArtGenerator.generateMap(new TmxMapLoader().load("data/output/layout_16x1.tmx"), jbLevelLayout);
-		
-//		generateRoomsFor(tiledMap, 1, hRooms, vRooms, margin);
+		JBLevelLayout jbLevelLayout = JBLevelLayout.random(4);
+				
+		tiledMap = ProceduralLevelGenerator.generateMap(new TmxMapLoader().load("data/output/layout_16x1.tmx"), jbLevelLayout);
 		
 		tileMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 2f/32f);		
 		
@@ -93,9 +70,13 @@ public class Level {
 		
 		createPhysicsWorld();		
 		
-		objectManager.populateLevel();
+		int initialX = jbLevelLayout.startRoomX*20*2+20;
+		int initialY = jbLevelLayout.startRoomY*16*2+20;
+		System.out.println("jack start at " + initialX +","+initialY);
 		
-		camera = new LevelCamera(this);		
+		objectManager.populateLevel(initialX, initialY);
+		
+		camera = new LevelCamera(this, initialX, initialY);		
 	}
 
 	private void generateRoomsFor(TiledMap tiledMap, int world, int hRooms, int vRooms, int margin) {

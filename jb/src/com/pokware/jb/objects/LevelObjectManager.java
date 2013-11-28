@@ -71,12 +71,12 @@ public class LevelObjectManager {
 		return buffer.toString();
 	}
 
-	public void populateLevel() {
+	public void populateLevel(float jackX, float jackY) {
 		TiledMapTileLayer mapLayer = (TiledMapTileLayer)level.tiledMap.getLayers().get(Constants.BACKGROUND_LAYERS[0]);
 		TiledMapTileLayer spriteLayer = (TiledMapTileLayer)level.tiledMap.getLayers().get(Constants.SPRITE_LAYERS[0]);
 		int mapHeightInMeters = mapLayer.getHeight()*METERS_PER_TILE;
 		
-		add(new Jack(level, 20f, mapHeightInMeters-20f));		
+		add(new Jack(level, jackX, jackY));		
 		// Spawn from tiles
 			
 		for (int y = spriteLayer.getHeight() - 1; y > 0; y--) {							

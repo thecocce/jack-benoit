@@ -15,7 +15,7 @@ import com.pokware.engine.tiles.JBLevelLayout;
 import com.pokware.engine.tiles.JBTile;
 import com.pokware.engine.tiles.Room;
 
-public class ProceduralArtGenerator {
+public class ProceduralLevelGenerator {
 	private TiledMapTileLayer platformLayer;
 	private TiledMapTileLayer ladderLayer;
 	private TiledMapTileSet tileSet;
@@ -28,7 +28,7 @@ public class ProceduralArtGenerator {
 	private Platform[] generatedPlatforms = new Platform[2000];
 	private int generatedPlatformsNumber;
 
-	public ProceduralArtGenerator(TiledMapTileLayer platformLayer, TiledMapTileLayer ladderLayer, TiledMapTileSet tileSet, int roomHeight, int roomWidth) {
+	public ProceduralLevelGenerator(TiledMapTileLayer platformLayer, TiledMapTileLayer ladderLayer, TiledMapTileSet tileSet, int roomHeight, int roomWidth) {
 		super();
 		this.rng = new Random();
 		this.platformLayer = platformLayer;
@@ -52,24 +52,23 @@ public class ProceduralArtGenerator {
 		}
 	}
 
-	public void createRandomRoom(int roomIndex, int roomOffsetX, int roomOffsetY, boolean floor, boolean ceiling, boolean leftWall, boolean rightWall, boolean ground) {
+	public void createRandomRoom(int roomIndex, int roomOffsetX, int roomOffsetY, boolean floor, boolean ceiling, boolean leftWall, boolean rightWall, boolean ground, boolean platforms) {
 		System.out.println(roomIndex + " " + roomOffsetX + " " + roomOffsetY + " " + floor + " " + ceiling + " " + leftWall + " " + rightWall);
 
 		if (ground) {
 			generateGround(roomIndex, roomOffsetX, roomOffsetY);
 		}
 
-		createRandomPlatforms(roomOffsetX, roomOffsetY, ground);
-
-		createRandomLadders(roomOffsetX, roomOffsetY);
+		if (platforms) {
+			createRandomPlatforms(roomOffsetX, roomOffsetY, ground);
+			createRandomLadders(roomOffsetX, roomOffsetY);
+		}
 
 		createRoomWalls(roomOffsetX, roomOffsetY, floor, ceiling, leftWall, rightWall);
 
 	}
 
-	private void createRoomWalls(int roomOffsetX, int roomOffsetY, boolean floor, boolean ceiling, boolean leftWall, boolean rightWall) {
-		System.out.println(String.format("Room at %d,%d: f:%b c:%b l:%b r:%b", roomOffsetX,  roomOffsetY,  floor,  ceiling,  leftWall,  rightWall));
-		
+	private void createRoomWalls(int roomOffsetX, int roomOffsetY, boolean floor, boolean ceiling, boolean leftWall, boolean rightWall) {				
 		for (int y = roomHeight - 1; y >= 0; y--) {
 			if (leftWall) {
 				setPlatform(roomOffsetX, roomOffsetY, 0, y, WORLD1_DIRT1);				
@@ -85,7 +84,7 @@ public class ProceduralArtGenerator {
 	}
 
 	private void createRandomLadders(int roomOffsetX, int roomOffsetY) {
-		System.out.println("generatedPlatformsNumber="+generatedPlatformsNumber);
+				
 		for (int i = 0; i < generatedPlatformsNumber; i++) {
 			Platform platform = generatedPlatforms[i];			
 			
@@ -165,6 +164,7 @@ public class ProceduralArtGenerator {
 	}
 
 	private void createRandomPlatforms(int roomOffsetX, int roomOffsetY, boolean ground) {
+		generatedPlatformsNumber = 0;
 		for (int y = ground ? 3 : 0; y < roomHeight - 2; y++) {
 			if (Math.random() <= 0.7) {
 				for (int x = 0; x < roomWidth; x++) {
@@ -316,14 +316,19 @@ public class ProceduralArtGenerator {
 		map.getTileSets().addTileSet(tileSet);
 		map.getProperties().putAll(master.getProperties());
 
-		ProceduralArtGenerator proceduralArtGenerator = new ProceduralArtGenerator(platformLayer, ladderLayer, tileSet, levelLayout.roomHeight, levelLayout.roomWidth);
-		for (Room room : levelLayout) {
-			if (room.filled) {
-				proceduralArtGenerator.fillRoom(room.id, room.offsetX, room.offsetY);
-			} else {
-				proceduralArtGenerator.createRandomRoom(room.id, room.offsetX, room.offsetY, room.bottomWall, room.topWall, room.leftWall, room.rightWall, room.ground);
-			}
+		ProceduralLevelGenerator proceduralArtGenerator = new ProceduralLevelGenerator(platformLayer, ladderLayer, tileSet, levelLayout.roomHeight, levelLayout.roomWidth);
+		for(int x=0; x < levelLayout.hRooms; x++) {
+			for(int y=0; y < levelLayout.vRooms; y++) {
+				Room room = levelLayout.rooms[x][y];
+				if (room.filled) {
+					proceduralArtGenerator.fillRoom(room.id, room.offsetX, room.offsetY);
+				} else {
+					boolean platforms = (levelLayout.startRoomX != x || levelLayout.startRoomY != y);
+					proceduralArtGenerator.createRandomRoom(room.id, room.offsetX, room.offsetY, room.bottomWall, room.topWall, room.leftWall, room.rightWall, room.ground, platforms);
+				}	
+			}	
 		}
+		
 
 		proceduralArtGenerator.tilingPostProcessing();
 

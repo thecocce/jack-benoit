@@ -22,7 +22,7 @@ public class LevelCamera {
 	private int levelWidthInMeters;
 	public Body cameraBody;
 		
-	public LevelCamera(Level level) {
+	public LevelCamera(Level level, float initialX, float initialY) {
 		TiledMapTileLayer layer = (TiledMapTileLayer)level.tiledMap.getLayers().get(0);
 		
 		this.viewPortWidthInMeters = (int) ((Gdx.graphics.getWidth() / 32) * Constants.METERS_PER_TILE);
@@ -32,6 +32,9 @@ public class LevelCamera {
 		this.zoom = Constants.ZOOM_FACTOR;
 		this.front = new OrthographicCamera(viewPortWidthInMeters, viewPortHeightInMeters);
 		this.parrallax = new OrthographicCamera(viewPortWidthInMeters, viewPortHeightInMeters);
+		
+		this.front.position.x = initialX;
+		this.front.position.y = initialY;
 		
 		this.front.zoom = zoom;
 		this.parrallax.zoom = zoom;
