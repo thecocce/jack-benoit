@@ -42,13 +42,9 @@ public class PathingTool {
 					else {
 						markAsWalkable(x,y);						
 					}
-					/*if (y > 1 && isPlatformAt(platformTiles, x, y)) { // top ladder
+					if (y > 1 && isPlatformAt(platformTiles, x, y)) { // top ladder
 						markAsWaypoint(x, y+1);
-					}
-					if (y > 1 && x-1 > 0 && x < platformTiles.getWidth() && (platformTiles.getCell(x-1, y-1) != null || 
-							platformTiles.getCell(x+1, y-1) != null)) { // ladder
-						markAsWaypoint(x, y);
-					}*/
+					}					
 				}
 			}
 		}

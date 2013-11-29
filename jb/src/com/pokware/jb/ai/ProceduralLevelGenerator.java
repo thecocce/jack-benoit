@@ -153,7 +153,7 @@ public class ProceduralLevelGenerator {
 		
 		for (int y = ground ? 3 : 0; y < roomHeight - 2; y++) {
 			if (Math.random() <= 0.7) {
-				for (int x = 1; x < roomWidth-1; x++) {
+				for (int x = 1; x < roomWidth-2; x++) {
 					double nextGaussian = rng.nextGaussian() + 1;
 					if (nextGaussian < 0) {
 						nextGaussian = 0;
@@ -190,7 +190,7 @@ public class ProceduralLevelGenerator {
 		for (Platform platform : platformList) {
 			
 			int ladderX = rng.nextInt(platform.length);								
-			if (!blockAt(platform.x+ladderX, platform.y + 1)) {  
+			if (!blockAt(platform.x+ladderX, platform.y + 1) && !blockAt(platform.x+ladderX, platform.y - 1)) {  
 				setLadder(platform.x+ladderX, platform.y, true);			
 				ladderList.add(new Ladder(platform.x+ladderX, platform.y, 1));
 			}
@@ -268,35 +268,41 @@ public class ProceduralLevelGenerator {
 
 	public void tilingPostProcessing() {		
 		// Create platform tiles in the layer
-		boolean platformStarted = false;
 		for (int y = platformLayer.getHeight() - 2; y > 0; y--) {
 			for (int x = 0; x < platformLayer.getWidth(); x++) {
-				if (blockAt(x, y) && !blockAt(x, y - 1) && !blockAt(x, y + 1)) {
-					if (!platformStarted) {
-						platformStarted = true;
-						setPlatform(x, y, WORLD1_PLATFORM_LEFT);
-					} else {
+				if (blockAt(x, y) && !blockAt(x, y - 1) && !blockAt(x, y + 1)) {	
+					boolean blockLeft = blockAt(x-1, y);
+					boolean blockRight = blockAt(x+1, y);
+					
+					if ( (blockLeft && blockRight) || (!blockLeft && !blockRight) ) {
 						setPlatform(x, y, WORLD1_PLATFORM);
 					}
-				} else {
-					if (platformStarted) {
-						platformStarted = false;
-						setPlatform(x - 1 >= 0 ? x - 1 : 0, y, WORLD1_PLATFORM_RIGHT);
+					else if (blockLeft) {
+						setPlatform(x, y, WORLD1_PLATFORM_RIGHT);
 					}
+					else if (blockRight) {
+						setPlatform(x, y, WORLD1_PLATFORM_LEFT);
+					}		
 				}
 			}
 		}
+		
 
 		for (int y = platformLayer.getHeight() - 1; y >= 0; y--) {
 			for (int x = 0; x < platformLayer.getWidth(); x++) {
-				Cell top = platformLayer.getCell(x, y);
-				Cell bottom = platformLayer.getCell(x, y - 1);
-				if (top != null && bottom != null && JBTile.fromCell(top).isPlatformTile() && JBTile.fromCell(bottom).isPlatformTile()) {
-					top.setTile(tileSet.getTile(JBTile.WORLD1_GROUND.id));
-					bottom.setTile(tileSet.getTile(JBTile.WORLD1_DIRT_HALF.id));
+				if (blockAt(x, y) && blockAt(x, y-1) && !blockAt(x, y+1)) {
+					platformLayer.setCell(x, y, JBTile.WORLD1_GROUND.toCell(tileSet));
 				}
 			}
 		}
+		for (int y = platformLayer.getHeight() - 1; y >= 0; y--) {
+			for (int x = 0; x < platformLayer.getWidth(); x++) {
+				if (blockAt(x, y) && blockAt(x, y+1) && !blockAt(x, y-1)) {
+					platformLayer.setCell(x, y, JBTile.WORLD1_DIRT_HALF.toCell(tileSet));
+				}
+			}
+		}
+		
 		
 		// Grow ladders
 		for (Ladder ladder : ladderList) {
