@@ -12,7 +12,6 @@ public class JBLevelLayout {
 	public Room[][] rooms; // left to right, then bottom to top  
 	public int width;
 	public int height;
-	public int index = 0;
 	public int startRoomY;
 	public int startRoomX;
 	
@@ -31,21 +30,20 @@ public class JBLevelLayout {
 	@Override
 	public String toString() {
 		return "JBLevelLayout [hRooms=" + hRooms + ", vRooms=" + vRooms + ", roomWidth=" + roomWidth + ", roomHeight=" + roomHeight + ", rooms=" + Arrays.toString(rooms)
-				+ ", width=" + width + ", height=" + height + ", index=" + index + "]";
+				+ ", width=" + width + ", height=" + height + "]";
 	}
 	
 	public void addFilledRoom(int x, int y) {
-		Room room = new Room(index, (index%hRooms)*roomWidth, (index/hRooms)*roomHeight);
+		Room room = new Room(y*hRooms+x,x*roomWidth, y*roomHeight);
 		rooms[x][y] = room;
-		index++;
 	}
 
 	public void addRoom(int x, int y, boolean topWall, boolean bottomWall, boolean leftWall, boolean rightWall, boolean ground) {
-		Room room = new Room(index, topWall, bottomWall, leftWall, rightWall, 
-				(index%hRooms)*roomWidth, 
-				(index/hRooms)*roomHeight, ground);
+		Room room = new Room(y*hRooms+x,
+				topWall, bottomWall, leftWall, rightWall, 
+				x*roomWidth, 
+				y*roomHeight, ground);
 		rooms[x][y] = room;
-		index++;
 	}
 	
 	
@@ -145,8 +143,8 @@ public class JBLevelLayout {
 		}
 		
 		// 3. Layout generation
-		int hRooms = topX-bottomX;
-		int vRooms = topY-bottomY;
+		int hRooms = topX-bottomX + 1;
+		int vRooms = topY-bottomY + 1;
 		JBLevelLayout jbLevelLayout = new JBLevelLayout(hRooms, vRooms, 20, 16, directions.length/2-bottomX, directions.length/2-bottomY);		
 		
 		for (int x = 0; x < hRooms; x++) {
@@ -162,14 +160,14 @@ public class JBLevelLayout {
 					if (orientation.current == Direction.NORTH || orientation.previous == Direction.SOUTH) {
 						topWall = false;						
 					}
-					else if (orientation.current == Direction.SOUTH || orientation.previous == Direction.NORTH) {
+					if (orientation.current == Direction.SOUTH || orientation.previous == Direction.NORTH) {
 						bottomWall = false;
 						ground = false;
 					}
-					else if (orientation.current == Direction.EAST || orientation.previous == Direction.WEST) {
+					if (orientation.current == Direction.EAST || orientation.previous == Direction.WEST) {
 						rightWall = false;
 					}
-					else if (orientation.current == Direction.WEST || orientation.previous == Direction.EAST) {
+					if (orientation.current == Direction.WEST || orientation.previous == Direction.EAST) {
 						leftWall = false;
 					}				
 					jbLevelLayout.addRoom(x,y, topWall, bottomWall, leftWall, rightWall, ground);
@@ -202,6 +200,23 @@ public class JBLevelLayout {
 						case EAST: System.out.print(">");break;
 						case WEST: System.out.print("<");break;
 					}					
+			}
+			System.out.println();
+		}
+		
+		for(int y=vRooms-1; y >= 0; y--) {
+			for(int x=0; x < hRooms; x++) {
+				Room room = rooms[x][y];
+				if (room.filled) {
+					System.out.print("@@@@");
+				} else {					
+					System.out.print(
+							(room.topWall?"T":" ") +
+							(room.bottomWall?"B":" ") +
+							(room.leftWall?"L":" ") +
+							(room.rightWall?"R":" ") 									
+						);
+				}	
 			}
 			System.out.println();
 		}

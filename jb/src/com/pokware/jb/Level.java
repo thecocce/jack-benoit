@@ -10,11 +10,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -26,7 +23,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.pokware.engine.tiles.JBLevelLayout;
-import com.pokware.engine.tiles.Room;
 import com.pokware.jb.ai.PathingTool;
 import com.pokware.jb.ai.ProceduralLevelGenerator;
 import com.pokware.jb.objects.CollisionCategory;
@@ -59,8 +55,13 @@ public class Level {
 		this.physicalWorld = new World(gravityVector, true);		
 		this.objectManager = new LevelObjectManager(this);
 		
-		JBLevelLayout jbLevelLayout = JBLevelLayout.random(4);
-				
+		JBLevelLayout jbLevelLayout = JBLevelLayout.random(16);
+		/*JBLevelLayout jbLevelLayout = new JBLevelLayout(2, 2, 20, 16, 0, 1);
+		jbLevelLayout.addRoom(0, 1, true, true, true, false, false);
+		jbLevelLayout.addRoom(1, 1, true, false, false, true, false);		
+		jbLevelLayout.addRoom(0, 0, true, true, true, false, false);
+		jbLevelLayout.addRoom(1, 0, false, true, false, true, false);*/
+						
 		tiledMap = ProceduralLevelGenerator.generateMap(new TmxMapLoader().load("data/output/layout_16x1.tmx"), jbLevelLayout);
 		
 		tileMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 2f/32f);		
@@ -76,7 +77,7 @@ public class Level {
 		
 		objectManager.populateLevel(initialX, initialY);
 		
-		camera = new LevelCamera(this, initialX, initialY);		
+		camera = new LevelCamera(this, initialX+2*10, initialY+2*8);		
 	}
 
 	private void generateRoomsFor(TiledMap tiledMap, int world, int hRooms, int vRooms, int margin) {

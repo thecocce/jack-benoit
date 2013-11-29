@@ -1,7 +1,7 @@
 package com.pokware.engine.tiles;
 
 public class Room {
-	public int id;
+	public int id; 
 	public boolean topWall, bottomWall, leftWall, rightWall;
 	public int offsetX, offsetY;
 	public boolean ground;
@@ -21,7 +21,7 @@ public class Room {
 	}
 
 	public Room(int id, int offsetX, int offsetY) {
-		this.id = id;		
+		this.id = id;
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
 		this.filled = true;
@@ -29,7 +29,7 @@ public class Room {
 
 	@Override
 	public String toString() {
-		return "Room [id=" + id + ", topWall=" + topWall + ", bottomWall=" + bottomWall + ", leftWall=" + leftWall + ", rightWall=" + rightWall + ", offsetX=" + offsetX
+		return "Room [topWall=" + topWall + ", bottomWall=" + bottomWall + ", leftWall=" + leftWall + ", rightWall=" + rightWall + ", offsetX=" + offsetX
 				+ ", offsetY=" + offsetY + "]";
 	}
 	
