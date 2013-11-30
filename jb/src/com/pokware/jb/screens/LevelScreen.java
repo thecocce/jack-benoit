@@ -4,8 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.tiledmappacker.TileSetLayout;
+import com.pokware.engine.tiles.JBTile;
 import com.pokware.jb.Constants;
 import com.pokware.jb.Level;
 import com.pokware.jb.objects.Jack;
@@ -36,7 +40,7 @@ public class LevelScreen extends AbstractScreen {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		level.camera.update(level.objectManager.getJack());
-
+		
 		// Render map
 		level.tileMapRenderer.setView(level.camera.parrallax);
 		level.tileMapRenderer.render(Constants.PARALLAX_LAYERS);

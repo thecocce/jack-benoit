@@ -70,7 +70,18 @@ public class ProceduralLevelGenerator {
 		}
 
 		createRoomWalls(room);
+		
+		createSprites(room.id);
 
+	}
+
+	private void createSprites(int roomIndex) {
+		List<Platform> platformList = generatedPlatforms[roomIndex];		
+		int zombies = (int)(Math.random()*2);
+		for (int i = 0; i < zombies; i++) {
+//			Platform platform = platformList.get((int)(Math.random()*platformList.size()));
+			
+		}
 	}
 
 	private void createRoomWalls(Room room) {

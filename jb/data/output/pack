@@ -101,16 +101,9 @@ walk
   orig: 128, 32
   offset: 0, 0
   index: -1
-Walk
-  rotate: false
-  xy: 390, 230
-  size: 96, 32
-  orig: 96, 32
-  offset: 0, 0
-  index: -1
 Climb
   rotate: false
-  xy: 390, 264
+  xy: 390, 230
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
@@ -166,70 +159,70 @@ front
   index: -1
 web
   rotate: false
-  xy: 456, 264
+  xy: 456, 230
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 left
   rotate: false
-  xy: 260, 298
+  xy: 390, 264
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-orange
   rotate: false
-  xy: 294, 298
+  xy: 260, 298
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-pink
   rotate: false
-  xy: 294, 316
+  xy: 260, 316
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-green
   rotate: false
-  xy: 294, 334
+  xy: 260, 334
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-grey
   rotate: false
-  xy: 294, 352
+  xy: 260, 352
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-yellow
   rotate: false
-  xy: 294, 370
+  xy: 260, 370
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
 crystal-qubodup-ccby3-16-blue
   rotate: false
-  xy: 294, 388
+  xy: 260, 388
   size: 128, 16
   orig: 128, 16
   offset: 0, 0
   index: -1
 spider0
   rotate: false
-  xy: 424, 298
+  xy: 424, 264
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 spider1
   rotate: false
-  xy: 424, 316
+  xy: 390, 298
   size: 64, 16
   orig: 64, 16
   offset: 0, 0

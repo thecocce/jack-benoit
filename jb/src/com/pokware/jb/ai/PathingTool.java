@@ -48,7 +48,7 @@ public class PathingTool {
 				}
 			}
 		}
-//		dump();
+		dump();
 
 		this.shortestPathSearchNodes = new PriorityQueue<PathNode>(256, new ShortestPathNodeComparator(this));
 		this.randomPathSearchNodes = new PriorityQueue<PathNode>(256, new RandomPathNodeComparator(this));

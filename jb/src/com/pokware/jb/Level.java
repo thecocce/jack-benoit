@@ -55,7 +55,7 @@ public class Level {
 		this.physicalWorld = new World(gravityVector, true);		
 		this.objectManager = new LevelObjectManager(this);
 		
-		JBLevelLayout jbLevelLayout = JBLevelLayout.random(16);
+		JBLevelLayout jbLevelLayout = JBLevelLayout.random(2);
 		/*JBLevelLayout jbLevelLayout = new JBLevelLayout(2, 2, 20, 16, 0, 1);
 		jbLevelLayout.addRoom(0, 1, true, true, true, false, false);
 		jbLevelLayout.addRoom(1, 1, true, false, false, true, false);		
