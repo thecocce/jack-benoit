@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -13,6 +14,7 @@ import com.pokware.engine.tiles.JBTile;
 import com.pokware.jb.Constants;
 import com.pokware.jb.Level;
 import com.pokware.jb.objects.Jack;
+import com.sun.org.glassfish.external.statistics.annotations.Reset;
 
 public class LevelScreen extends AbstractScreen {
 	
@@ -21,9 +23,26 @@ public class LevelScreen extends AbstractScreen {
 	private long lastKeyTime = System.currentTimeMillis();
 	private float timer = 0f;	
 	private Box2DDebugRenderer box2dDebugRenderer;
+	private boolean pause;
+
 	
-	public LevelScreen(String mapName) {
-		level = new Level(mapName);		
+	public LevelScreen() {
+		level = new Level(this);	
+		fadeIn();
+	}
+	
+	public void reset() {
+		pause = true;
+		fadeOut();
+	}
+	
+	
+	@Override
+	protected void onFadeOutTermination() {
+		level.objectManager.reset();
+		level.camera.focusOnJack(level.objectManager.getJack());
+		fadeIn();
+		pause = false;
 	}
 	
 	@Override
@@ -33,11 +52,9 @@ public class LevelScreen extends AbstractScreen {
 			lastKeyTime=System.currentTimeMillis();
 		}
 		
-		float deltaTime = Gdx.graphics.getDeltaTime();
+		float deltaTime = pause ? 0 : Gdx.graphics.getDeltaTime();
 		timer += deltaTime;
 		level.step(deltaTime, 8, 3);
-		
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		level.camera.update(level.objectManager.getJack());
 		
@@ -75,6 +92,8 @@ public class LevelScreen extends AbstractScreen {
 				level.objectManager.drawDebugInfo();
 			}				
 		}
+		
+		super.renderCurtain();
 	}
 	
 
@@ -83,4 +102,7 @@ public class LevelScreen extends AbstractScreen {
 		return jack.toString();
 	}
 
+	public void pause() {
+		this.pause = true;
+	}
 }

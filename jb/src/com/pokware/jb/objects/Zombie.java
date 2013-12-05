@@ -37,8 +37,8 @@ public class Zombie extends GameObject implements Climber {
 	final static Vector2 leftImpulseVector = new Vector2(-ZOMBIE_SPEED, 0.0f);
 	final static Vector2 rightImpulseVector = new Vector2(ZOMBIE_SPEED, 0.0f);
 
-	public Zombie(Level level, float x, float y) {
-		super(level, x, y, CollisionCategory.ENEMY, true);
+	public Zombie(int id, Level level, float x, float y) {
+		super(id, level, x, y, CollisionCategory.ENEMY, true);
 		antiGravityVector = level.gravityVector.cpy().scl(-body.getMass()*1.1f);
 	}
 	

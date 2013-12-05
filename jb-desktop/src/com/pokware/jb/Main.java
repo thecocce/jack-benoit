@@ -62,7 +62,7 @@ public class Main {
 		for (File file : listFiles) {
 			Files.copy(Paths.get(file.getAbsolutePath()), Paths.get(outputDir.getAbsolutePath()+"/"+file.getName()), StandardCopyOption.REPLACE_EXISTING);
 		}
-		
-		
 	}
+	
+	
 }

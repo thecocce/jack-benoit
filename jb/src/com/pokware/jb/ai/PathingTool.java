@@ -36,19 +36,11 @@ public class PathingTool {
 			PathNode[] row = pathNodeTopology[y];
 			for (int x = 0; x < row.length; x++) {
 				if (isLadderAt(interactionLayer, x, y)) { // ladders
-					if (isWalkable(x, y)) {
-						markAsWaypoint(x, y);
-					}					
-					else {
-						markAsWalkable(x,y);						
-					}
-					if (y > 1 && isPlatformAt(platformTiles, x, y)) { // top ladder
-						markAsWaypoint(x, y+1);
-					}					
+						markAsWalkable(x, y);
 				}
 			}
 		}
-		dump();
+//		dump();
 
 		this.shortestPathSearchNodes = new PriorityQueue<PathNode>(256, new ShortestPathNodeComparator(this));
 		this.randomPathSearchNodes = new PriorityQueue<PathNode>(256, new RandomPathNodeComparator(this));
@@ -68,6 +60,7 @@ public class PathingTool {
 	private void markAsWalkable(int x, int y) {
 		if (y < pathNodeTopology.length && y >= 0) {
 			pathNodeTopology[y][x] = new PathNode(x, y);
+			pathNodeTopology[y][x].wayPoint = true;
 		}
 	}
 	

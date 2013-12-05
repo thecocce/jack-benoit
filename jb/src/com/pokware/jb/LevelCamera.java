@@ -56,9 +56,9 @@ public class LevelCamera {
 	
 	public void focusOnJack(Jack jack) {			
 		Vector2 jackWorldPosition = jack.body.getPosition();
-		Vector2 cameraBodyPosition = cameraBody.getPosition();		
-		cameraBodyPosition.x = jackWorldPosition.x;
-		cameraBodyPosition.y = jackWorldPosition.y;
+		this.front.position.x = jackWorldPosition.x;
+		this.front.position.y = jackWorldPosition.y;
+		cameraBody.setTransform(jackWorldPosition.x, jackWorldPosition.y, 0);		
 		cameraBody.setLinearVelocity(0,0);
 	}
 	

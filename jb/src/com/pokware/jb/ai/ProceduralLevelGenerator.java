@@ -1,41 +1,63 @@
 package com.pokware.jb.ai;
 
+import static com.pokware.engine.tiles.JBTile.BLUE_JEWEL;
+import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_EMPTY;
+import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_INNER_BOTTOM_LEFT;
+import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_INNER_BOTTOM_RIGHT;
+import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_INNER_TOP_LEFT;
+import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_INNER_TOP_RIGHT;
+import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_OUTER_LEFT;
+import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_OUTER_RIGHT;
+import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_PLAIN;
 import static com.pokware.engine.tiles.JBTile.WORLD1_DIRT1;
+import static com.pokware.engine.tiles.JBTile.WORLD1_DIRT_HALF;
+import static com.pokware.engine.tiles.JBTile.WORLD1_GROUND;
+import static com.pokware.engine.tiles.JBTile.WORLD1_LADDER;
+import static com.pokware.engine.tiles.JBTile.WORLD1_LADDER_TOP;
 import static com.pokware.engine.tiles.JBTile.WORLD1_PLATFORM;
 import static com.pokware.engine.tiles.JBTile.WORLD1_PLATFORM_LEFT;
 import static com.pokware.engine.tiles.JBTile.WORLD1_PLATFORM_RIGHT;
+import static com.pokware.engine.tiles.JBTile.ZOMBIE;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.pokware.engine.tiles.JBLevelLayout;
 import com.pokware.engine.tiles.JBTile;
 import com.pokware.engine.tiles.Room;
+import com.pokware.engine.tiles.RoomType;
+import com.pokware.jb.Constants;
 
 public class ProceduralLevelGenerator {
 	private TiledMapTileLayer platformLayer;
 	private TiledMapTileLayer ladderLayer;
+	private TiledMapTileLayer spriteLayer;
+	private TiledMapTileLayer backgroundLayer;
 	private TiledMapTileSet tileSet;
 	private int roomHeight;
 	private int roomWidth;
 	private Random rng;
 	/** for each room, the relative altitude */
 	private int[][] groundAltitudes;
-	
+
 	private List<Platform>[] generatedPlatforms;
 	private List<Ladder> ladderList;
-	
-	public ProceduralLevelGenerator(TiledMapTileLayer platformLayer, TiledMapTileLayer ladderLayer, TiledMapTileSet tileSet, int roomHeight, int roomWidth) {
+
+	public ProceduralLevelGenerator(TiledMap tiledMap, int roomHeight, int roomWidth) {
 		super();
 		this.rng = new Random();
-		this.platformLayer = platformLayer;
-		this.ladderLayer = ladderLayer;
-		this.tileSet = tileSet;
+		this.platformLayer = (TiledMapTileLayer) tiledMap.getLayers().get(Constants.PLATFORM_LAYER);
+		this.ladderLayer = (TiledMapTileLayer) tiledMap.getLayers().get(Constants.LADDER_LAYER);
+		this.spriteLayer = (TiledMapTileLayer) tiledMap.getLayers().get(Constants.SPRITE_LAYER);
+		this.backgroundLayer = (TiledMapTileLayer) tiledMap.getLayers().get(Constants.PARRALAX_LAYER);
+		this.tileSet = tiledMap.getTileSets().getTileSet(0);
 		this.roomHeight = roomHeight;
 		this.roomWidth = roomWidth;
 
@@ -43,7 +65,7 @@ public class ProceduralLevelGenerator {
 		int horizontalRooms = (platformLayer.getWidth()) / roomWidth;
 		int verticalRooms = (platformLayer.getHeight()) / roomHeight;
 		System.out.println(String.format("Number of horizontal rooms: %d, vertical: %d", horizontalRooms, verticalRooms));
-		
+
 		this.groundAltitudes = new int[horizontalRooms * verticalRooms][roomWidth];
 		this.generatedPlatforms = new ArrayList[horizontalRooms * verticalRooms];
 		this.ladderList = new ArrayList<Ladder>();
@@ -52,60 +74,101 @@ public class ProceduralLevelGenerator {
 	private void fillRoom(int offsetX, int offsetY) {
 		for (int y = 0; y < roomHeight; y++) {
 			for (int x = 0; x < roomWidth; x++) {
-				setPlatform(offsetX, offsetY, x, y, JBTile.WORLD1_DIRT1);
+				setPlatform(offsetX, offsetY, x, y, WORLD1_DIRT1);
 			}
 		}
 	}
 
-	public void createRandomRoom(Room room, boolean platforms) {
-//		System.out.println(roomOffsetX + " " + roomOffsetY + " " + floor + " " + ceiling + " " + leftWall + " " + rightWall);
+	public void createRandomRoom(Room room) {
 
 		if (room.ground) {
 			generateGround(room.id, room.offsetX, room.offsetY);
 		}
 
-		if (platforms) {
+		if (room.roomType == RoomType.PROCEDURAL || room.roomType == RoomType.END) {
 			createRandomPlatforms(room.id, room.offsetX, room.offsetY, room.ground);
 			createRandomLadders(room.id, room.offsetX, room.offsetY);
 		}
-
-		createRoomWalls(room);
 		
+		createRoomWalls(room);
+
+		if (room.roomType == RoomType.START) {
+			createStartingPosition(room);
+		}
+		
+		createDecorations(room);
 		createSprites(room.id);
 
 	}
 
+	private void createStartingPosition(Room room) {
+		for (int y = 1; y < roomHeight - 1; y++) {
+			for (int x = 1; x < roomWidth - 1; x++) {
+				if (blockAt(x, y)) {
+					if (!blockAt(room.offsetX, room.offsetY, x, y+1)) {
+					System.out.println("Found Starting position at " + x + "," + y + " in room " + room.id);
+					spriteLayer.setCell(room.offsetX+x, room.offsetY+y+1, JBTile.JACK.toCell(tileSet));
+					return;
+					}
+				}
+			}
+		}
+	}
+
+	private void createDecorations(Room room) {
+	}
+
 	private void createSprites(int roomIndex) {
 		List<Platform> platformList = generatedPlatforms[roomIndex];		
-		int zombies = (int)(Math.random()*2);
+		if (platformList == null) {
+			return;
+		}
+		int zombies = rng.nextInt(5);
 		for (int i = 0; i < zombies; i++) {
-//			Platform platform = platformList.get((int)(Math.random()*platformList.size()));
+			// get a random platform
 			
+			Platform platform = platformList.get(rng.nextInt(platformList.size()));
+			int randomPlacement = rng.nextInt(platform.length);
+			
+			if (!blockAt(platform.x+randomPlacement, platform.y+1)) {
+				spriteLayer.setCell(platform.x+randomPlacement, platform.y+1, ZOMBIE.toCell(tileSet));
+			}
+		}
+		
+		// Collectables
+		for(Platform platform : platformList) {
+			if (rng.nextDouble() > 0.5d) {
+				for (int jewelIndex = 0; jewelIndex < platform.length; jewelIndex++) {
+					if (!blockAt(platform.x+jewelIndex, platform.y+1) && rng.nextDouble() > 0.6) {
+						spriteLayer.setCell(platform.x+jewelIndex, platform.y+1, BLUE_JEWEL.toCell(tileSet));
+					}
+				}
+			}
 		}
 	}
 
 	private void createRoomWalls(Room room) {
-				
+
 		for (int y = roomHeight - 1; y >= 0; y--) {
 			if (room.leftWall) {
-				setPlatform(room.offsetX, room.offsetY, 0, y, WORLD1_DIRT1);				
+				setPlatform(room.offsetX, room.offsetY, 0, y, WORLD1_DIRT1);
 			}
 			if (room.rightWall) {
 				setPlatform(room.offsetX, room.offsetY, roomWidth - 1, y, WORLD1_DIRT1);
-			}						
+			}
 		}
-		
+
 		if (room.bottomWall) {
 			for (int x = 0; x < roomWidth; x++) {
 				platformLayer.setCell(room.offsetX + x, room.offsetY, WORLD1_DIRT1.toCell(tileSet));
 			}
 		}
-		
+
 		if (room.topWall) {
 			for (int x = 0; x < roomWidth; x++) {
 				platformLayer.setCell(room.offsetX + x, room.offsetY + roomHeight - 1, WORLD1_DIRT1.toCell(tileSet));
 			}
-		}		
+		}
 	}
 
 	private void generateGround(int roomIndex, int roomOffsetX, int roomOffsetY) {
@@ -138,17 +201,17 @@ public class ProceduralLevelGenerator {
 			} else if (currentHoleWidth > 0) { // end of hole
 				currentHoleWidth = 0;
 			}
-						
+
 			if (groundAltitude > 0) {
-				// Fill Ground			
+				// Fill Ground
 				for (int i = 0; i < groundAltitude; i++) {
 					setPlatform(roomOffsetX, roomOffsetY, x, i);
 				}
-				
+
 				int groundX = roomOffsetX + x;
-				int groundY = roomOffsetY + groundAltitudes[roomIndex][x]; 				
-				platformLayer.setCell(groundX, groundY, JBTile.WORLD1_GROUND.toCell(tileSet));
-			}			
+				int groundY = roomOffsetY + groundAltitudes[roomIndex][x];
+				platformLayer.setCell(groundX, groundY, WORLD1_GROUND.toCell(tileSet));
+			}
 		}
 
 		if (!hasHole) { // Create at least one hole
@@ -159,12 +222,12 @@ public class ProceduralLevelGenerator {
 	}
 
 	private void createRandomPlatforms(int roomIndex, int roomOffsetX, int roomOffsetY, boolean ground) {
-		
+
 		generatedPlatforms[roomIndex] = new ArrayList<Platform>();
-		
+
 		for (int y = ground ? 3 : 0; y < roomHeight - 2; y++) {
 			if (Math.random() <= 0.7) {
-				for (int x = 1; x < roomWidth-2; x++) {
+				for (int x = 1; x < roomWidth - 2; x++) {
 					double nextGaussian = rng.nextGaussian() + 1;
 					if (nextGaussian < 0) {
 						nextGaussian = 0;
@@ -180,13 +243,13 @@ public class ProceduralLevelGenerator {
 						}
 						int i = 0;
 						if (platformLength > 0) {
-							for (i = 0; i < platformLength; i++) {							
+							for (i = 0; i < platformLength; i++) {
 								setPlatform(roomOffsetX, roomOffsetY, x + i, y);
 							}
-							
-							generatedPlatforms[roomIndex].add(new Platform(roomOffsetX+x, roomOffsetY+y, i));
+
+							generatedPlatforms[roomIndex].add(new Platform(roomOffsetX + x, roomOffsetY + y, i));
 						}
-						
+
 						int variableSpaceLength = 1 + (int) rng.nextDouble() * 8;
 						x += i + variableSpaceLength;
 					}
@@ -194,18 +257,18 @@ public class ProceduralLevelGenerator {
 			}
 		}
 	}
-	
+
 	private void createRandomLadders(int roomIndex, int roomOffsetX, int roomOffsetY) {
-				
-		List<Platform> platformList = generatedPlatforms[roomIndex];		
+
+		List<Platform> platformList = generatedPlatforms[roomIndex];
 		for (Platform platform : platformList) {
-			
-			int ladderX = rng.nextInt(platform.length);								
-			if (!blockAt(platform.x+ladderX, platform.y + 1) && !blockAt(platform.x+ladderX, platform.y - 1)) {  
-				setLadder(platform.x+ladderX, platform.y, true);			
-				ladderList.add(new Ladder(platform.x+ladderX, platform.y, 1));
+
+			int ladderX = rng.nextInt(platform.length);
+			if (!blockAt(platform.x + ladderX, platform.y + 1) && !blockAt(platform.x + ladderX, platform.y - 1)) {
+				setLadder(platform.x + ladderX, platform.y, true);
+				ladderList.add(new Ladder(platform.x + ladderX, platform.y, 1));
 			}
-								
+
 		}
 	}
 
@@ -232,7 +295,7 @@ public class ProceduralLevelGenerator {
 	private boolean topLadderAt(int roomOffsetX, int roomOffsetY, int relativeX, int relativeY) {
 		int x = roomOffsetX + relativeX;
 		int y = roomOffsetY + relativeY;
-		return ladderLayer.getCell(x, y) != null && ladderLayer.getCell(x, y).getTile().getId() == JBTile.WORLD1_LADDER_TOP.id;
+		return ladderLayer.getCell(x, y) != null && ladderLayer.getCell(x, y).getTile().getId() == WORLD1_LADDER_TOP.id;
 	}
 
 	private boolean blockAt(int roomOffsetX, int roomOffsetY, int relativeX, int relativeY) {
@@ -245,14 +308,14 @@ public class ProceduralLevelGenerator {
 		return platformLayer.getCell(x, y) != null;
 	}
 
-	private void setLadder(int x, int y, boolean top) {				
-		if (x >= 0 && x < platformLayer.getWidth() && y >= 0 && y < platformLayer.getHeight()) {			
-			ladderLayer.setCell(x, y, top ? JBTile.WORLD1_LADDER_TOP.toCell(tileSet) : JBTile.WORLD1_LADDER.toCell(tileSet));
+	private void setLadder(int x, int y, boolean top) {
+		if (x >= 0 && x < platformLayer.getWidth() && y >= 0 && y < platformLayer.getHeight()) {
+			ladderLayer.setCell(x, y, top ? WORLD1_LADDER_TOP.toCell(tileSet) : WORLD1_LADDER.toCell(tileSet));
 		}
 	}
 
 	private void setPlatform(int roomOffsetX, int roomOffsetY, int relativeX, int relativeY) {
-		setPlatform(roomOffsetX, roomOffsetY, relativeX, relativeY, JBTile.WORLD1_DIRT1);
+		setPlatform(roomOffsetX, roomOffsetY, relativeX, relativeY, WORLD1_DIRT1);
 	}
 
 	private void setPlatform(int roomOffsetX, int roomOffsetY, int relativeX, int relativeY, JBTile tile) {
@@ -277,54 +340,49 @@ public class ProceduralLevelGenerator {
 		ladderLayer.setCell(x, y, null);
 	}
 
-	public void tilingPostProcessing() {		
+	public void tilingPostProcessing() {
 		// Create platform tiles in the layer
 		for (int y = platformLayer.getHeight() - 2; y > 0; y--) {
 			for (int x = 0; x < platformLayer.getWidth(); x++) {
-				if (blockAt(x, y) && !blockAt(x, y - 1) && !blockAt(x, y + 1)) {	
-					boolean blockLeft = blockAt(x-1, y);
-					boolean blockRight = blockAt(x+1, y);
-					
-					if ( (blockLeft && blockRight) || (!blockLeft && !blockRight) ) {
+				if (blockAt(x, y) && !blockAt(x, y - 1) && !blockAt(x, y + 1)) {
+					boolean blockLeft = blockAt(x - 1, y);
+					boolean blockRight = blockAt(x + 1, y);
+
+					if ((blockLeft && blockRight) || (!blockLeft && !blockRight)) {
 						setPlatform(x, y, WORLD1_PLATFORM);
-					}
-					else if (blockLeft) {
+					} else if (blockLeft) {
 						setPlatform(x, y, WORLD1_PLATFORM_RIGHT);
-					}
-					else if (blockRight) {
+					} else if (blockRight) {
 						setPlatform(x, y, WORLD1_PLATFORM_LEFT);
-					}		
+					}
 				}
 			}
 		}
-		
 
 		for (int y = platformLayer.getHeight() - 1; y >= 0; y--) {
 			for (int x = 0; x < platformLayer.getWidth(); x++) {
-				if (blockAt(x, y) && blockAt(x, y-1) && !blockAt(x, y+1)) {
-					platformLayer.setCell(x, y, JBTile.WORLD1_GROUND.toCell(tileSet));
+				if (blockAt(x, y) && blockAt(x, y - 1) && !blockAt(x, y + 1)) {
+					platformLayer.setCell(x, y, WORLD1_GROUND.toCell(tileSet));
 				}
 			}
 		}
 		for (int y = platformLayer.getHeight() - 1; y >= 0; y--) {
 			for (int x = 0; x < platformLayer.getWidth(); x++) {
-				if (blockAt(x, y) && blockAt(x, y+1) && !blockAt(x, y-1)) {
-					platformLayer.setCell(x, y, JBTile.WORLD1_DIRT_HALF.toCell(tileSet));
+				if (blockAt(x, y) && blockAt(x, y + 1) && !blockAt(x, y - 1)) {
+					platformLayer.setCell(x, y, WORLD1_DIRT_HALF.toCell(tileSet));
 				}
 			}
 		}
-		
-		
+
 		// Grow ladders
 		for (Ladder ladder : ladderList) {
 			int ladderX = ladder.x, ladderY = ladder.y - 1;
 			boolean groundFound = false;
-			while(!groundFound && ladderY > 1) {
+			while (!groundFound && ladderY > 1) {
 				Cell cell = platformLayer.getCell(ladderX, ladderY - 1);
-				if (cell!=null) {
+				if (cell != null) {
 					groundFound = true;
-				}
-				else {
+				} else {
 					setLadder(ladderX, ladderY, false);
 				}
 				ladderY--;
@@ -342,32 +400,116 @@ public class ProceduralLevelGenerator {
 		TiledMapTileLayer ladderLayer = new TiledMapTileLayer(levelLayout.width, levelLayout.height, 32, 32);
 		TiledMapTileLayer spriteLayer = new TiledMapTileLayer(levelLayout.width, levelLayout.height, 32, 32);
 
+		
 		map.getLayers().add(parrallaxLayer);
 		map.getLayers().add(platformLayer);
 		map.getLayers().add(ladderLayer);
 		map.getLayers().add(spriteLayer);
 		TiledMapTileSet tileSet = master.getTileSets().getTileSet(0);
+		Iterator<TiledMapTile> iterator = tileSet.iterator();
+		for (TiledMapTile tiledMapTile : tileSet) {
+			Object tileId = tiledMapTile.getProperties().get("id");
+			if (tileId!=null)
+				System.out.println(String.format("%s(%d),",tileId, tiledMapTile.getId()));
+		}
 		map.getTileSets().addTileSet(tileSet);
 		map.getProperties().putAll(master.getProperties());
 
-		ProceduralLevelGenerator proceduralArtGenerator = new ProceduralLevelGenerator(platformLayer, ladderLayer, tileSet, levelLayout.roomHeight, levelLayout.roomWidth);
-		for(int x=0; x < levelLayout.hRooms; x++) {
-			for(int y=0; y < levelLayout.vRooms; y++) {
+		ProceduralLevelGenerator proceduralArtGenerator = new ProceduralLevelGenerator(map, levelLayout.roomHeight, levelLayout.roomWidth);
+		
+		proceduralArtGenerator.fillBackground();
+		
+		for (int x = 0; x < levelLayout.hRooms; x++) {
+			for (int y = 0; y < levelLayout.vRooms; y++) {
 				Room room = levelLayout.rooms[x][y];
-				if (room.filled) {
+				if (room.roomType == RoomType.FILLED) {
 					proceduralArtGenerator.fillRoom(room.offsetX, room.offsetY);
 				} else {
-					boolean platforms = (levelLayout.startRoomX != x || levelLayout.startRoomY != y);
-					proceduralArtGenerator.createRandomRoom(room, platforms);
-				}	
-			}	
+					proceduralArtGenerator.createRandomRoom(room);
+				}
+			}
 		}
-		
 
 		proceduralArtGenerator.tilingPostProcessing();
 
 		return map;
 	}
 
+	private void fillBackground() {
+		for (int x = 0; x < backgroundLayer.getWidth(); x++) {
+			for (int y = 0; y <= backgroundLayer.getHeight(); y++) {
+				backgroundLayer.setCell(x, y, WORLD1_BACK_EMPTY.toCell(tileSet));
+			}
+		}
+		for (int x = 0; x < backgroundLayer.getWidth(); x+=2) {
+			// Stalactite
+			int stalactiteHeight = rng.nextInt(backgroundLayer.getHeight() / 2);
+			int stalagmiteHeight = rng.nextInt(backgroundLayer.getHeight() / 2);
+			for (int y = backgroundLayer.getHeight(); y >= backgroundLayer.getHeight() - stalactiteHeight; y--) {
+				backgroundLayer.setCell(x, y, WORLD1_BACK_PLAIN.toCell(tileSet));
+				backgroundLayer.setCell(x+1, y, WORLD1_BACK_PLAIN.toCell(tileSet));
+			}
+			// Stalagmite
+			for (int y = 0; y <= stalagmiteHeight; y++) {
+				backgroundLayer.setCell(x, y, WORLD1_BACK_PLAIN.toCell(tileSet));
+				backgroundLayer.setCell(x+1, y, WORLD1_BACK_PLAIN.toCell(tileSet));
+			}
+		}
+		for (int x = 0; x < backgroundLayer.getWidth(); x+=2) {
+			for (int y = 1; y <= backgroundLayer.getHeight(); y++) {
+				Cell topLeftCell = backgroundLayer.getCell(x, y);
+				Cell topRightCell = backgroundLayer.getCell(x+1, y);
+				Cell bottomLeftCell = backgroundLayer.getCell(x, y-1);
+				Cell bottomRightCell = backgroundLayer.getCell(x+1, y-1);
+				
+				boolean topLeftBlock = topLeftCell != null;
+				boolean topRightBlock = topRightCell != null;
+				boolean bottomLeftBlock = bottomLeftCell != null;
+				boolean bottomRightBlock = bottomRightCell != null;
+				boolean bottom = bottomLeftBlock && bottomRightBlock; 
+				boolean top = topLeftBlock && topRightBlock;	
+				
+				if (bottom && !top) {
+					refineBackgroundTile(x, y-1, WORLD1_BACK_INNER_BOTTOM_RIGHT);
+					refineBackgroundTile(x+1, y-1, WORLD1_BACK_INNER_BOTTOM_LEFT);
+				}
+				else if (top && !bottom) {
+					refineBackgroundTile(x, y, WORLD1_BACK_INNER_TOP_RIGHT);
+					refineBackgroundTile(x+1, y, WORLD1_BACK_INNER_TOP_LEFT);
+				}
+			}
+		}
+		for (int y = 1; y <= backgroundLayer.getHeight(); y+=2) {
+			for (int x = 0; x < backgroundLayer.getWidth(); x++) {
+
+				Cell topLeftCell = backgroundLayer.getCell(x, y);
+				Cell topRightCell = backgroundLayer.getCell(x+1, y);
+				Cell bottomLeftCell = backgroundLayer.getCell(x, y-1);
+				Cell bottomRightCell = backgroundLayer.getCell(x+1, y-1);
+				
+				boolean topLeftBlock = topLeftCell != null;
+				boolean topRightBlock = topRightCell != null;
+				boolean bottomLeftBlock = bottomLeftCell != null;
+				boolean bottomRightBlock = bottomRightCell != null;
+				boolean left = topLeftBlock && bottomLeftBlock;
+				boolean right = topRightBlock && bottomRightBlock;		
+				
+				if (left && !right) {
+					refineBackgroundTile(x+1, y, WORLD1_BACK_OUTER_RIGHT);
+					refineBackgroundTile(x+1, y-1, WORLD1_BACK_OUTER_RIGHT);
+				}
+				else if (right && !left) {
+					refineBackgroundTile(x, y, WORLD1_BACK_OUTER_LEFT);
+					refineBackgroundTile(x, y-1, WORLD1_BACK_OUTER_LEFT);
+				}
+			}
+		}
+	}
+
+	private void refineBackgroundTile(int x, int y, JBTile tile) {
+		if (backgroundLayer.getCell(x, y) != null && backgroundLayer.getCell(x, y).getTile().getId() == WORLD1_BACK_PLAIN.id) {
+			backgroundLayer.setCell(x, y, tile.toCell(tileSet));
+		}
+	}
 
 }

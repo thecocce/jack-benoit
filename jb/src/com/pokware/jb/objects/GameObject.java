@@ -23,12 +23,11 @@ public abstract class GameObject {
 	public static final int LADDER = 1;
 	public static final int LADDER_BELOW = 2;
 	public static final int NO_CLIFF = 0;
-	public static int ID_COUNTER = 0;
 	
 	public static int MAX_NODE_LIST_SIZE = 1000;
 	public static Vector2 FORCE_APPLICATION_POINT = new Vector2(32, 32);
 	
-	public int id = ID_COUNTER++;
+	public int id;
 	public Body body;
 	public Fixture fixture;	
 	public Level level;
@@ -36,19 +35,20 @@ public abstract class GameObject {
 	public float height = 2f;
 	public GameObjectData userData;
 	
-	public GameObject(Level level, float x, float y, CollisionCategory category, boolean bullet) {				
-		init(level, x, y, 32, 32, category, 0.2f, 0.5f, bullet);
+	public GameObject(int id, Level level, float x, float y, CollisionCategory category, boolean bullet) {				
+		init(id, level, x, y, 32, 32, category, 0.2f, 0.5f, bullet);
 	}
 
-	public GameObject(Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category, boolean bullet) {
-		init(level, x, y, pixelWidth, pixelHeight, category, 0.2f, 0.5f, bullet);
+	public GameObject(int id, Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category, boolean bullet) {
+		init(id, level, x, y, pixelWidth, pixelHeight, category, 0.2f, 0.5f, bullet);
 	}
 
-	public GameObject(Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category, float widthRatio, float heightRatio, boolean bullet) {
-		init(level, x, y, pixelWidth, pixelHeight, category, widthRatio, heightRatio, bullet);
+	public GameObject(int id, Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category, float widthRatio, float heightRatio, boolean bullet) {
+		init(id, level, x, y, pixelWidth, pixelHeight, category, widthRatio, heightRatio, bullet);
 	}
 	
-	private void init(Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category, float widthRatio, float heightRatio, boolean bullet) {
+	private void init(int id, Level level, float x, float y, int pixelWidth, int pixelHeight, CollisionCategory category, float widthRatio, float heightRatio, boolean bullet) {
+		this.id = id;
 		this.width = Constants.METERS_PER_TILE * pixelWidth / 32f;
 		this.height = Constants.METERS_PER_TILE * pixelHeight / 32f;
 					
@@ -93,11 +93,14 @@ public abstract class GameObject {
 		if (userData!= null) {
 			if (!userData.hidden) {			
 				TextureRegion textureRegion = getTextureRegion(tick);
+				if (textureRegion == null) {
+					return;
+				}
 				Vector2 position = body.getPosition();
 				spriteBatch.draw(textureRegion, position.x-(width/2), position.y-(height/2), width, height);
 			}
 			else {
-				level.physicalWorld.destroyBody(body);
+				destroy();
 			}
 		}
 	}
@@ -181,5 +184,9 @@ public abstract class GameObject {
 	@Override
 	public String toString() {	
 		return "[" + String.valueOf(id) + "] " +userData.toString();
+	}
+	
+	public void destroy() {
+		level.physicalWorld.destroyBody(body);
 	}
 }

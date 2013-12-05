@@ -12,7 +12,8 @@ public class Constants {
 	public static int[] BACKGROUND_LAYERS = { 1, 2 };
 	public static int LADDER_LAYER = 2;
 	public static int PLATFORM_LAYER = 1;
-	public static int PARRALAX_LAYER = 1;
+	public static int PARRALAX_LAYER = 0;
+	public static int SPRITE_LAYER = 3;
 	public static int[] SPRITE_LAYERS = { 3 };
 	
 }

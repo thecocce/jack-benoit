@@ -1,5 +1,4 @@
 package com.pokware.engine.tiles;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,8 +13,10 @@ public class JBLevelLayout {
 	public int height;
 	public int startRoomY;
 	public int startRoomX;
+	public int endRoomY;
+	public int endRoomX;
 	
-	public JBLevelLayout(int hRooms, int vRooms, int roomWidth, int roomHeight, int startRoomX, int startRoomY) {
+	public JBLevelLayout(int hRooms, int vRooms, int roomWidth, int roomHeight, int startRoomX, int startRoomY, int endRoomX, int endRoomY) {
 		this.hRooms = hRooms;
 		this.vRooms = vRooms;
 		this.roomWidth = roomWidth;
@@ -25,24 +26,38 @@ public class JBLevelLayout {
 		this.height = roomHeight * vRooms;
 		this.startRoomX = startRoomX;
 		this.startRoomY = startRoomY;
+		this.endRoomX = endRoomX;
+		this.endRoomY = endRoomY;
 	}
 		
+	
+	
 	@Override
 	public String toString() {
 		return "JBLevelLayout [hRooms=" + hRooms + ", vRooms=" + vRooms + ", roomWidth=" + roomWidth + ", roomHeight=" + roomHeight + ", rooms=" + Arrays.toString(rooms)
-				+ ", width=" + width + ", height=" + height + "]";
+				+ ", width=" + width + ", height=" + height + ", startRoomY=" + startRoomY + ", startRoomX=" + startRoomX + ", endRoomY=" + endRoomY + ", endRoomX=" + endRoomX
+				+ "]";
 	}
-	
+
+
+
 	public void addFilledRoom(int x, int y) {
 		Room room = new Room(y*hRooms+x,x*roomWidth, y*roomHeight);
 		rooms[x][y] = room;
 	}
 
 	public void addRoom(int x, int y, boolean topWall, boolean bottomWall, boolean leftWall, boolean rightWall, boolean ground) {
+		RoomType roomType = RoomType.PROCEDURAL;
+		if (x == startRoomX && y == startRoomY) {
+			roomType = RoomType.START;
+		}
+		else if (x == endRoomX && y == endRoomY) {
+			roomType = RoomType.END;
+		}
 		Room room = new Room(y*hRooms+x,
 				topWall, bottomWall, leftWall, rightWall, 
 				x*roomWidth, 
-				y*roomHeight, ground);
+				y*roomHeight, ground, roomType);
 		rooms[x][y] = room;
 	}
 	
@@ -145,7 +160,11 @@ public class JBLevelLayout {
 		// 3. Layout generation
 		int hRooms = topX-bottomX + 1;
 		int vRooms = topY-bottomY + 1;
-		JBLevelLayout jbLevelLayout = new JBLevelLayout(hRooms, vRooms, 20, 16, directions.length/2-bottomX, directions.length/2-bottomY);		
+		JBLevelLayout jbLevelLayout = new JBLevelLayout(hRooms, vRooms, 20, 16, 
+				directions.length/2-bottomX, 
+				directions.length/2-bottomY,
+				rx-bottomX,
+				ry-bottomY);		
 		
 		for (int x = 0; x < hRooms; x++) {
 			for (int y = 0; y < vRooms; y++) {
@@ -184,39 +203,28 @@ public class JBLevelLayout {
 
 	
 	private void dump() {
-		System.out.println("start="+startRoomX + "," + startRoomY);
-		
-		
-		for (int gy = 63; gy >= 0 ; gy--) {
-			for (int gx = 0; gx < 64; gx++) {
-				Orientation direction = directions[gx][gy];
-				if (direction == null) {
-					System.out.print(".");
-				}
-				else 
-					switch(direction.current) {
-						case NORTH: System.out.print("^");break;
-						case SOUTH: System.out.print("v");break;
-						case EAST: System.out.print(">");break;
-						case WEST: System.out.print("<");break;
-					}					
-			}
-			System.out.println();
-		}
+		System.out.println("start="+startRoomX + "," + startRoomY + "end="+endRoomX + "," + endRoomY);
 		
 		for(int y=vRooms-1; y >= 0; y--) {
 			for(int x=0; x < hRooms; x++) {
 				Room room = rooms[x][y];
-				if (room.filled) {
-					System.out.print("@@@@");
+				if (room.roomType == RoomType.FILLED) {
+					System.out.print("[@@@@]");
 				} else {					
-					System.out.print(
+					System.out.print('['+
 							(room.topWall?"T":" ") +
 							(room.bottomWall?"B":" ") +
 							(room.leftWall?"L":" ") +
-							(room.rightWall?"R":" ") 									
+							(room.rightWall?"R":" ") + ']'								
 						);
 				}	
+			}
+			System.out.println();
+		}
+		for(int y=vRooms-1; y >= 0; y--) {
+			for(int x=0; x < hRooms; x++) {
+				Room room = rooms[x][y];				
+				System.out.print(room.roomType.name().substring(0, 3) + " ");
 			}
 			System.out.println();
 		}

@@ -18,13 +18,13 @@ public class HUD {
 		spriteBatch.begin();
 		
 		Jack jack = level.objectManager.getJack();
-		int life = jack.getLife();
+		int life = jack.getMojo();
 		for(int i = 0; i < life; i++) {					
 			TextureRegion keyFrame = Art.heartAnimation.getKeyFrame(timer, true);			
 			spriteBatch.draw(keyFrame, Gdx.graphics.getWidth()-128+32*i, Gdx.graphics.getHeight()-40, 32, 32);			
 		}
 		
-		Art.bitmapFont.draw(spriteBatch, String.format("SCORE: %08d  JACK: 3   MOJO:", jack.getScore()), 20, Gdx.graphics.getHeight()-20);				
+		Art.bitmapFont.draw(spriteBatch, String.format("SCORE: %08d  JACK: %d   MOJO:", jack.getScore(), jack.getLife()), 20, Gdx.graphics.getHeight()-20);				
 		spriteBatch.end();
 	}
 

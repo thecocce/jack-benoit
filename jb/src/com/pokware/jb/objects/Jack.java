@@ -18,34 +18,21 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	public static float WALK_POWER = 3;
 	public static float JUMP_POWER = 1700;
 	public static float CLIMB_POWER = 200;
-	
-	public static enum JackStateEnum {
-		IDLE(Art.walkingLeftAnimation), 
-		WALK_LEFT(Art.walkingLeftAnimation),
-		WALK_RIGHT(Art.walkingRightAnimation),
-		CLIMBING_UP(Art.climbingAnimation),
-		CLIMBING_DOWN(Art.climbingAnimation), 
-		CLIMBING_IDLE(Art.climbingAnimation),
-		FALLING(Art.walkingLeftAnimation);
-		private Animation animation;
-
-		private JackStateEnum(Animation animation) {
-			this.animation = animation;
-		}
-		
-		public Animation getAnimation() {
-			return animation;
-		}
-	}
 
 	private JackStateEnum state = JackStateEnum.IDLE;
 	private JackStateEnum lastState = null;
-	private int life = 3;
+	private int mojo = 3;
+	private static int life = 3;
+	
+	// invicibility management
+	private int grantInvisibilityOnNextRender = 0;
+	private float invicibilityExpirationTime = -1;
+	
 	private int score;
 	private Vector2 antiGravityVector;
 			
-	public Jack(Level level, float x, float y) {
-		super(level, x, y, CollisionCategory.JACK, false);
+	public Jack(int id, Level level, float x, float y) {
+		super(id, level, x, y, CollisionCategory.JACK, false);
 		body.setBullet(true);			
 		antiGravityVector = level.gravityVector.cpy().scl(-body.getMass());
 		
@@ -73,9 +60,12 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	
 	
 	int lastLadderStatus = 0;
+	private boolean invicible;
 	
 	@Override
-	public TextureRegion getTextureRegion(float tick) {		
+	public TextureRegion getTextureRegion(float tick) {
+		manageInvicibilityStatus(tick);
+		
 		state = lastState != null ? lastState : JackStateEnum.IDLE;
 		
 		int ladderStatus = getLadderStatus();
@@ -154,8 +144,36 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		
 		lastLadderStatus = ladderStatus;
 		lastState = state;
-		return state.getAnimation().getKeyFrame(looping ? tick : 0, true);
 		
+		
+		TextureRegion keyFrame = state.getAnimation().getKeyFrame(looping ? tick : 0, true);
+		if (invicible) {
+			System.out.println("invincible");
+			int frameIndex = (int)(tick/10f);
+			if (frameIndex % 2 == 0) {
+				return null;
+			}
+			else {
+				return keyFrame;
+			}
+		}
+		else {
+			return keyFrame;
+		}
+	}
+
+
+	private void manageInvicibilityStatus(float tick) {
+		if (grantInvisibilityOnNextRender > 0) {
+			invicibilityExpirationTime = tick + grantInvisibilityOnNextRender;
+			grantInvisibilityOnNextRender = 0;
+			System.out.println("invincible until " + invicibilityExpirationTime + " tick is " + tick);
+			invicible = true;
+		}
+		if (invicibilityExpirationTime > tick) {
+			invicible = false;
+			invicibilityExpirationTime = -1;
+		}
 	}
 
 	private float goUp() {
@@ -271,8 +289,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	private Vector3 delta = new Vector3();
 	public boolean wasDraggingUp = false;
 	public boolean wasDraggingDown = false;
-	
-	
+
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 				
@@ -328,9 +345,12 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		return true;
 	}
 
-
 	public int getLife() {
 		return life;
+	}
+
+	public int getMojo() {
+		return mojo;
 	}
 
 
@@ -343,9 +363,17 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	}
 
 
-	public void decrementLife() {
-		if (life > 1) {
+	public void onHit() {
+		if (invicible) {
+			return;
+		}
+		if (mojo > 1) {
+			mojo--;
+			grantInvisibilityOnNextRender = 1;
+		}
+		else {
 			life--;
+			level.reset();
 		}
 	}
 
@@ -353,5 +381,23 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		incScore(collectable.getScoreValue());
 	}
 
+	
+	public static enum JackStateEnum {
+		IDLE(Art.walkingLeftAnimation), 
+		WALK_LEFT(Art.walkingLeftAnimation),
+		WALK_RIGHT(Art.walkingRightAnimation),
+		CLIMBING_UP(Art.climbingAnimation),
+		CLIMBING_DOWN(Art.climbingAnimation), 
+		CLIMBING_IDLE(Art.climbingAnimation),
+		FALLING(Art.walkingLeftAnimation);
+		private Animation animation;
 
+		private JackStateEnum(Animation animation) {
+			this.animation = animation;
+		}
+		
+		public Animation getAnimation() {
+			return animation;
+		}
+	}
 }

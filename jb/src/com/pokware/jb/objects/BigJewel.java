@@ -8,8 +8,8 @@ public class BigJewel extends GameObject implements Collectable {
 
 	private JewelType type;
 	
-	public BigJewel(Level level, float x, float y, JewelType type) {
-		super(level, x, y, 32, 32, CollisionCategory.COLLECTABLE, false);
+	public BigJewel(int id, Level level, float x, float y, JewelType type) {
+		super(id, level, x, y, 32, 32, CollisionCategory.COLLECTABLE, false);
 		this.type = type;
 	}
 	

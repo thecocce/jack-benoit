@@ -8,47 +8,52 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.pokware.engine.tiles.JBTile;
 import com.pokware.jb.Constants;
 import com.pokware.jb.Level;
 
 public class LevelObjectManager {
 
-	private List<GameObject> list = new ArrayList<GameObject>(150);
-	
+	private GameObject[] list = new GameObject[5000];
+	private int listSize = 0;
+	private int idGenerator = 0;
 	private Level level;
+	private int jackId = -1;
 	
 	public LevelObjectManager(Level level) {	
 		this.level = level;					
 	}
 	
 	public void add(GameObject gameObject) {
-		if (gameObject.id == list.size()) {
-			list.add(gameObject);	
+		if (gameObject instanceof Jack) {
+			this.jackId = gameObject.id;
 		}
-		else {
-			list.add(gameObject.id, gameObject);	
-		}				
+		listSize++;
+		list[gameObject.id] = gameObject;	
+//		System.out.println("Added go " + gameObject.getClass().getSimpleName() + " with id " + gameObject.id + " listSize now " + listSize);
 	}
 	
 	public GameObject get(int id) {
-		return list.get(id);
+		return list[id];
 	}
 	
 	public Jack getJack() {
-		return (Jack) list.get(0);
+		return (Jack) get(jackId);
 	}
 	
 	public void draw(SpriteBatch spriteBatch, float tick) {	
-		for (int i = 0; i < list.size(); i++) {
-			GameObject gameObject = list.get(i);		
-			gameObject.render(spriteBatch, tick);
+		for (int i = 0; i < listSize; i++) {
+			GameObject gameObject = list[i];
+			if (gameObject != null)
+				gameObject.render(spriteBatch, tick);
 		}		
 	}
 
 	public void drawDebugInfo() {		
-		for (int i = 0; i < list.size(); i++) {
-			GameObject gameObject = list.get(i);	
-			gameObject.renderDebugInfo();
+		for (int i = 0; i < listSize; i++) {
+			GameObject gameObject = list[i];
+			if (gameObject != null)
+				gameObject.renderDebugInfo();
 		}		
 	}	
 	
@@ -57,7 +62,7 @@ public class LevelObjectManager {
 	}
 
 	public int size() {
-		return list.size();
+		return listSize;
 	}
 	
 	@Override
@@ -71,45 +76,62 @@ public class LevelObjectManager {
 		return buffer.toString();
 	}
 
-	public void populateLevel(float jackX, float jackY) {
-		TiledMapTileLayer mapLayer = (TiledMapTileLayer)level.tiledMap.getLayers().get(Constants.BACKGROUND_LAYERS[0]);
-		TiledMapTileLayer spriteLayer = (TiledMapTileLayer)level.tiledMap.getLayers().get(Constants.SPRITE_LAYERS[0]);
-		int mapHeightInMeters = mapLayer.getHeight()*METERS_PER_TILE;
-		
-		add(new Jack(level, jackX, jackY));		
-		// Spawn from tiles
+	public void reset() {
+		listSize = 0;
+		idGenerator = 0;
+		for (int i = 0; i < list.length; i++) {
+			if (list[i] != null && !list[i].userData.hidden) {
+				list[i].destroy();
+				list[i] = null;
+			}
+		}
+		jackId = -1;
+		populateLevel();
+	}
+	
+	public void populateLevel() {
+		TiledMapTileLayer spriteLayer = (TiledMapTileLayer)level.tiledMap.getLayers().get(Constants.SPRITE_LAYER);
 			
 		for (int y = spriteLayer.getHeight() - 1; y > 0; y--) {							
 			for (int x = 0; x < spriteLayer.getWidth(); x++) {
-				Cell cell = spriteLayer.getCell(x, y);				
-				String tileProperty = "";
-				if (cell != null) {
-					Object object = cell.getTile().getProperties().get("spawn");
-					if (object != null) {
-						tileProperty = object.toString();						
-					}
+				Cell cell = spriteLayer.getCell(x, y);			
+				if (cell == null) continue;
+				
+				float xPosition, yPosition;
+				switch(JBTile.fromCell(cell)) {
+				case JACK: {
+					xPosition = x*METERS_PER_TILE+1;
+					yPosition = y*METERS_PER_TILE+1;
+					add(new Jack(idGenerator++, level, xPosition, yPosition));
+					break;
 				}
-
-				if ("Spider".equals(tileProperty)) {	
-					float xPosition = x*METERS_PER_TILE+1;
-					float yPosition = y*METERS_PER_TILE-0.2f;
-					add(new Spider(level, xPosition, yPosition));
+				case SPIDER: {
+					xPosition = x*METERS_PER_TILE+1;
+					yPosition = y*METERS_PER_TILE-0.2f;
+					add(new Spider(idGenerator++, level, xPosition, yPosition));
+					break;
 				}
-				else if ("Zombie".equals(tileProperty)) {	
-					float xPosition = x*METERS_PER_TILE+1;
-					float yPosition = y*METERS_PER_TILE+1;
-					add(new Zombie(level, xPosition, yPosition));
+				case ZOMBIE: {
+					xPosition = x*METERS_PER_TILE+1;
+					yPosition = y*METERS_PER_TILE+1;
+					add(new Zombie(idGenerator++, level, xPosition, yPosition));
+					break;
 				}
-				else if("blue_jewel".equals(tileProperty)) {
-					float xPosition = x*METERS_PER_TILE+1;
-					float yPosition = y*METERS_PER_TILE+1;
-					add(new Jewel(level, xPosition, yPosition, JewelType.BLUE));
+				case BLUE_JEWEL: {
+					xPosition = x*METERS_PER_TILE+1;
+					yPosition = y*METERS_PER_TILE+1;
+					add(new Jewel(idGenerator++, level, xPosition, yPosition, JewelType.BLUE));
+					break;
 				}
-				else if("big_blue_jewel".equals(tileProperty)) {
-					float xPosition = x*METERS_PER_TILE+1;
-					float yPosition = y*METERS_PER_TILE+1;
-					add(new BigJewel(level, xPosition, yPosition, JewelType.BLUE));
+				case BIG_BLUE_JEWEL: {
+					xPosition = x*METERS_PER_TILE+1;
+					yPosition = y*METERS_PER_TILE+1;
+					add(new BigJewel(idGenerator++, level, xPosition, yPosition, JewelType.BLUE));
+					break;
 				}
+					default: break;
+				}
+			
 			}
 		}	
 	}

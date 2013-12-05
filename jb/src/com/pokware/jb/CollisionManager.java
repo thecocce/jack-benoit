@@ -147,7 +147,7 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 			bodyA.applyLinearImpulse(b2a.scl(200f), new Vector2(32, 32), true);		
 			
 			Jack jack = objectManager.getJack();
-			jack.decrementLife();
+			jack.onHit();
 		}
 		else if ((userDataB.collisionCategory == CollisionCategory.JACK && userDataA.collisionCategory == CollisionCategory.ENEMY)) {
 			Art.hurtSound.play();
@@ -158,7 +158,7 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 			bodyB.applyLinearImpulse(b2a.rotate(180f).scl(200f), new Vector2(32, 32), true);
 			
 			Jack jack = objectManager.getJack();			
-			jack.decrementLife();
+			jack.onHit();
 			
 		}				
 		else if ((userDataB.collisionCategory == CollisionCategory.JACK && userDataA.collisionCategory == CollisionCategory.COLLECTABLE)) {

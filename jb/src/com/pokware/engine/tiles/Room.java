@@ -5,9 +5,9 @@ public class Room {
 	public boolean topWall, bottomWall, leftWall, rightWall;
 	public int offsetX, offsetY;
 	public boolean ground;
-	public boolean filled;
+	public RoomType roomType;
 	
-	public Room(int id, boolean topWall, boolean bottomWall, boolean leftWall, boolean rightWall, int offsetX, int offsetY, boolean ground) {
+	public Room(int id, boolean topWall, boolean bottomWall, boolean leftWall, boolean rightWall, int offsetX, int offsetY, boolean ground, RoomType roomType) {
 		super();
 		this.id = id;
 		this.topWall = topWall;
@@ -17,14 +17,14 @@ public class Room {
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
 		this.ground = ground;
-		this.filled = false;
+		this.roomType = roomType;
 	}
 
 	public Room(int id, int offsetX, int offsetY) {
 		this.id = id;
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
-		this.filled = true;
+		this.roomType = RoomType.FILLED;
 	}
 
 	@Override

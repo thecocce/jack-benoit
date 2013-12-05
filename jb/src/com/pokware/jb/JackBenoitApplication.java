@@ -27,7 +27,7 @@ public class JackBenoitApplication extends InputAdapter implements ApplicationLi
 		
 		AbstractScreen.listener = this;
 //		currentScreen = new MenuScreen();
-		currentScreen = new LevelScreen("");
+		currentScreen = new LevelScreen();
 	}
 
 	private void loadArt() {
