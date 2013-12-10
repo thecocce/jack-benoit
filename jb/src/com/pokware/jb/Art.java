@@ -12,7 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Art {
 
 	private static final int TILESIZE = 32;
-		
+	
+	public static Sound startSound;
 	public static Sound coinSound;
 	public static Sound hurtSound;
 	public static Sound jumpSound;
@@ -91,6 +92,7 @@ public class Art {
 		coinSound = Gdx.audio.newSound(Gdx.files.getFileHandle("data/output/sound/coin2.wav", FileType.Internal));
 		hurtSound = Gdx.audio.newSound(Gdx.files.getFileHandle("data/output/sound/hurt.wav", FileType.Internal));
 		jumpSound = Gdx.audio.newSound(Gdx.files.getFileHandle("data/output/sound/jump.wav", FileType.Internal));
+		startSound = Gdx.audio.newSound(Gdx.files.getFileHandle("data/output/sound/start.mp3", FileType.Internal));
 	}
 	
 	

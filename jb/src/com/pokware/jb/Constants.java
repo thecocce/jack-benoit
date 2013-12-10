@@ -2,6 +2,10 @@ package com.pokware.jb;
 
 public class Constants {
 
+	public static final String LADDER_ZONE = "1";
+	public static final String SOLID_ZONE = "1";
+	public static final String HAZARD_ZONE = "2";
+
 	public static float ZOOM_FACTOR = 1;
 	
 	public static int METERS_PER_TILE = 2;	

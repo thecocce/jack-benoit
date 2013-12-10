@@ -6,6 +6,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 
 public enum JBTile {
 
+	SPIKE1(1),
+	SPIKE2(2),
 	WORLD1_PLATFORM_LEFT(5),
 	WORLD1_PLATFORM(6),
 	WORLD1_PLATFORM_RIGHT(7),
@@ -37,7 +39,6 @@ public enum JBTile {
 	WORLD1_BACK_OUTER_TOP_LEFT(44),
 	BIG_BLUE_JEWEL(54),
 	BLUE_JEWEL(70);
-
 
 	public int id;
 	

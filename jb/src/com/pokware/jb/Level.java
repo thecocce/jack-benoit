@@ -18,6 +18,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -62,7 +63,7 @@ public class Level {
 
 		JBLevelLayout jbLevelLayout = JBLevelLayout.random(16);
 		
-		TiledMap masterMap = new TmxMapLoader().load("data/output/layout_16x1.tmx");
+		TiledMap masterMap = new TmxMapLoader().load("data/output/layout_16x1.tmx");				
 		tiledMap = ProceduralLevelGenerator.generateMap(masterMap, jbLevelLayout);
 
 		tileMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 2f / 32f);
@@ -86,8 +87,17 @@ public class Level {
 		TiledMapTileLayer ladders = (TiledMapTileLayer) tiledMap.getLayers().get(BACKGROUND_LAYERS[1]);
 
 		/*
-		 * tileX, tileY coords: +-----+-----+-----+-----+ | 0,2 | 1,2 | 2,2 | 3,2 | +-----+-----+-----+-----+ | 0,1 | 1,1 | 2,1 | 3,1 | +-----+-----+-----+-----+ | 0,0 | 1,0 | 2,0 | 3,0 | +-----+-----+-----+-----+
+		 * tileX, tileY coords: 
+		 * +-----+-----+-----+-----+ 
+		 * | 0,2 | 1,2 | 2,2 | 3,2 | 
+		 * +-----+-----+-----+-----+ 
+		 * | 0,1 | 1,1 | 2,1 | 3,1 | 
+		 * +-----+-----+-----+-----+ 
+		 * | 0,0 | 1,0 | 2,0 | 3,0 | 
+		 * +-----+-----+-----+-----+
 		 */
+		
+		// Platforms
 
 		for (int tileY = 0; tileY < platforms.getHeight(); tileY++) {
 			int startRectTileX = -1;
@@ -104,7 +114,7 @@ public class Level {
 					ladderPresent = ladders.getCell(tileX, tileY).getTile().getProperties().get("ladder");
 				}
 
-				if ("1".equals(platformCollision) && !"1".equals(ladderPresent)) {
+				if (Constants.SOLID_ZONE.equals(platformCollision) && !Constants.LADDER_ZONE.equals(ladderPresent)) {
 					if (startRectTileX == -1) {
 						startRectTileX = tileX;
 						startRectTileY = tileY;
@@ -121,6 +131,8 @@ public class Level {
 				}
 			}
 		}
+
+		// Create traversable top ladders 
 
 		for (int y = platforms.getHeight() - 2, tileY = 1; y >= 1; y--, tileY++) {
 			int firstColIndex = 1;
@@ -164,6 +176,7 @@ public class Level {
 
 	public HUD hud = new HUD();
 
+	
 	private void createRect(int startTileX, int startTileY, int endTileX, int endTileY) {
 		rectNumber++;
 
@@ -174,7 +187,7 @@ public class Level {
 		float hx = rectWidthInTiles;
 		float hy = rectHeightInTiles;
 		Vector2 center = new Vector2(startTileX * METERS_PER_TILE + hx, startTileY * METERS_PER_TILE + hy + 0.2f);
-		groundPoly.setAsBox(hx, hy - 0.2f, center, 0f);
+		groundPoly.setAsBox(hx, hy - 0.2f, center, 0f);	
 
 		BodyDef groundBodyDef = new BodyDef();
 		groundBodyDef.type = BodyType.StaticBody;
@@ -206,7 +219,7 @@ public class Level {
 	}
 
 	public void step(float deltaTime, int velocityIterations, int positionIterations) {
-		physicalWorld.step(deltaTime * 0.7f, velocityIterations, positionIterations);
+		physicalWorld.step(deltaTime, velocityIterations, positionIterations);
 	}
 
 }

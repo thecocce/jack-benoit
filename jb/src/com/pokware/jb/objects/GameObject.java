@@ -97,7 +97,7 @@ public abstract class GameObject {
 					return;
 				}
 				Vector2 position = body.getPosition();
-				spriteBatch.draw(textureRegion, position.x-(width/2), position.y-(height/2), width, height);
+				spriteBatch.draw(textureRegion, position.x-(width/2), position.y-(height/2), 1f, 1f, width, height, 1f, 1f, 45f);
 			}
 			else {
 				destroy();

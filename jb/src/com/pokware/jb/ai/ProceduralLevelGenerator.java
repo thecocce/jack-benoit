@@ -96,26 +96,37 @@ public class ProceduralLevelGenerator {
 			createStartingPosition(room);
 		}
 		
-		createDecorations(room);
+		createEnvironmentalHazard(room);
 		createSprites(room.id);
 
 	}
 
 	private void createStartingPosition(Room room) {
-		for (int y = 1; y < roomHeight - 1; y++) {
+		for (int y = 0; y < roomHeight - 1; y++) {
 			for (int x = 1; x < roomWidth - 1; x++) {
-				if (blockAt(x, y)) {
+				if (blockAt(room.offsetX, room.offsetY, x, y)) {
 					if (!blockAt(room.offsetX, room.offsetY, x, y+1)) {
-					System.out.println("Found Starting position at " + x + "," + y + " in room " + room.id);
-					spriteLayer.setCell(room.offsetX+x, room.offsetY+y+1, JBTile.JACK.toCell(tileSet));
-					return;
+						System.out.println("Found Starting position at " + x + "," + y + " in room " + room.id);
+						spriteLayer.setCell(room.offsetX+x, room.offsetY+y+1, JBTile.JACK.toCell(tileSet));
+						return;
 					}
 				}
 			}
 		}
 	}
 
-	private void createDecorations(Room room) {
+	private void createEnvironmentalHazard(Room room) {
+		for (int y = 0; y < roomHeight - 1; y++) {
+			for (int x = 1; x < roomWidth - 1; x++) {
+				if (blockAt(room.offsetX, room.offsetY, x, y)) {
+					if (!blockAt(room.offsetX, room.offsetY, x, y+1)) {
+						if (rng.nextFloat() > 0.95) {
+							ladderLayer.setCell(room.offsetX+x, room.offsetY+y+1, JBTile.SPIKE1.toCell(tileSet));
+						}
+					}
+				}
+			}
+		}		
 	}
 
 	private void createSprites(int roomIndex) {
@@ -415,7 +426,7 @@ public class ProceduralLevelGenerator {
 		map.getTileSets().addTileSet(tileSet);
 		map.getProperties().putAll(master.getProperties());
 
-		ProceduralLevelGenerator proceduralArtGenerator = new ProceduralLevelGenerator(map, levelLayout.roomHeight, levelLayout.roomWidth);
+		ProceduralLevelGenerator proceduralArtGenerator = new ProceduralLevelGenerator(map, levelLayout.roomHeightInTiles, levelLayout.roomWidthInTiles);
 		
 		proceduralArtGenerator.fillBackground();
 		

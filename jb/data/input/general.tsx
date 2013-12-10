@@ -4,6 +4,18 @@
  <terraintypes>
   <terrain name="rocky" tile="-1"/>
  </terraintypes>
+ <tile id="0">
+  <properties>
+   <property name="col" value="2"/>
+   <property name="id" value="SPIKE1"/>
+  </properties>
+ </tile>
+ <tile id="1">
+  <properties>
+   <property name="col" value="2"/>
+   <property name="id" value="SPIKE2"/>
+  </properties>
+ </tile>
  <tile id="4">
   <properties>
    <property name="col" value="1"/>

@@ -14,6 +14,7 @@ import com.pokware.jb.objects.GameObject;
 import com.pokware.jb.objects.CollisionCategory;
 import com.pokware.jb.objects.GameObjectData;
 import com.pokware.jb.objects.Jack;
+import com.pokware.jb.objects.Jack.JackStateEnum;
 import com.pokware.jb.objects.LevelObjectManager;
 
 public final class CollisionManager implements ContactFilter, ContactListener {
@@ -35,9 +36,10 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		
 		// Disable jack-platform collision when climbing
 		if ((categoryA == CollisionCategory.JACK && categoryB == CollisionCategory.TRAVERSABLE_PLATFORM) 
-				|| (categoryB == CollisionCategory.JACK && categoryA == CollisionCategory.TRAVERSABLE_PLATFORM)) {					
+				|| (categoryB == CollisionCategory.JACK && categoryA == CollisionCategory.TRAVERSABLE_PLATFORM)) {	
+			
 			Jack jack = objectManager.getJack();
-			return !jack.isClimbing();			
+			return !jack.isClimbing() || !jack.wasDraggingDown;			
 		}
 		// Disable enemy-platform collision when climbing
 		else if (categoryA == CollisionCategory.ENEMY && categoryB == CollisionCategory.TRAVERSABLE_PLATFORM) {
@@ -65,12 +67,22 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		else if (categoryA == CollisionCategory.ENEMY && categoryB == CollisionCategory.ENEMY) {
 			return false;
 		}
+
+		if (categoryA == CollisionCategory.ENEMY && categoryB == CollisionCategory.JACK) {
+			return !objectManager.getJack().isInvicible();
+		}
+		else if (categoryB == CollisionCategory.ENEMY && categoryA == CollisionCategory.JACK) {
+			return !objectManager.getJack().isInvicible();
+		}
+				
 		return true;
 	}
 
-	Vector2 curr = new Vector2();
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
+		
+		Jack jack = objectManager.getJack();
+		
 		Fixture fixtureA = contact.getFixtureA();
 		Fixture fixtureB = contact.getFixtureB();
 		Body bodyA = fixtureA.getBody();
@@ -78,9 +90,9 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		GameObjectData userDataA = (GameObjectData) bodyA.getUserData();		
 		GameObjectData userDataB = (GameObjectData) bodyB.getUserData();
 		
-		Jack jack = objectManager.getJack();
 		if ((userDataA.collisionCategory == CollisionCategory.JACK && userDataB.collisionCategory == CollisionCategory.TRAVERSABLE_PLATFORM)
 				|| (userDataB.collisionCategory == CollisionCategory.JACK && userDataA.collisionCategory == CollisionCategory.TRAVERSABLE_PLATFORM)) {
+			
 			// drop down the the ladder below
 			if (jack.wasDraggingDown || jack.isClimbing()) {
 				contact.setEnabled(false);
@@ -140,26 +152,25 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		GameObjectData userDataB = (GameObjectData) bodyB.getUserData();
 		if ((userDataA.collisionCategory == CollisionCategory.JACK && userDataB.collisionCategory == CollisionCategory.ENEMY)) {
 
-			Art.hurtSound.play();
-			Vector2 positionA = bodyA.getPosition();
-			Vector2 positionB = bodyB.getPosition();
-			Vector2 b2a = positionA.sub(positionB).nor();
-			bodyA.applyLinearImpulse(b2a.scl(200f), new Vector2(32, 32), true);		
-			
 			Jack jack = objectManager.getJack();
-			jack.onHit();
+			if (!jack.isInvicible()) {				
+				Vector2 positionA = bodyA.getPosition();
+				Vector2 positionB = bodyB.getPosition();
+				Vector2 b2a = positionA.sub(positionB).nor();
+				bodyA.applyLinearImpulse(b2a.scl(200f), new Vector2(32, 32), true);					
+				jack.onHit();
+			}
 		}
 		else if ((userDataB.collisionCategory == CollisionCategory.JACK && userDataA.collisionCategory == CollisionCategory.ENEMY)) {
 			Art.hurtSound.play();
-				
-			Vector2 positionA = bodyA.getPosition();
-			Vector2 positionB = bodyB.getPosition();
-			Vector2 b2a = positionA.sub(positionB).nor();
-			bodyB.applyLinearImpulse(b2a.rotate(180f).scl(200f), new Vector2(32, 32), true);
-			
 			Jack jack = objectManager.getJack();			
-			jack.onHit();
-			
+			if (!jack.isInvicible()) {
+				Vector2 positionA = bodyA.getPosition();
+				Vector2 positionB = bodyB.getPosition();
+				Vector2 b2a = positionA.sub(positionB).nor();
+				bodyB.applyLinearImpulse(b2a.rotate(180f).scl(200f), new Vector2(32, 32), true);			
+				jack.onHit();
+			}
 		}				
 		else if ((userDataB.collisionCategory == CollisionCategory.JACK && userDataA.collisionCategory == CollisionCategory.COLLECTABLE)) {
 			Art.coinSound.play();

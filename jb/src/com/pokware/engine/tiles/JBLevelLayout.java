@@ -6,7 +6,7 @@ import java.util.List;
 public class JBLevelLayout {
 
 	public int hRooms, vRooms;
-	public int roomWidth, roomHeight;
+	public int roomWidthInTiles, roomHeightInTiles;
 	
 	public Room[][] rooms; // left to right, then bottom to top  
 	public int width;
@@ -16,14 +16,14 @@ public class JBLevelLayout {
 	public int endRoomY;
 	public int endRoomX;
 	
-	public JBLevelLayout(int hRooms, int vRooms, int roomWidth, int roomHeight, int startRoomX, int startRoomY, int endRoomX, int endRoomY) {
+	public JBLevelLayout(int hRooms, int vRooms, int roomWidthInTiles, int roomHeightInTiles, int startRoomX, int startRoomY, int endRoomX, int endRoomY) {
 		this.hRooms = hRooms;
 		this.vRooms = vRooms;
-		this.roomWidth = roomWidth;
-		this.roomHeight = roomHeight;
+		this.roomWidthInTiles = roomWidthInTiles;
+		this.roomHeightInTiles = roomHeightInTiles;
 		this.rooms = new Room[hRooms][vRooms];
-		this.width = roomWidth * hRooms;
-		this.height = roomHeight * vRooms;
+		this.width = roomWidthInTiles * hRooms;
+		this.height = roomHeightInTiles * vRooms;
 		this.startRoomX = startRoomX;
 		this.startRoomY = startRoomY;
 		this.endRoomX = endRoomX;
@@ -34,7 +34,7 @@ public class JBLevelLayout {
 	
 	@Override
 	public String toString() {
-		return "JBLevelLayout [hRooms=" + hRooms + ", vRooms=" + vRooms + ", roomWidth=" + roomWidth + ", roomHeight=" + roomHeight + ", rooms=" + Arrays.toString(rooms)
+		return "JBLevelLayout [hRooms=" + hRooms + ", vRooms=" + vRooms + ", roomWidth=" + roomWidthInTiles + ", roomHeight=" + roomHeightInTiles + ", rooms=" + Arrays.toString(rooms)
 				+ ", width=" + width + ", height=" + height + ", startRoomY=" + startRoomY + ", startRoomX=" + startRoomX + ", endRoomY=" + endRoomY + ", endRoomX=" + endRoomX
 				+ "]";
 	}
@@ -42,7 +42,7 @@ public class JBLevelLayout {
 
 
 	public void addFilledRoom(int x, int y) {
-		Room room = new Room(y*hRooms+x,x*roomWidth, y*roomHeight);
+		Room room = new Room(y*hRooms+x,x*roomWidthInTiles, y*roomHeightInTiles);
 		rooms[x][y] = room;
 	}
 
@@ -56,8 +56,8 @@ public class JBLevelLayout {
 		}
 		Room room = new Room(y*hRooms+x,
 				topWall, bottomWall, leftWall, rightWall, 
-				x*roomWidth, 
-				y*roomHeight, ground, roomType);
+				x*roomWidthInTiles, 
+				y*roomHeightInTiles, ground, roomType);
 		rooms[x][y] = room;
 	}
 	

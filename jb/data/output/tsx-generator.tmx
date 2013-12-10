@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="general.tsx"/>
  <layer name="Calque de Tile 1" width="40" height="30">
   <data encoding="base64" compression="zlib">
-   eJztwTEBAAAAwqD1T20ND6AAAAAA4NcAEsAAAQ==
+   eJztlc0KhDAMhHN21fPi3wO4vv/z2UIDoSQVNSsV5vBdim0nM6OORDQCAF5BF+gdzvkKPPVNgaECn96kL2b6S2yO+uS5kf5g3WIOfBKto76YhezhcLAu57I0e+Z7VV9Jw119eVdK+pqU2aJoWI3sZ+X5O55J+M4t08UzsRbum2fXrC5LnyTaTGdy9uyfdof0jGda6H/fkpKXWl9Y+5rlKv239j7BRPb7UQM1/qcAAACAWtgB8GB9eg==
   </data>
  </layer>
 </map>

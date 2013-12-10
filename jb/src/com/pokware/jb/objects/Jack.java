@@ -5,12 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.pokware.jb.Art;
+import com.pokware.jb.Constants;
 import com.pokware.jb.Level;
 
 public class Jack extends GameObject implements Climber, InputProcessor {
@@ -19,17 +21,25 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	public static float JUMP_POWER = 1700;
 	public static float CLIMB_POWER = 200;
 
-	private JackStateEnum state = JackStateEnum.IDLE;
-	private JackStateEnum lastState = null;
-	private int mojo = 3;
-	private static int life = 3;
+	public JackStateEnum state = JackStateEnum.IDLE;
+	public JackStateEnum lastState = null;
+	public int lastLadderStatus = 0;
+	
+	public static int life = 3;
+	public int mojo = 3;
+	public int score = 0;
+	public boolean dead = false;
 	
 	// invicibility management
-	private int grantInvisibilityOnNextRender = 0;
-	private float invicibilityExpirationTime = -1;
+	public int grantInvisibilityOnNextRender = 0;
+	public float invicibilityExpirationTime = -1;
+	public boolean invicible;
 	
-	private int score;
-	private Vector2 antiGravityVector;
+	public Vector2 antiGravityVector;
+	public boolean wasDraggingDown = false;
+	public Vector2 forceVector = new Vector2();
+	public boolean wasClimbing = false;	
+		
 			
 	public Jack(int id, Level level, float x, float y) {
 		super(id, level, x, y, CollisionCategory.JACK, false);
@@ -55,16 +65,10 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		circle.dispose();		
 	}
 
-	final Vector2 forceVector = new Vector2();
-	boolean wasClimbing = false;
-	
-	
-	int lastLadderStatus = 0;
-	private boolean invicible;
-	
 	@Override
 	public TextureRegion getTextureRegion(float tick) {
-		manageInvicibilityStatus(tick);
+		manageInvicibilityStatus(tick);						
+		checkCollisions();
 		
 		state = lastState != null ? lastState : JackStateEnum.IDLE;
 		
@@ -104,33 +108,13 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 			}
 		}
 		
-		/*if (goUp > 0) {					
-			if (ladderStatus == GameObject.LADDER || ladderStatus == GameObject.LADDER + GameObject.LADDER_BELOW) {
-				state = JackStateEnum.CLIMBING_UP;
-				body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT);
-				
-				body.applyLinearImpulse(forceVector.set(0.0f, 6.4f*goUp), FORCE_APPLICATION_POINT);
-			}
-			else if (ladderStatus == GameObject.LADDER_BELOW && wasClimbing) {
-				// Last steps of the ladder: re-enable gravity so jack "jump" onto the platform
-				state = JackStateEnum.IDLE;
-				body.setLinearVelocity(0f, 64f);
-			}
-		}		
-		else if (goDown > 0) {					
-			if (ladderStatus == GameObject.LADDER_BELOW || ladderStatus == GameObject.LADDER + GameObject.LADDER_BELOW) {
-				state = JackStateEnum.CLIMBING_DOWN;
-				body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT);
-				
-				body.applyLinearImpulse(forceVector.set(0.0f, -6.4f*goDown), FORCE_APPLICATION_POINT);
-			}
-		}*/
-		//else {
-			if (ladderStatus == GameObject.LADDER || ladderStatus == GameObject.LADDER + GameObject.LADDER_BELOW) {
-				state = JackStateEnum.CLIMBING_IDLE;
+
+		if (ladderStatus == GameObject.LADDER || ladderStatus == GameObject.LADDER + GameObject.LADDER_BELOW) {
+			state = JackStateEnum.CLIMBING_IDLE;
+			if (!wasDraggingDown) {
 				body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT, true);
-			}			
-		//}
+			}
+		}			
 		
 		wasClimbing = isClimbing();
 		if (body.getLinearVelocity().x > 0 && !wasClimbing) {
@@ -147,30 +131,39 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		
 		
 		TextureRegion keyFrame = state.getAnimation().getKeyFrame(looping ? tick : 0, true);
-		if (invicible) {
-			System.out.println("invincible");
-			int frameIndex = (int)(tick/10f);
-			if (frameIndex % 2 == 0) {
-				return null;
-			}
-			else {
-				return keyFrame;
+		if (invicible) {		
+			if (Math.random() > 0.5) {	
+				return null;			
 			}
 		}
-		else {
-			return keyFrame;
+		
+		return keyFrame;
+		
+	}
+
+
+	private void checkCollisions() {
+		Vector2 position = body.getPosition();		
+		int tileX = (int) (position.x/Constants.METERS_PER_TILE);				
+		int tileY = (int) (position.y/Constants.METERS_PER_TILE);		
+		TiledMapTileLayer ladderLayer = (TiledMapTileLayer)level.tiledMap.getLayers().get(Constants.LADDER_LAYER);			 					
+		Cell cell = ladderLayer.getCell(tileX, tileY);
+		if (cell!=null && Constants.HAZARD_ZONE.equals(cell.getTile().getProperties().get("col"))) {	
+			GameObjectData gameObjectData = (GameObjectData)body.getUserData();
+			if (gameObjectData.flying) {
+				onHit();
+			}
 		}
 	}
 
 
 	private void manageInvicibilityStatus(float tick) {
-		if (grantInvisibilityOnNextRender > 0) {
+		if (grantInvisibilityOnNextRender > 0) {			
 			invicibilityExpirationTime = tick + grantInvisibilityOnNextRender;
 			grantInvisibilityOnNextRender = 0;
-			System.out.println("invincible until " + invicibilityExpirationTime + " tick is " + tick);
 			invicible = true;
 		}
-		if (invicibilityExpirationTime > tick) {
+		if (invicibilityExpirationTime < tick) {
 			invicible = false;
 			invicibilityExpirationTime = -1;
 		}
@@ -232,23 +225,22 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	}
 
 
-	final Vector2 jumpVector = new Vector2();
 	
-	public void jump() {
-		if (wasClimbing) {		
-			if (isTopOfTheLadder()) {
-				body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER*2), FORCE_APPLICATION_POINT, true);	
-			}
-			else {
-				body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER), FORCE_APPLICATION_POINT, true);
-			}						
+	final Vector2 jumpVector = new Vector2();
+	public void jump() {		
+		if (wasClimbing) {					
+				if (isTopOfTheLadder()) {
+					body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER*2), FORCE_APPLICATION_POINT, true);	
+				}
+				else {
+					body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER), FORCE_APPLICATION_POINT, true);
+				}									
 		} else {
 			Vector2 linearVelocity = body.getLinearVelocity();			
 			if (Math.abs(linearVelocity.y) < 0.0001f) {							
 				body.applyLinearImpulse(jumpVector.set(0f, JUMP_POWER), FORCE_APPLICATION_POINT, true);
 				Art.jumpSound.play();
-			}
-			
+			}			
 		}		
 	}
 		
@@ -279,69 +271,25 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	}
 		 	
 	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {							
-		jump();
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if (screenX < Gdx.graphics.getWidth() / 2) {			
+			wasDraggingDown = true;
+		}
+		else {
+			jump();
+		}
 		return true;
 	}
-
-	private Vector3 curr = new Vector3();
-	private Vector3 last = new Vector3();
-	private Vector3 delta = new Vector3();
-	public boolean wasDraggingUp = false;
-	public boolean wasDraggingDown = false;
+	
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-				
-		level.camera.front.unproject(curr.set(screenX, screenY, 0));
-		if (!(last.x == -1 && last.y == -1 )) {
-			level.camera.front.unproject(delta.set(last.x, last.y, 0));
-			delta.sub(curr);
-			
-			/*if (goUp > 0) {					
-			if (ladderStatus == GameObject.LADDER || ladderStatus == GameObject.LADDER + GameObject.LADDER_BELOW) {
-				state = JackStateEnum.CLIMBING_UP;
-				body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT);
-				
-				body.applyLinearImpulse(forceVector.set(0.0f, 6.4f*goUp), FORCE_APPLICATION_POINT);
-			}
-			else if (ladderStatus == GameObject.LADDER_BELOW && wasClimbing) {
-				// Last steps of the ladder: re-enable gravity so jack "jump" onto the platform
-				state = JackStateEnum.IDLE;
-				body.setLinearVelocity(0f, 64f);
-			}
-		}		
-		else if (goDown > 0) {					
-			if (ladderStatus == GameObject.LADDER_BELOW || ladderStatus == GameObject.LADDER + GameObject.LADDER_BELOW) {
-				state = JackStateEnum.CLIMBING_DOWN;
-				body.applyForce(antiGravityVector, FORCE_APPLICATION_POINT);
-				
-				body.applyLinearImpulse(forceVector.set(0.0f, -6.4f*goDown), FORCE_APPLICATION_POINT);
-			}
-		}*/
-	
-			if (lastLadderStatus == GameObject.LADDER || lastLadderStatus == GameObject.LADDER + GameObject.LADDER_BELOW || lastLadderStatus == GameObject.LADDER_BELOW) {					
-				if (delta.y < 0) {
-					// drag up				
-					wasDraggingUp = true;
-					body.applyLinearImpulse(forceVector.set(0.0f, -delta.y*20), FORCE_APPLICATION_POINT, true);
-				}
-				else if (delta.y > 0) {
-					// drag down								
-					wasDraggingDown = true;
-					body.applyLinearImpulse(forceVector.set(0.0f, -delta.y*20), FORCE_APPLICATION_POINT, true);
-				}					
-			}
-		}
-		last.set(screenX, screenY, 0);
-		return false;
+		return true;
 	}
 	
 	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {				
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		wasDraggingDown = false;
-		wasDraggingUp = false;
-		last.set(-1, -1, -1);
 		return true;
 	}
 
@@ -364,16 +312,24 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 
 
 	public void onHit() {
-		if (invicible) {
-			return;
-		}
-		if (mojo > 1) {
-			mojo--;
-			grantInvisibilityOnNextRender = 1;
-		}
-		else {
-			life--;
-			level.reset();
+		if (!invicible) {
+			Art.hurtSound.play();
+			
+			if (mojo > 0) {				
+				mojo--;				
+			}
+			
+			if (mojo > 0) {
+				grantInvisibilityOnNextRender = 2;
+				invicible = true;
+			}
+			else {
+				dead = true;
+				invicible = true;
+				grantInvisibilityOnNextRender = 10;
+				life--;
+				level.reset();
+			}
 		}
 	}
 
@@ -383,13 +339,12 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 
 	
 	public static enum JackStateEnum {
-		IDLE(Art.walkingLeftAnimation), 
+		IDLE(Art.walkingRightAnimation), 
 		WALK_LEFT(Art.walkingLeftAnimation),
 		WALK_RIGHT(Art.walkingRightAnimation),
 		CLIMBING_UP(Art.climbingAnimation),
 		CLIMBING_DOWN(Art.climbingAnimation), 
-		CLIMBING_IDLE(Art.climbingAnimation),
-		FALLING(Art.walkingLeftAnimation);
+		CLIMBING_IDLE(Art.climbingAnimation);
 		private Animation animation;
 
 		private JackStateEnum(Animation animation) {
@@ -399,5 +354,10 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		public Animation getAnimation() {
 			return animation;
 		}
+	}
+
+
+	public boolean isInvicible() {
+		return invicible;
 	}
 }

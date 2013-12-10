@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.pokware.jb.screens.AbstractScreen;
 import com.pokware.jb.screens.LevelScreen;
+import com.pokware.jb.screens.MenuScreen;
 import com.pokware.jb.screens.ScreenListener;
 
 public class JackBenoitApplication extends InputAdapter implements ApplicationListener, ScreenListener {
@@ -26,8 +27,8 @@ public class JackBenoitApplication extends InputAdapter implements ApplicationLi
 		loadArt();
 		
 		AbstractScreen.listener = this;
-//		currentScreen = new MenuScreen();
-		currentScreen = new LevelScreen();
+		currentScreen = new MenuScreen();
+//		currentScreen = new LevelScreen();
 	}
 
 	private void loadArt() {
