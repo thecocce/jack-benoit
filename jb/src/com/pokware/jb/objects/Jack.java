@@ -11,9 +11,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.pokware.engine.tiles.JBTile;
 import com.pokware.jb.Art;
 import com.pokware.jb.Constants;
 import com.pokware.jb.Level;
+import com.pokware.jb.screens.MenuScreen;
 
 public class Jack extends GameObject implements Climber, InputProcessor {
 	
@@ -65,12 +67,26 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		circle.dispose();		
 	}
 
+	public float orientiation;
+	public float getOrientation() {
+		if (dead) {
+			orientiation=(float)(((int)orientiation+2)%360);
+			return orientiation;	
+		}
+		else {
+			return 0f;
+		}
+	}
+	
 	@Override
 	public TextureRegion getTextureRegion(float tick) {
 		manageInvicibilityStatus(tick);						
 		checkCollisions();
 		
 		state = lastState != null ? lastState : JackStateEnum.IDLE;
+		if (dead) {
+			return state.getAnimation().getKeyFrame(0);
+		}
 		
 		int ladderStatus = getLadderStatus();
 		if (ladderStatus == GameObject.NO_LADDER && lastLadderStatus != NO_LADDER) {
@@ -148,11 +164,16 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		int tileY = (int) (position.y/Constants.METERS_PER_TILE);		
 		TiledMapTileLayer ladderLayer = (TiledMapTileLayer)level.tiledMap.getLayers().get(Constants.LADDER_LAYER);			 					
 		Cell cell = ladderLayer.getCell(tileX, tileY);
-		if (cell!=null && Constants.HAZARD_ZONE.equals(cell.getTile().getProperties().get("col"))) {	
-			GameObjectData gameObjectData = (GameObjectData)body.getUserData();
-			if (gameObjectData.flying) {
-				onHit();
+		if (cell!=null) {
+			if (Constants.HAZARD_ZONE.equals(cell.getTile().getProperties().get("col"))) {	
+				GameObjectData gameObjectData = (GameObjectData)body.getUserData();
+				if (gameObjectData.flying) {
+					onHit();
+				}
 			}
+			else if (JBTile.EXIT.id == cell.getTile().getId()) {
+				level.onCompletion();
+			}			
 		}
 	}
 
@@ -324,12 +345,23 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 				invicible = true;
 			}
 			else {
-				dead = true;
-				invicible = true;
-				grantInvisibilityOnNextRender = 10;
-				life--;
-				level.reset();
+				onDeath();
 			}
+		}
+	}
+
+
+	public void onDeath() {		
+		body.applyLinearImpulse(jumpVector.set((float) ((-1+Math.random()*2)*WALK_POWER), CLIMB_POWER*8), FORCE_APPLICATION_POINT, true);
+		dead = true;
+		invicible = true;
+		grantInvisibilityOnNextRender = 10;
+		life--;
+		if (life == 0) {			
+			level.screen.transitionTo(new MenuScreen());
+		}
+		else {			
+			level.reset();
 		}
 	}
 
@@ -359,5 +391,10 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 
 	public boolean isInvicible() {
 		return invicible;
+	}
+
+
+	public boolean isDead() {
+		return dead;
 	}
 }

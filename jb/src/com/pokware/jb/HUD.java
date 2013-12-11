@@ -21,10 +21,14 @@ public class HUD {
 		int life = jack.getMojo();
 		for(int i = 0; i < life; i++) {					
 			TextureRegion keyFrame = Art.heartAnimation.getKeyFrame(timer, true);			
-			spriteBatch.draw(keyFrame, Gdx.graphics.getWidth()-128+32*i, Gdx.graphics.getHeight()-40, 32, 32);			
+			int x = Gdx.graphics.getWidth()-220+64*i;
+			int y = Gdx.graphics.getHeight()-70;
+			spriteBatch.draw(keyFrame, x, y, 0, 0, 32, 32, 2f, 2f, 0f);			
 		}
-		
-		Art.bitmapFont.draw(spriteBatch, String.format("SCORE: %08d  JACK: %d   MOJO:", jack.getScore(), jack.getLife()), 20, Gdx.graphics.getHeight()-20);				
+				
+		Art.bitmapFont.draw(spriteBatch, String.format("SCORE: %08d JACK: %d", 
+				jack.getScore(),
+				jack.getLife()), 20, Gdx.graphics.getHeight()-20);				
 		spriteBatch.end();
 	}
 

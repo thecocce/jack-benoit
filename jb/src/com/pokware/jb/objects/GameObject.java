@@ -97,7 +97,13 @@ public abstract class GameObject {
 					return;
 				}
 				Vector2 position = body.getPosition();
-				spriteBatch.draw(textureRegion, position.x-(width/2), position.y-(height/2), 1f, 1f, width, height, 1f, 1f, 45f);
+				if (this instanceof Jack) {
+					float orientation = ((Jack)this).getOrientation();
+					spriteBatch.draw(textureRegion, position.x-(width/2), position.y-(height/2), 1f, 1f, width, height, 1f, 1f, orientation);
+				}
+				else {
+					spriteBatch.draw(textureRegion, position.x-(width/2), position.y-(height/2), width, height);
+				}
 			}
 			else {
 				destroy();

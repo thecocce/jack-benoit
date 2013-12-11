@@ -1,23 +1,6 @@
 package com.pokware.jb.ai;
 
-import static com.pokware.engine.tiles.JBTile.BLUE_JEWEL;
-import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_EMPTY;
-import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_INNER_BOTTOM_LEFT;
-import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_INNER_BOTTOM_RIGHT;
-import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_INNER_TOP_LEFT;
-import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_INNER_TOP_RIGHT;
-import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_OUTER_LEFT;
-import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_OUTER_RIGHT;
-import static com.pokware.engine.tiles.JBTile.WORLD1_BACK_PLAIN;
-import static com.pokware.engine.tiles.JBTile.WORLD1_DIRT1;
-import static com.pokware.engine.tiles.JBTile.WORLD1_DIRT_HALF;
-import static com.pokware.engine.tiles.JBTile.WORLD1_GROUND;
-import static com.pokware.engine.tiles.JBTile.WORLD1_LADDER;
-import static com.pokware.engine.tiles.JBTile.WORLD1_LADDER_TOP;
-import static com.pokware.engine.tiles.JBTile.WORLD1_PLATFORM;
-import static com.pokware.engine.tiles.JBTile.WORLD1_PLATFORM_LEFT;
-import static com.pokware.engine.tiles.JBTile.WORLD1_PLATFORM_RIGHT;
-import static com.pokware.engine.tiles.JBTile.ZOMBIE;
+import static com.pokware.engine.tiles.JBTile.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -95,6 +78,9 @@ public class ProceduralLevelGenerator {
 		if (room.roomType == RoomType.START) {
 			createStartingPosition(room);
 		}
+		if (room.roomType == RoomType.END) {
+			createExitPosition(room);
+		}
 		
 		createEnvironmentalHazard(room);
 		createSprites(room.id);
@@ -114,7 +100,19 @@ public class ProceduralLevelGenerator {
 			}
 		}
 	}
-
+	private void createExitPosition(Room room) {
+		for (int y = 0; y < roomHeight - 1; y++) {
+			for (int x = 1; x < roomWidth - 1; x++) {
+				if (blockAt(room.offsetX, room.offsetY, x, y)) {
+					if (!blockAt(room.offsetX, room.offsetY, x, y+1)) {
+						System.out.println("Found Exit position at " + x + "," + y + " in room " + room.id);
+						ladderLayer.setCell(room.offsetX+x, room.offsetY+y+1, JBTile.EXIT.toCell(tileSet));
+						return;
+					}
+				}
+			}
+		}
+	}
 	private void createEnvironmentalHazard(Room room) {
 		for (int y = 0; y < roomHeight - 1; y++) {
 			for (int x = 1; x < roomWidth - 1; x++) {
@@ -141,8 +139,18 @@ public class ProceduralLevelGenerator {
 			Platform platform = platformList.get(rng.nextInt(platformList.size()));
 			int randomPlacement = rng.nextInt(platform.length);
 			
-			if (!blockAt(platform.x+randomPlacement, platform.y+1)) {
-				spriteLayer.setCell(platform.x+randomPlacement, platform.y+1, ZOMBIE.toCell(tileSet));
+			if (!blockAt(platform.x+randomPlacement, platform.y+1)) {				
+				int random = rng.nextInt(3);
+				if (random == 0) {
+					spriteLayer.setCell(platform.x+randomPlacement, platform.y+1, FLOWER.toCell(tileSet));
+				}
+				else if (random == 1) {
+					ladderLayer.setCell(platform.x+randomPlacement, platform.y, SPIDER.toCell(tileSet));
+					spriteLayer.setCell(platform.x+randomPlacement, platform.y, SPIDER.toCell(tileSet));
+				}
+				else {
+					spriteLayer.setCell(platform.x+randomPlacement, platform.y+1, ZOMBIE.toCell(tileSet));
+				}				
 			}
 		}
 		

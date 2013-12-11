@@ -64,6 +64,10 @@ public class LevelCamera {
 	
 	private void smoothTrackJack(Jack jack) {		
 		
+		if (jack.isDead()) {
+			return;
+		}
+		
 		Vector2 jackWorldPosition = jack.body.getPosition();		
 		jackScreenPosition.x = jackWorldPosition.x;
 		jackScreenPosition.y = jackWorldPosition.y;

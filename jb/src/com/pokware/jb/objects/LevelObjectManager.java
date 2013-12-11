@@ -117,6 +117,12 @@ public class LevelObjectManager {
 					add(new Zombie(idGenerator++, level, xPosition, yPosition));
 					break;
 				}
+				case FLOWER: {
+					xPosition = x*METERS_PER_TILE+1;
+					yPosition = y*METERS_PER_TILE+1;
+					add(new Flower(idGenerator++, level, xPosition, yPosition));
+					break;
+				}
 				case BLUE_JEWEL: {
 					xPosition = x*METERS_PER_TILE+1;
 					yPosition = y*METERS_PER_TILE+1;

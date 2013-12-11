@@ -31,9 +31,8 @@ public class LevelScreen extends AbstractScreen {
 		fadeIn();
 	}
 	
-	public void reset() {
-		pause = true;
-		fadeOut();
+	public void reset() {		
+		fadeOut();		
 	}
 	
 	
@@ -42,7 +41,6 @@ public class LevelScreen extends AbstractScreen {
 		level.objectManager.reset();
 		level.camera.focusOnJack(level.objectManager.getJack());
 		fadeIn();
-		pause = false;
 	}
 	
 	@Override

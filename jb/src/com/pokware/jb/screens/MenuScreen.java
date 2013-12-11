@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.pokware.engine.tiles.JBTile;
 import com.pokware.jb.Art;
 import com.pokware.jb.Constants;
+import com.pokware.jb.objects.Jack;
 
 public class MenuScreen extends AbstractScreen {
 
@@ -102,6 +103,7 @@ public class MenuScreen extends AbstractScreen {
 	
 	@Override
 	protected void onFadeOutTermination() {
+		Jack.life = 3;
 		MenuScreen.this.transitionTo(new LevelScreen());
 	}
 

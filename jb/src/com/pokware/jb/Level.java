@@ -1,24 +1,16 @@
 package com.pokware.jb;
 
-import static com.pokware.jb.Constants.BACKGROUND_LAYERS;
+ import static com.pokware.jb.Constants.BACKGROUND_LAYERS;
 import static com.pokware.jb.Constants.METERS_PER_TILE;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.GL11;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.maps.tiled.TideMapLoader.Parameters;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader.Parameters;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -31,7 +23,6 @@ import com.pokware.engine.tiles.JBLevelLayout;
 import com.pokware.jb.ai.PathingTool;
 import com.pokware.jb.ai.ProceduralLevelGenerator;
 import com.pokware.jb.objects.CollisionCategory;
-import com.pokware.jb.objects.GameObject;
 import com.pokware.jb.objects.GameObjectData;
 import com.pokware.jb.objects.LevelObjectManager;
 import com.pokware.jb.screens.LevelScreen;
@@ -61,9 +52,14 @@ public class Level {
 		this.physicalWorld = new World(gravityVector, true);
 		this.objectManager = new LevelObjectManager(this);
 
-		JBLevelLayout jbLevelLayout = JBLevelLayout.random(16);
+		JBLevelLayout jbLevelLayout = JBLevelLayout.random(14);
 		
-		TiledMap masterMap = new TmxMapLoader().load("data/output/layout_16x1.tmx");				
+		Parameters params = new Parameters();
+		params.textureMagFilter = TextureFilter.Nearest;
+		params.textureMinFilter = TextureFilter.Nearest;
+		TiledMap masterMap = new TmxMapLoader().load("data/output/layout_16x1.tmx", params);		
+		
+		
 		tiledMap = ProceduralLevelGenerator.generateMap(masterMap, jbLevelLayout);
 
 		tileMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 2f / 32f);
@@ -220,6 +216,10 @@ public class Level {
 
 	public void step(float deltaTime, int velocityIterations, int positionIterations) {
 		physicalWorld.step(deltaTime, velocityIterations, positionIterations);
+	}
+
+	public void onCompletion() {
+		screen.transitionTo(new LevelScreen());
 	}
 
 }

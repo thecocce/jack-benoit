@@ -32,7 +32,7 @@ public class JackBenoitApplication extends InputAdapter implements ApplicationLi
 	}
 
 	private void loadArt() {
-		Art.load(new TextureAtlas(Gdx.files.internal("data/output/pack")));
+		Art.load(new TextureAtlas(Gdx.files.internal("data/output/pack.atlas")));
 	}
 
 	@Override

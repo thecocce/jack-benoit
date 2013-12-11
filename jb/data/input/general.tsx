@@ -216,6 +216,11 @@
    <property name="" value=""/>
   </properties>
  </tile>
+ <tile id="112">
+  <properties>
+   <property name="id" value="BOULDER"/>
+  </properties>
+ </tile>
  <tile id="117">
   <properties>
    <property name="" value=""/>
@@ -229,6 +234,18 @@
  <tile id="119">
   <properties>
    <property name="" value=""/>
+  </properties>
+ </tile>
+ <tile id="129">
+  <properties>
+   <property name="col" value="2"/>
+   <property name="id" value="SPIKE1"/>
+  </properties>
+ </tile>
+ <tile id="130">
+  <properties>
+   <property name="col" value="2"/>
+   <property name="id" value="SPIKE2"/>
   </properties>
  </tile>
 </tileset>

@@ -32,13 +32,20 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		GameObjectData userDataA = (GameObjectData) bodyA.getUserData();
 		GameObjectData userDataB = (GameObjectData) bodyB.getUserData();
 		CollisionCategory categoryA = userDataA.collisionCategory;
-		CollisionCategory categoryB = userDataB.collisionCategory;
+		CollisionCategory categoryB = userDataB.collisionCategory;		
+		Jack jack = objectManager.getJack();
+		
+				
+		if (categoryA == CollisionCategory.JACK || categoryB == CollisionCategory.JACK) {
+			if (jack.isDead()) {
+				return false;
+			}
+		}
 		
 		// Disable jack-platform collision when climbing
 		if ((categoryA == CollisionCategory.JACK && categoryB == CollisionCategory.TRAVERSABLE_PLATFORM) 
 				|| (categoryB == CollisionCategory.JACK && categoryA == CollisionCategory.TRAVERSABLE_PLATFORM)) {	
 			
-			Jack jack = objectManager.getJack();
 			return !jack.isClimbing() || !jack.wasDraggingDown;			
 		}
 		// Disable enemy-platform collision when climbing
@@ -74,6 +81,7 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		else if (categoryB == CollisionCategory.ENEMY && categoryA == CollisionCategory.JACK) {
 			return !objectManager.getJack().isInvicible();
 		}
+		
 				
 		return true;
 	}
@@ -89,6 +97,12 @@ public final class CollisionManager implements ContactFilter, ContactListener {
 		Body bodyB = fixtureB.getBody();
 		GameObjectData userDataA = (GameObjectData) bodyA.getUserData();		
 		GameObjectData userDataB = (GameObjectData) bodyB.getUserData();
+		
+		if (userDataA.collisionCategory == CollisionCategory.JACK || userDataB.collisionCategory == CollisionCategory.JACK) {
+			if (jack.isDead()) {
+				contact.setEnabled(false);
+			}
+		}			
 		
 		if ((userDataA.collisionCategory == CollisionCategory.JACK && userDataB.collisionCategory == CollisionCategory.TRAVERSABLE_PLATFORM)
 				|| (userDataB.collisionCategory == CollisionCategory.JACK && userDataA.collisionCategory == CollisionCategory.TRAVERSABLE_PLATFORM)) {
