@@ -21,10 +21,10 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.pokware.engine.tiles.JBLevelLayout;
 import com.pokware.jb.ai.PathingTool;
-import com.pokware.jb.ai.ProceduralLevelGenerator;
 import com.pokware.jb.objects.CollisionCategory;
 import com.pokware.jb.objects.GameObjectData;
 import com.pokware.jb.objects.LevelObjectManager;
+import com.pokware.jb.procedural.ProceduralLevelGenerator;
 import com.pokware.jb.screens.LevelScreen;
 
 public class Level {
@@ -190,6 +190,7 @@ public class Level {
 		Body body = physicalWorld.createBody(groundBodyDef);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = groundPoly;
+		fixtureDef.friction = 0f;		
 		fixtureDef.filter.groupIndex = 0;
 		body.createFixture(fixtureDef);
 

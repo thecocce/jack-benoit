@@ -1,4 +1,4 @@
-package com.pokware.jb.ai;
+package com.pokware.jb.procedural;
 
 import java.util.Random;
 

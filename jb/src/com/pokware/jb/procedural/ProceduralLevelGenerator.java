@@ -1,4 +1,4 @@
-package com.pokware.jb.ai;
+package com.pokware.jb.procedural;
 
 import static com.pokware.engine.tiles.JBTile.*;
 
@@ -457,78 +457,48 @@ public class ProceduralLevelGenerator {
 	private void fillBackground() {
 		for (int x = 0; x < backgroundLayer.getWidth(); x++) {
 			for (int y = 0; y <= backgroundLayer.getHeight(); y++) {
-				backgroundLayer.setCell(x, y, WORLD1_BACK_EMPTY.toCell(tileSet));
+				backgroundLayer.setCell(x, y, randomTile());				
 			}
 		}
-		for (int x = 0; x < backgroundLayer.getWidth(); x+=2) {
-			// Stalactite
-			int stalactiteHeight = rng.nextInt(backgroundLayer.getHeight() / 2);
-			int stalagmiteHeight = rng.nextInt(backgroundLayer.getHeight() / 2);
-			for (int y = backgroundLayer.getHeight(); y >= backgroundLayer.getHeight() - stalactiteHeight; y--) {
-				backgroundLayer.setCell(x, y, WORLD1_BACK_PLAIN.toCell(tileSet));
-				backgroundLayer.setCell(x+1, y, WORLD1_BACK_PLAIN.toCell(tileSet));
-			}
-			// Stalagmite
-			for (int y = 0; y <= stalagmiteHeight; y++) {
-				backgroundLayer.setCell(x, y, WORLD1_BACK_PLAIN.toCell(tileSet));
-				backgroundLayer.setCell(x+1, y, WORLD1_BACK_PLAIN.toCell(tileSet));
-			}
-		}
-		for (int x = 0; x < backgroundLayer.getWidth(); x+=2) {
-			for (int y = 1; y <= backgroundLayer.getHeight(); y++) {
-				Cell topLeftCell = backgroundLayer.getCell(x, y);
-				Cell topRightCell = backgroundLayer.getCell(x+1, y);
-				Cell bottomLeftCell = backgroundLayer.getCell(x, y-1);
-				Cell bottomRightCell = backgroundLayer.getCell(x+1, y-1);
+		int maxSize = backgroundLayer.getHeight() > backgroundLayer.getWidth() ? backgroundLayer.getHeight() : backgroundLayer.getWidth();		
+		Amortized2DNoise noise = new Amortized2DNoise(maxSize);
+		noise.generate2DNoise(backgroundLayer, tileSet, JBTile.BACK1_LIGHT1, JBTile.BACK1_LIGHT2, 5, 5, 0, 0);
+		
+		// Antialias tiles
+		for (int x = 1; x < backgroundLayer.getWidth() - 1; x++) {
+			for (int y = 1; y < backgroundLayer.getHeight() - 1; y++) {
+				Cell cell = backgroundLayer.getCell(x, y);
 				
-				boolean topLeftBlock = topLeftCell != null;
-				boolean topRightBlock = topRightCell != null;
-				boolean bottomLeftBlock = bottomLeftCell != null;
-				boolean bottomRightBlock = bottomRightCell != null;
-				boolean bottom = bottomLeftBlock && bottomRightBlock; 
-				boolean top = topLeftBlock && topRightBlock;	
+				Cell top = backgroundLayer.getCell(x, y+1);
+				Cell bottom = backgroundLayer.getCell(x, y-1);
+				Cell left = backgroundLayer.getCell(x-1, y);
+				Cell right = backgroundLayer.getCell(x+1, y);
 				
-				if (bottom && !top) {
-					refineBackgroundTile(x, y-1, WORLD1_BACK_INNER_BOTTOM_RIGHT);
-					refineBackgroundTile(x+1, y-1, WORLD1_BACK_INNER_BOTTOM_LEFT);
-				}
-				else if (top && !bottom) {
-					refineBackgroundTile(x, y, WORLD1_BACK_INNER_TOP_RIGHT);
-					refineBackgroundTile(x+1, y, WORLD1_BACK_INNER_TOP_LEFT);
-				}
-			}
-		}
-		for (int y = 1; y <= backgroundLayer.getHeight(); y+=2) {
-			for (int x = 0; x < backgroundLayer.getWidth(); x++) {
-
-				Cell topLeftCell = backgroundLayer.getCell(x, y);
-				Cell topRightCell = backgroundLayer.getCell(x+1, y);
-				Cell bottomLeftCell = backgroundLayer.getCell(x, y-1);
-				Cell bottomRightCell = backgroundLayer.getCell(x+1, y-1);
-				
-				boolean topLeftBlock = topLeftCell != null;
-				boolean topRightBlock = topRightCell != null;
-				boolean bottomLeftBlock = bottomLeftCell != null;
-				boolean bottomRightBlock = bottomRightCell != null;
-				boolean left = topLeftBlock && bottomLeftBlock;
-				boolean right = topRightBlock && bottomRightBlock;		
-				
-				if (left && !right) {
-					refineBackgroundTile(x+1, y, WORLD1_BACK_OUTER_RIGHT);
-					refineBackgroundTile(x+1, y-1, WORLD1_BACK_OUTER_RIGHT);
-				}
-				else if (right && !left) {
-					refineBackgroundTile(x, y, WORLD1_BACK_OUTER_LEFT);
-					refineBackgroundTile(x, y-1, WORLD1_BACK_OUTER_LEFT);
+				if (!isLight(cell)) {
+					if (isLight(top) && isLight(left) && !isLight(right) && !isLight(bottom)) {
+						cell.setTile(JBTile.BACK1_NORTH_WEST.fromTileSet(tileSet));
+					}
+					if (isLight(top) && isLight(right) && !isLight(left) && !isLight(bottom)) {
+						cell.setTile(JBTile.BACK1_NORTH_EAST.fromTileSet(tileSet));
+					}
+					if (isLight(bottom) && isLight(left) && !isLight(right) && !isLight(top)) {
+						cell.setTile(JBTile.BACK1_SOUTH_WEST.fromTileSet(tileSet));
+					}
+					if (isLight(bottom) && isLight(right) && !isLight(left) && !isLight(top)) {
+						cell.setTile(JBTile.BACK1_SOUTH_EAST.fromTileSet(tileSet));
+					}
 				}
 			}
 		}
 	}
 
-	private void refineBackgroundTile(int x, int y, JBTile tile) {
-		if (backgroundLayer.getCell(x, y) != null && backgroundLayer.getCell(x, y).getTile().getId() == WORLD1_BACK_PLAIN.id) {
-			backgroundLayer.setCell(x, y, tile.toCell(tileSet));
-		}
+	private Cell randomTile() {
+		return rng.nextBoolean() ? BACK1_DARK1.toCell(tileSet) : BACK1_DARK2.toCell(tileSet);
 	}
 
+	private boolean isLight(Cell cell) {		
+		return cell.getTile().getId() == BACK1_LIGHT1.id || cell.getTile().getId() == BACK1_LIGHT2.id;
+	}
+
+	
 }

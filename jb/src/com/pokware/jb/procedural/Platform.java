@@ -1,12 +1,11 @@
-package com.pokware.jb.ai;
+package com.pokware.jb.procedural;
 
 
-public class Ladder {
+public class Platform {
 
 	public int x, y, length;
 
-	/** Global coords */
-	public Ladder(int x, int y, int length) {
+	public Platform(int x, int y, int length) {
 		if (length <= 0) {
 			throw new RuntimeException("Zero length");
 		}

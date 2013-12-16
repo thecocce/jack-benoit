@@ -76,9 +76,9 @@ public abstract class GameObject {
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.x = x;
 		bodyDef.position.y = y;
-		bodyDef.gravityScale = 1.0f;	
+		bodyDef.gravityScale = 0.9f;	
 		bodyDef.fixedRotation = true;
-		bodyDef.linearDamping = 10f;
+		bodyDef.linearDamping = 8f;
 		
 		return bodyDef;
 	}

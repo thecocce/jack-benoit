@@ -20,7 +20,7 @@ import com.pokware.jb.screens.MenuScreen;
 public class Jack extends GameObject implements Climber, InputProcessor {
 	
 	public static float WALK_POWER = 3;
-	public static float JUMP_POWER = 1700;
+	public static float JUMP_POWER = 700;
 	public static float CLIMB_POWER = 200;
 
 	public JackStateEnum state = JackStateEnum.IDLE;
@@ -57,6 +57,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		polyShape.setAsBox(width*0.2f, height*0.4f);
 		fixture = body.createFixture(polyShape, 5);
 		fixture.setFriction(0f);
+		
 		polyShape.dispose();		
 		
 		CircleShape circle = new CircleShape();
@@ -64,6 +65,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		circle.setPosition(new Vector2(0f, -0.5f));
 		fixture = body.createFixture(circle, 0);
 		fixture.setFriction(0f);
+		
 		circle.dispose();		
 	}
 
@@ -336,9 +338,9 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		if (!invicible) {
 			Art.hurtSound.play();
 			
-			if (mojo > 0) {				
-				mojo--;				
-			}
+//			if (mojo > 0) {				
+//				mojo--;				
+//			}
 			
 			if (mojo > 0) {
 				grantInvisibilityOnNextRender = 2;
