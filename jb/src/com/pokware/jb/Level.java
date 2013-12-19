@@ -60,7 +60,7 @@ public class Level {
 		TiledMap masterMap = new TmxMapLoader().load("data/output/layout_16x1.tmx", params);		
 		
 		
-		tiledMap = ProceduralLevelGenerator.generateMap(masterMap, jbLevelLayout);
+		tiledMap = ProceduralLevelGenerator.generateMap(masterMap, jbLevelLayout, 1);
 
 		tileMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 2f / 32f);
 

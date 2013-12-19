@@ -59,7 +59,7 @@ public class MenuScreen extends AbstractScreen {
 		button.addListener(new ChangeListener() {			
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				Art.startSound.play();
+//				Art.startSound.play();
 				fadeOut();
 			}
 		});
