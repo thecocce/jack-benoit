@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.pokware.engine.tiles.JBTile;
+import com.pokware.engine.tiles.WorldTile;
 
 public class Amortized2DNoise {
 	float[] uax, vax, ubx, vbx, uay, vay, uby, vby; // /< Amortized noise tables.
@@ -127,7 +127,7 @@ public class Amortized2DNoise {
 		return 0.7071f / (1.0f - scale); // scale factor
 	} // getAmortize
 
-	public float generate2DNoise(TiledMapTileLayer layer, TiledMapTileSet tileSet, JBTile tile, JBTile tile2, int octave0, int octave1, int incX, int incY) {
+	public float generate2DNoise(TiledMapTileLayer layer, TiledMapTileSet tileSet, WorldTile tile, WorldTile tile2, int octave0, int octave1, int incX, int incY) {
 
 		float[][] cell = new float[size][size];
 		for (int i = 0; i < size; i++) {

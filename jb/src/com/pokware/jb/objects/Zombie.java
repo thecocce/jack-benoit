@@ -179,7 +179,10 @@ public class Zombie extends GameObject implements Climber {
 		// Compute animation
 		animation = ZombieAnimationEnum.IDLE;
 
-		if (body.getLinearVelocity().x > 0) {
+		if (climbingDown || climbingUp) {
+			animation = ZombieAnimationEnum.CLIMBING;
+		}
+		else if (body.getLinearVelocity().x > 0) {
 			animation = ZombieAnimationEnum.WALK_RIGHT;
 		}
 		else if (body.getLinearVelocity().x < 0) {
@@ -231,7 +234,7 @@ public class Zombie extends GameObject implements Climber {
 	}
 
 	public static enum ZombieAnimationEnum {
-		IDLE(Art.zombieWalkingLeftAnimation), WALK_LEFT(Art.zombieWalkingLeftAnimation), WALK_RIGHT(Art.zombieWalkingRightAnimation), CLIMBING(Art.zombieWalkingRightAnimation);
+		IDLE(Art.zombieWalkingLeftAnimation), WALK_LEFT(Art.zombieWalkingLeftAnimation), WALK_RIGHT(Art.zombieWalkingRightAnimation), CLIMBING(Art.zombieClimbAnimation);
 		private Animation animation;
 
 		private ZombieAnimationEnum(Animation animation) {

@@ -26,6 +26,7 @@ public class Art {
 	// Zombie
 	public static Animation zombieWalkingRightAnimation;
 	public static Animation zombieWalkingLeftAnimation;
+	public static Animation zombieClimbAnimation;
 	
 	// Spider
 	public static Animation spiderAnimation;
@@ -86,6 +87,8 @@ public class Art {
 			textureRegion.flip(true, false);
 		}		
 		zombieWalkingLeftAnimation = new Animation(0.2f, zombieFlippedWalkingTextures);
+		TextureRegion[] zombieClimbTextures = atlas.findRegion("zombie_climb").split(TILESIZE, TILESIZE)[0];
+		zombieClimbAnimation = new Animation(0.2f, zombieClimbTextures);
 		
 		TextureRegion[] spiderTextures = atlas.findRegion("spider0").split(TILESIZE, 16)[0];
 		System.out.println(spiderTextures.length);

@@ -56,7 +56,7 @@ public class Main {
 			
 			@Override
 			public boolean accept(File pathname) {
-				return pathname.getName().endsWith("tsx") || pathname.getName().endsWith("tmx") || pathname.getName().equals("tiles.png"); 
+				return pathname.getName().endsWith("tsx") || pathname.getName().endsWith("tmx") || pathname.getName().endsWith("png"); 
 			}
 		});
 		for (File file : listFiles) {

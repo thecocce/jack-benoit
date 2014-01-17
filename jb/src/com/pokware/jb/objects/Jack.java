@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.pokware.engine.tiles.JBTile;
+import com.pokware.engine.tiles.CommonTile;
 import com.pokware.jb.Art;
 import com.pokware.jb.Constants;
 import com.pokware.jb.Level;
@@ -28,8 +28,8 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	public int lastLadderStatus = 0;
 	
 	public static int life = 3;
+	public static int score = 0;
 	public int mojo = 3;
-	public int score = 0;
 	public boolean dead = false;
 	
 	// invicibility management
@@ -46,7 +46,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	public Jack(int id, Level level, float x, float y) {
 		super(id, level, x, y, CollisionCategory.JACK, false);
 		body.setBullet(true);			
-		antiGravityVector = level.gravityVector.cpy().scl(-body.getMass());
+		antiGravityVector = level.gravityVector.cpy().scl(-body.getMass()).scl(0.9f);
 		
 		Gdx.input.setInputProcessor(this);		
 	}
@@ -57,7 +57,6 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		polyShape.setAsBox(width*0.2f, height*0.4f);
 		fixture = body.createFixture(polyShape, 5);
 		fixture.setFriction(0f);
-		
 		polyShape.dispose();		
 		
 		CircleShape circle = new CircleShape();
@@ -65,7 +64,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		circle.setPosition(new Vector2(0f, -0.5f));
 		fixture = body.createFixture(circle, 0);
 		fixture.setFriction(0f);
-		
+		fixture.setDensity(0.5f);
 		circle.dispose();		
 	}
 
@@ -173,7 +172,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 					onHit();
 				}
 			}
-			else if (JBTile.EXIT.id == cell.getTile().getId()) {
+			else if (CommonTile.EXIT.name().equals(cell.getTile().getProperties().get("id"))) {
 				level.onCompletion();
 			}			
 		}
@@ -360,6 +359,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		grantInvisibilityOnNextRender = 10;
 		life--;
 		if (life == 0) {			
+			score = 0;
 			level.screen.transitionTo(new MenuScreen());
 		}
 		else {			

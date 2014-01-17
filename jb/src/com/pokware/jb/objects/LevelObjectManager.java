@@ -2,13 +2,10 @@ package com.pokware.jb.objects;
 
 import static com.pokware.jb.Constants.METERS_PER_TILE;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.pokware.engine.tiles.JBTile;
+import com.pokware.engine.tiles.CommonTile;
 import com.pokware.jb.Constants;
 import com.pokware.jb.Level;
 
@@ -98,7 +95,7 @@ public class LevelObjectManager {
 				if (cell == null) continue;
 				
 				float xPosition, yPosition;
-				switch(JBTile.fromCell(cell)) {
+				switch(CommonTile.fromCell(cell)) {
 				case JACK: {
 					xPosition = x*METERS_PER_TILE+1;
 					yPosition = y*METERS_PER_TILE+1;

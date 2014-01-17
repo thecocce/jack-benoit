@@ -57,10 +57,10 @@ public class Level {
 		Parameters params = new Parameters();
 		params.textureMagFilter = TextureFilter.Nearest;
 		params.textureMinFilter = TextureFilter.Nearest;
-		TiledMap masterMap = new TmxMapLoader().load("data/output/layout_16x1.tmx", params);		
+		TiledMap masterMap = new TmxMapLoader().load("data/output/master.tmx", params);		
 		
 		
-		tiledMap = ProceduralLevelGenerator.generateMap(masterMap, jbLevelLayout, 1);
+		tiledMap = ProceduralLevelGenerator.generateMap(masterMap, jbLevelLayout, 2);
 
 		tileMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 2f / 32f);
 
@@ -190,7 +190,7 @@ public class Level {
 		Body body = physicalWorld.createBody(groundBodyDef);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = groundPoly;
-		fixtureDef.friction = 0f;		
+		fixtureDef.friction = 0f;
 		fixtureDef.filter.groupIndex = 0;
 		body.createFixture(fixtureDef);
 

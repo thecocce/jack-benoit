@@ -2,19 +2,11 @@ package com.pokware.jb.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.tiledmappacker.TileSetLayout;
-import com.pokware.engine.tiles.JBTile;
 import com.pokware.jb.Constants;
 import com.pokware.jb.Level;
 import com.pokware.jb.objects.Jack;
-import com.sun.org.glassfish.external.statistics.annotations.Reset;
 
 public class LevelScreen extends AbstractScreen {
 	
