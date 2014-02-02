@@ -36,6 +36,11 @@
    <property name="id" value="BOULDER"/>
   </properties>
  </tile>
+ <tile id="19">
+  <properties>
+   <property name="id" value="ESKIMO"/>
+  </properties>
+ </tile>
  <tile id="32">
   <properties>
    <property name="id" value="BIG_BLUE_JEWEL"/>

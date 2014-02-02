@@ -12,6 +12,9 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.tools.imagepacker.TexturePacker;
 import com.badlogic.gdx.tools.imagepacker.TexturePacker.Settings;
 import com.badlogic.gdx.tools.imagepacker.TexturePacker2;
+import com.fbksoft.engine.ActionResolver;
+import com.fbksoft.jb.Constants;
+import com.fbksoft.jb.JackBenoitApplication;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
@@ -27,7 +30,7 @@ public class Main {
 		copyTiledMaps();
 		processSprites();
 		
-		new LwjglApplication(new JackBenoitApplication(), cfg);
+		new LwjglApplication(new JackBenoitApplication(new ActionResolverDesktop()), cfg);
 	}
 
 	public static void deleteFiles() {
@@ -63,6 +66,5 @@ public class Main {
 			Files.copy(Paths.get(file.getAbsolutePath()), Paths.get(outputDir.getAbsolutePath()+"/"+file.getName()), StandardCopyOption.REPLACE_EXISTING);
 		}
 	}
-	
 	
 }

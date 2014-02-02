@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Jack Benoit</string>
+    <integer name="google_play_services_version">4132500</integer>
+    <string name="app_id">462101330254</string>
+    <string name="leaderboard_id">CgkIzvKKu7kNEAIQAg</string>
+    
 </resources>

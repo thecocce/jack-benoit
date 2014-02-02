@@ -1,6 +1,6 @@
 package com.pokware.jb;
 
-import com.pokware.engine.ActionResolver;
+import com.fbksoft.engine.ActionResolver;
 
 public class ActionResolverDesktop implements ActionResolver {	
 	boolean signedInStateGPGS = false;

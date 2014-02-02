@@ -220,6 +220,7 @@ containing a value of this type.
         public static int google_play_services_version=0x7f060000;
     }
     public static final class string {
+        public static int app_id=0x7f05001a;
         /**   Title for notification shown when GooglePlayServices needs to be
         enabled for a application to work. [CHAR LIMIT=70] 
          */

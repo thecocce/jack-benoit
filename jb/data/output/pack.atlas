@@ -171,23 +171,30 @@ Climb
   orig: 64, 32
   offset: 0, 0
   index: -1
-zombie_climb
+eskimo_climb
   rotate: false
   xy: 389, 214
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
+zombie_climb
+  rotate: false
+  xy: 389, 180
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
 spider0
   rotate: false
-  xy: 389, 196
+  xy: 389, 162
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
   index: -1
 spider1
   rotate: false
-  xy: 389, 178
+  xy: 389, 144
   size: 64, 16
   orig: 64, 16
   offset: 0, 0
@@ -208,7 +215,7 @@ back
   index: -1
 earlysketch_col
   rotate: false
-  xy: 389, 144
+  xy: 389, 110
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -222,35 +229,35 @@ front
   index: -1
 front_walk1
   rotate: false
-  xy: 389, 110
+  xy: 474, 408
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 front_walk2
   rotate: false
-  xy: 474, 408
+  xy: 423, 110
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 left
   rotate: false
-  xy: 423, 144
+  xy: 453, 282
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 right
   rotate: false
-  xy: 423, 110
+  xy: 453, 248
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 web
   rotate: false
-  xy: 453, 282
+  xy: 455, 214
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
