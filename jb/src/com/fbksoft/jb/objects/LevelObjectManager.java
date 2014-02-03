@@ -88,7 +88,7 @@ public class LevelObjectManager {
 	public void populateLevel() {
 		TiledMapTileLayer spriteLayer = (TiledMapTileLayer)level.tiledMap.getLayers().get(Constants.SPRITE_LAYER);
 			
-		for (int y = spriteLayer.getHeight() - 1; y > 0; y--) {							
+		for (int y = spriteLayer.getHeight() - 1; y >= 0; y--) {							
 			for (int x = 0; x < spriteLayer.getWidth(); x++) {
 				Cell cell = spriteLayer.getCell(x, y);			
 				if (cell == null) continue;

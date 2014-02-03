@@ -18,8 +18,8 @@ public class LevelScreen extends AbstractScreen {
 	private boolean pause;
 
 	
-	public LevelScreen() {
-		level = new Level(this);	
+	public LevelScreen(int worldId) {
+		level = new Level(this, worldId);	
 		fadeIn();
 	}
 	

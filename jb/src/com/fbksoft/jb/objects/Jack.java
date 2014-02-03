@@ -19,12 +19,8 @@ import com.fbksoft.jb.Level;
 import com.fbksoft.jb.screens.MenuScreen;
 
 public class Jack extends GameObject implements Climber, InputProcessor {
-	
-	/*public static float WALK_POWER = 3;
-	public static float JUMP_POWER = 700;
-	public static float CLIMB_POWER = 200;*/
-	
-	public static float WALK_POWER = 1;
+		
+	public static float WALK_POWER = 3;
 	public static float JUMP_POWER = 700;
 	public static float CLIMB_POWER = 200;
 
@@ -52,13 +48,12 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		super(id, level, x, y, CollisionCategory.JACK, false);
 		body.setBullet(true);			
 		antiGravityVector = level.gravityVector.cpy().scl(-body.getMass()).scl(0.9f);
-		
-		body.setLinearDamping(0f);					
+							
 		Gdx.input.setInputProcessor(this);		
 	}
 
 	
-	protected void createFixtures(Body body, float widthRatio, float heightRatio) {
+	protected void createFixtures(Level level, Body body, float widthRatio, float heightRatio) {
 		PolygonShape polyShape = new PolygonShape();
 		polyShape.setAsBox(width*0.2f, height*0.4f);
 		fixture = body.createFixture(polyShape, 5);
@@ -69,7 +64,9 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 		circle.setRadius(0.40f);
 		circle.setPosition(new Vector2(0f, -0.5f));
 		fixture = body.createFixture(circle, 0);
-		fixture.setFriction(0.02f);
+
+		fixture.setFriction(level.getJackFriction());
+				
 		fixture.setDensity(0.5f);
 		circle.dispose();		
 	}
@@ -89,17 +86,30 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	public TextureRegion getTextureRegion(float tick) {
 		manageInvicibilityStatus(tick);						
 		checkCollisions();
-
-		Vector2 linearVelocity = body.getLinearVelocity();
-		if (linearVelocity.x > 25) {			
-			body.setLinearVelocity(25, linearVelocity.y);
+		
+		if (isClimbing()) {
+			body.setLinearDamping(8f);
 		}
-		if (linearVelocity.y > 50) {			
-			body.setLinearVelocity(linearVelocity.x, 50);
+		else {
+			body.setLinearDamping(level.getPlatformDamping());
 		}
 		
-		System.out.println("velocity = " + linearVelocity.len());
-		   
+		Vector2 linearVelocity = body.getLinearVelocity();
+		if (body.getLinearDamping() < 1)  {
+			if (linearVelocity.x > 25) {			
+				body.setLinearVelocity(25, linearVelocity.y);
+			}
+			else if (linearVelocity.x < -25) {			
+				body.setLinearVelocity(-25, linearVelocity.y);
+			}
+			if (linearVelocity.y > 50) {			
+				body.setLinearVelocity(linearVelocity.x, 50);
+			}
+			else if (linearVelocity.y < -50) {			
+				body.setLinearVelocity(linearVelocity.x, -50);
+			}
+		}
+						   
 		state = lastState != null ? lastState : JackStateEnum.IDLE;
 		if (dead) {
 			return state.getAnimation().getKeyFrame(0);
@@ -269,10 +279,10 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 	public void jump() {		
 		if (wasClimbing) {					
 				if (isTopOfTheLadder()) {
-					body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER*2), FORCE_APPLICATION_POINT, true);	
+					body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER*2), FORCE_APPLICATION_POINT, true);					
 				}
 				else {
-					body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER), FORCE_APPLICATION_POINT, true);
+					body.applyLinearImpulse(jumpVector.set(0f, CLIMB_POWER), FORCE_APPLICATION_POINT, true);					
 				}									
 		} else {
 			Vector2 linearVelocity = body.getLinearVelocity();			

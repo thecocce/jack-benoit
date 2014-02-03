@@ -43,7 +43,7 @@ public class Zombie extends GameObject implements Climber {
 	}
 	
 	@Override
-	protected void createFixtures(Body body, float widthRatio, float heightRatio) {
+	protected void createFixtures(Level level, Body body, float widthRatio, float heightRatio) {
 		PolygonShape polyShape = new PolygonShape();
 		polyShape.setAsBox(width*0.2f, height*0.4f);
 		fixture = body.createFixture(polyShape, 5);

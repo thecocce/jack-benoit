@@ -60,14 +60,14 @@ public abstract class GameObject {
 		body.setBullet(bullet);		
 		customizeBody(body);
 				
-		createFixtures(body, widthRatio, heightRatio);		
+		createFixtures(level, body, widthRatio, heightRatio);		
 		this.level=level;
 	}
 
 	public void customizeBody(Body body) {		
 	}
 
-	protected void createFixtures(Body body, float widthRatio, float heightRatio) {
+	protected void createFixtures(Level level, Body body, float widthRatio, float heightRatio) {
 		PolygonShape polyShape = new PolygonShape();
 		polyShape.setAsBox(width*widthRatio, height*heightRatio);				
 		fixture = body.createFixture(polyShape, 5);

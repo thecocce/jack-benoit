@@ -17,6 +17,7 @@ import com.fbksoft.engine.tiles.RoomType;
 import com.fbksoft.engine.tiles.WorldTile;
 import com.fbksoft.engine.tiles.JBLevelLayout.Direction;
 import com.fbksoft.jb.Constants;
+import com.fbksoft.jb.Level;
 
 public class ProceduralLevelGenerator {
 	
@@ -134,10 +135,10 @@ public class ProceduralLevelGenerator {
 					spriteLayer.setCell(platform.x+randomPlacement, platform.y, CommonTile.SPIDER.toCell(commonTileSet));
 				}
 				else {
-					if (worldId == 1 || worldId == 3) {
+					if (worldId % Level.NUMBER_OF_WORLDS == 1 || worldId % Level.NUMBER_OF_WORLDS == 3) {
 						spriteLayer.setCell(platform.x+randomPlacement, platform.y+1, CommonTile.ZOMBIE.toCell(commonTileSet));
 					}
-					else if (worldId == 2) {
+					else if (worldId % Level.NUMBER_OF_WORLDS == 2) {
 						spriteLayer.setCell(platform.x+randomPlacement, platform.y+1, CommonTile.ESKIMO.toCell(commonTileSet));
 					}
 				}
@@ -456,6 +457,7 @@ public class ProceduralLevelGenerator {
 		}
 		this.endPosition = wpTargetPosition;
 
+		System.out.println("Jack tile position at " + startPosition.x + ", " + startPosition.y);
 		spriteLayer.setCell(startPosition.x, startPosition.y, CommonTile.JACK.toCell(commonTileSet));
 		
 		ladderLayer.setCell(endPosition.x, endPosition.y, CommonTile.EXIT.toCell(commonTileSet));
@@ -543,7 +545,7 @@ public class ProceduralLevelGenerator {
 		map.getLayers().add(ladderLayer);
 		map.getLayers().add(spriteLayer);
 		TiledMapTileSet commonTileSet = master.getTileSets().getTileSet(0);		
-		TiledMapTileSet worldTileSet = master.getTileSets().getTileSet(worldId);		
+		TiledMapTileSet worldTileSet = master.getTileSets().getTileSet(worldId % Level.NUMBER_OF_WORLDS);		
 		
 		System.out.println("* common tileset");
 		for (TiledMapTile tiledMapTile : commonTileSet) {

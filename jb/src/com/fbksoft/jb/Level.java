@@ -29,6 +29,8 @@ import com.fbksoft.jb.screens.LevelScreen;
 
 public class Level {
 
+	public static final int NUMBER_OF_WORLDS = 3;
+	
 	public OrthogonalTiledMapRenderer tileMapRenderer;
 	public TiledMap tiledMap;
 
@@ -41,11 +43,12 @@ public class Level {
 	public LevelCamera camera;
 	public Vector2 gravityVector = new Vector2(0f, -300f);
 	public LevelScreen screen;
-	public int worldId = 1;
+	public int worldId;
 
-	public Level(LevelScreen levelScreen) {
+	public Level(LevelScreen levelScreen, int worldId) {
 		super();
 		this.screen = levelScreen;
+		this.worldId = worldId;
 
 		this.font = new BitmapFont();
 		font.setColor(Color.YELLOW);
@@ -60,11 +63,8 @@ public class Level {
 		params.textureMinFilter = TextureFilter.Nearest;
 		TiledMap masterMap = new TmxMapLoader().load("data/output/master.tmx", params);		
 			
-//		this.worldId  = 1+(int)(Math.random()*3);
-		this.worldId  = 2;
 		tiledMap = ProceduralLevelGenerator.generateMap(masterMap, jbLevelLayout, worldId);
 
-		
 		tileMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 2f / 32f);
 
 		pathingTool = new PathingTool((TiledMapTileLayer) tiledMap.getLayers().get(BACKGROUND_LAYERS[0]), (TiledMapTileLayer) tiledMap.getLayers().get(BACKGROUND_LAYERS[1]));
@@ -222,7 +222,21 @@ public class Level {
 	}
 
 	public void onCompletion() {
-		screen.transitionTo(new LevelScreen());
+		screen.transitionTo(new LevelScreen(worldId+1));
+	}
+
+	public float getPlatformDamping() {
+		if (worldId % Level.NUMBER_OF_WORLDS == 2) {
+			return 0.01f;
+		}
+		return 8f;
+	}
+
+	public float getJackFriction() {
+		if (worldId % Level.NUMBER_OF_WORLDS == 2) {
+			return 0.02f;
+		}
+		return 0f;
 	}
 
 }
