@@ -131,7 +131,7 @@ public class MenuScreen extends AbstractScreen {
 	@Override
 	protected void onFadeOutTermination() {
 		Jack.life = 3;
-		MenuScreen.this.transitionTo(new LevelScreen(2));
+		MenuScreen.this.transitionTo(new LevelScreen(1));
 	}
 
 	private void generateRandomDecorations() {

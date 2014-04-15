@@ -16,7 +16,7 @@ import com.fbksoft.engine.tiles.CommonTile;
 import com.fbksoft.jb.Art;
 import com.fbksoft.jb.Constants;
 import com.fbksoft.jb.Level;
-import com.fbksoft.jb.screens.MenuScreen;
+import com.fbksoft.jb.screens.GameOverScreen;
 
 public class Jack extends GameObject implements Climber, InputProcessor {
 		
@@ -395,7 +395,7 @@ public class Jack extends GameObject implements Climber, InputProcessor {
 			}			
 			
 			score = 0;
-			level.screen.transitionTo(new MenuScreen());
+			level.screen.transitionTo(new GameOverScreen());
 		}
 		else {			
 			level.reset();

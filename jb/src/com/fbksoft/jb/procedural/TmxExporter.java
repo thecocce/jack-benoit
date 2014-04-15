@@ -25,9 +25,9 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 public class TmxExporter {
 
 	private TiledMap tiledMap;
-
+	
 	public TmxExporter(TiledMap tiledMap) {
-		this.tiledMap = tiledMap;
+		this.tiledMap = tiledMap;	
 	}
 
 	public void export(File output)  {
@@ -43,15 +43,27 @@ public class TmxExporter {
 		doc.appendChild(mapElement);
 		
 		Element tileSetElement = doc.createElement("tileset");
-		tileSetElement.setAttribute("firstfid", "1");
-		tileSetElement.setAttribute("source", "general.tsx");		
+		tileSetElement.setAttribute("firstgid", "1");
+		tileSetElement.setAttribute("source", "common.tsx");
+		
+		Element tileSetElement2 = doc.createElement("tileset");
+		tileSetElement2.setAttribute("firstgid", "257");
+		tileSetElement2.setAttribute("source", "world1.tsx");
+				 				 
 		mapElement.appendChild(tileSetElement);
+		mapElement.appendChild(tileSetElement2);
 
 		MapLayers layers = tiledMap.getLayers();
-		for (MapLayer mapLayer : layers) {			
-			Element layerElement = createLayer(doc, (TiledMapTileLayer)mapLayer);
-			mapElement.appendChild(layerElement);
-		}
+		
+		Element layerElement = createLayer(doc, (TiledMapTileLayer)(layers.get(0)), 257);
+		mapElement.appendChild(layerElement);
+		Element layerElement2 = createLayer(doc, (TiledMapTileLayer)(layers.get(1)), 257);
+		mapElement.appendChild(layerElement2);
+		Element layerElement3 = createLayer(doc, (TiledMapTileLayer)(layers.get(2)), 257);
+		mapElement.appendChild(layerElement3);
+		Element layerElement4 = createLayer(doc, (TiledMapTileLayer)(layers.get(3)), 1);
+		mapElement.appendChild(layerElement4);
+		
 		
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -77,7 +89,7 @@ public class TmxExporter {
 
 	}
 
-	private Element createLayer(Document doc, TiledMapTileLayer mapLayer) {
+	private Element createLayer(Document doc, TiledMapTileLayer mapLayer, int delta) {
 		Element layerElement = doc.createElement("layer");
 		layerElement.setAttribute("name", mapLayer.getName());
 		layerElement.setAttribute("width", String.valueOf(mapLayer.getWidth()));
@@ -93,7 +105,7 @@ public class TmxExporter {
 			for(int x=0; x<mapLayer.getWidth(); x++) {
 				Cell cell = mapLayer.getCell(x, y);
 				if (cell!=null) {
-					layerData.append((cell.getTile().getId()-1) + ",");
+					layerData.append((cell.getTile().getId()) + ",");
 				}
 				else {
 					layerData.append("0,");

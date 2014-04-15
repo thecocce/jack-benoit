@@ -1,5 +1,6 @@
 package com.fbksoft.jb.procedural;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -12,10 +13,10 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.GridPoint2;
 import com.fbksoft.engine.tiles.CommonTile;
 import com.fbksoft.engine.tiles.JBLevelLayout;
+import com.fbksoft.engine.tiles.JBLevelLayout.Direction;
 import com.fbksoft.engine.tiles.Room;
 import com.fbksoft.engine.tiles.RoomType;
 import com.fbksoft.engine.tiles.WorldTile;
-import com.fbksoft.engine.tiles.JBLevelLayout.Direction;
 import com.fbksoft.jb.Constants;
 import com.fbksoft.jb.Level;
 
@@ -358,7 +359,7 @@ public class ProceduralLevelGenerator {
 		ladderLayer.setCell(x, y, null);
 	}*/
 
-	public void tilingPostProcessing() {
+	public void tilingPostProcessing(TiledMap map) {
 		// Create platform tiles in the layer
 		for (int y = platformLayer.getHeight() - 2; y > 0; y--) {
 			for (int x = 0; x < platformLayer.getWidth(); x++) {
@@ -392,6 +393,8 @@ public class ProceduralLevelGenerator {
 			}
 		}
 
+		new TmxExporter(map).export(new File("data/output/generated1.tmx"));
+		
 		// Grow ladders
 		for (Ladder ladder : ladderList) {
 			int ladderX = ladder.x, ladderY = ladder.y - 1;
@@ -406,6 +409,7 @@ public class ProceduralLevelGenerator {
 				ladderY--;
 			}
 		}
+		new TmxExporter(map).export(new File("data/output/generated2.tmx"));
 
 	}
 
@@ -429,10 +433,8 @@ public class ProceduralLevelGenerator {
 			proceduralArtGenerator.fillRoom(room);
 		}
 				
-		proceduralArtGenerator.tilingPostProcessing();
+		proceduralArtGenerator.tilingPostProcessing(map);
 		
-		//new TmxExporter(map).export(new File("data/output/generated.tmx"));
-
 		return map;
 	}
 
