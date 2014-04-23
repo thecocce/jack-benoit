@@ -17,15 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.fbksoft.engine.ActionResolver;
 import com.fbksoft.jb.Art;
 import com.fbksoft.jb.Constants;
-import com.fbksoft.jb.JackBenoitApplication;
 import com.fbksoft.jb.objects.Jack;
 
 public class MenuScreen extends AbstractScreen {
 
 	private OrthographicCamera camera;
 	private SpriteBatch spriteBatch = new SpriteBatch();
-//	private OrthogonalTiledMapRenderer tiledMapRenderer;
-//	private TiledMap tiledMap;
 	private Stage stage = new Stage();
 	private Skin skin = new Skin();
 	
@@ -36,7 +33,6 @@ public class MenuScreen extends AbstractScreen {
 		pixmap.fill();
 		skin.add("white", new Texture(pixmap));
 		skin.add("default", Art.bitmapFont);
-		// Configure a TextButtonStyle and name it "default". Skin resources are stored by type, so this doesn't overwrite the font.
 		TextButtonStyle textButtonStyle = new TextButtonStyle();
 		textButtonStyle.up = skin.newDrawable("white", Color.DARK_GRAY);
 		textButtonStyle.down = skin.newDrawable("white", Color.DARK_GRAY);		
@@ -58,7 +54,6 @@ public class MenuScreen extends AbstractScreen {
 						app.loginGPGS();
 					}
 				}
-//				Art.startSound.play();
 				fadeOut();
 			}
 		});
@@ -107,10 +102,6 @@ public class MenuScreen extends AbstractScreen {
 		
 		table.add(button3).pad(20);
 		table.layout();
-		
-//		tiledMap = new TmxMapLoader().load("data/output/menuscreen.tmx");
-
-//		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 2f / 32f);
 
 		int viewPortWidthInMeters = (int) ((Gdx.graphics.getWidth() / 32) * Constants.METERS_PER_TILE);
 		int viewPortHeightInMeters = (int) ((Gdx.graphics.getHeight() / 32) * Constants.METERS_PER_TILE);
@@ -119,9 +110,6 @@ public class MenuScreen extends AbstractScreen {
 		camera.position.x = viewPortWidthInMeters / 2;
 		camera.position.y = viewPortHeightInMeters / 2;
 		camera.update();
-//		tiledMapRenderer.setView(camera);
-
-//		generateRandomDecorations();
 		
 		Gdx.input.setInputProcessor(stage);
 		
@@ -134,36 +122,12 @@ public class MenuScreen extends AbstractScreen {
 		MenuScreen.this.transitionTo(new LevelScreen(1));
 	}
 
-	private void generateRandomDecorations() {
-//		TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet(0);
-//		TiledMapTileLayer layer = (TiledMapTileLayer)tiledMap.getLayers().get(0);
-//		layer.getCell(1, 1).setTile(tileSet.getTile(JBTile.WORLD1_LADDER.id));
-	}
-
-	@SuppressWarnings("unused")
-	private void dump() {
-		// generate Tiles.java
-//		TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet(0);
-//		for (TiledMapTile tiledMapTile : tileSet) {
-//			if (tiledMapTile.getProperties().get("id") != null) {
-//				System.out.println(tiledMapTile.getProperties().get("id") + "(" + tiledMapTile.getId() + "),");
-//			}
-//		}
-	}
-
 	@Override
 	public void render(float delta) {
-//		tiledMapRenderer.render();
-
 		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		spriteBatch.begin();
 
 		spriteBatch.draw(Art.jackBenoitLogo, (Gdx.graphics.getWidth() - Art.jackBenoitLogo.getRegionWidth()) / 2, Gdx.graphics.getHeight() - 150);
-
-		/*Art.bitmapFont.draw(spriteBatch, String.format("NEW GAME"), 320, Gdx.graphics.getHeight() - 185);
-		Art.bitmapFont.draw(spriteBatch, String.format("HI-SCORES"), 310, Gdx.graphics.getHeight() - 250);
-		Art.bitmapFont.draw(spriteBatch, String.format("EXIT"), 350, Gdx.graphics.getHeight() - 315);*/
-
 		spriteBatch.end();
 		
 		stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
