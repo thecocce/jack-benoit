@@ -5,7 +5,7 @@ Jack Benoit is a 2D procedural platformer game made with the [libGDX](http://lib
 
 You can try it on the Google Play Store : https://play.google.com/store/apps/details?id=com.fbksoft.jb
 
-![Screenshot](http://blog.scramcode.com/static/img/10-game.png)
+![Screenshot](http://i.imgur.com/wHOHvYb.png)
 
 ###  Features
 
